@@ -2,7 +2,7 @@
 
 ![Java CI with Gradle](https://github.com/TeamKun/FlyLib-Reloaded/workflows/Java%20CI%20with%20Gradle/badge.svg)  
 [![](https://jitpack.io/v/TeamKun/FlyLib-Reloaded.svg)](https://jitpack.io/#TeamKun/FlyLib-Reloaded)  
-A utility mod for Minecraft developed in Kotlin. We are developing it with the aim of making it as easy to write as
+A utility librarry for Minecraft developed in Kotlin. We are developing it with the aim of making it as easy to write as
 possible and easy to maintain.  
 This mod is developed by [Kotx__](https://twitter.com/kotx__)
 
