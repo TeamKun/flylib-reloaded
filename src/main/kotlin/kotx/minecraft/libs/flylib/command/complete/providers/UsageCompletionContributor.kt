@@ -19,14 +19,17 @@ class UsageCompletionContributor : CompletionContributor() {
             when {
                 it.startsWith("<..") || it.startsWith("[..") || it.startsWith("(..") -> listOf("...")
                 templateContentSplit?.size ?: 0 == 1 -> {
-                    val replacements =
-                        commandHandler.usageReplacements.filter { it.key(templateResult!!.groupValues[1]) }
-                            .flatMap { it.value.invoke(consumer) }
+                    val replacements = commandHandler.usageReplacements
+                        .filter { it.key(templateResult!!.groupValues[1]) }
+                        .flatMap { it.value.invoke(consumer) }
+
                     if (replacements.isEmpty()) listOf(it) else replacements
                 }
                 templateContentSplit?.size ?: 0 > 1 -> templateContentSplit!!.flatMap { s ->
-                    val replacements = commandHandler.usageReplacements.filter { it.key(s) }
+                    val replacements = commandHandler.usageReplacements
+                        .filter { it.key(s) }
                         .flatMap { it.value.invoke(consumer) }
+
                     if (replacements.isNotEmpty()) replacements else listOf(s)
                 }
                 else -> listOf(it)
