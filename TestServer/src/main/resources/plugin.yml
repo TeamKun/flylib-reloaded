@@ -1,7 +1,0 @@
-name: TestPlugin
-version: @version@
-description: Plugin description here.
-api-version: 1.15
-author: Kotx
-website: https://twitter.com/kotx__
-main: kotx.test.TestServer

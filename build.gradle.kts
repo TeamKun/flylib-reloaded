@@ -47,11 +47,11 @@ tasks {
 afterEvaluate {
     publishing {
         publications {
-            register("release", MavenPublication::class) {
-                this.from(components.getByName("release"))
+            create<MavenPublication>("release") {
                 groupId = "kotx.minecraft.libs"
                 artifactId = "FlyLib-Reloaded"
                 version = project.version.toString()
+                from(components["kotlin"])
             }
         }
     }
