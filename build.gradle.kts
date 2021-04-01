@@ -5,6 +5,7 @@
 
 plugins {
     kotlin("jvm") version "1.4.32"
+    `maven-publish`
 }
 
 group = "kotx.minecraft.libs"
@@ -16,7 +17,6 @@ repositories {
     maven("https://papermc.io/repo/repository/maven-public/")
     maven("https://oss.sonatype.org/content/groups/public/")
     maven("https://kotlin.bintray.com/kotlinx/")
-    maven("https://jitpack.io")
 }
 
 dependencies {
@@ -41,5 +41,18 @@ tasks {
 
     javadoc {
         options.encoding = "UTF-8"
+    }
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            register("release", MavenPublication::class) {
+                this.from(components.getByName("release"))
+                groupId = "kotx.minecraft.libs"
+                artifactId = "FlyLib-Reloaded"
+                version = project.version.toString()
+            }
+        }
     }
 }
