@@ -3,7 +3,7 @@
  * Twitter: https://twitter.com/kotx__
  */
 
-package kotx.minecraft.libs.flylib.command
+package kotx.minecraft.libs.flylib.command.internal
 
 /**
  * This is how to use commands.

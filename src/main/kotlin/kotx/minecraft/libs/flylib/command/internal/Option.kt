@@ -3,7 +3,7 @@
  * Twitter: https://twitter.com/kotx__
  */
 
-package kotx.minecraft.libs.flylib.command
+package kotx.minecraft.libs.flylib.command.internal
 
 /**
  * This is an option for the command. (A command option that starts with -- or - in linux)
