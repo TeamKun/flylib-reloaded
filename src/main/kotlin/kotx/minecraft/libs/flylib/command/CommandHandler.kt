@@ -47,6 +47,7 @@ class CommandHandler(
                 aliases = it.aliases
                 description = it.description
                 permission = "true"
+                permissionMessage = "You don't have permission to execute this command!"
             })
             logger.info("Registered command: ${it.name} - ${it.description}")
         }
