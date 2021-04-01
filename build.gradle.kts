@@ -5,11 +5,10 @@
 
 plugins {
     kotlin("jvm") version "1.4.32"
-    `maven-publish`
 }
 
 group = "kotx.minecraft.libs"
-version = "0.01"
+version = "1.02"
 
 repositories {
     mavenCentral()
