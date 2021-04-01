@@ -5,6 +5,12 @@
 
 package kotx.minecraft.libs.flylib.command
 
+import kotx.minecraft.libs.flylib.command.complete.CompletionContributor
+import kotx.minecraft.libs.flylib.command.complete.providers.BasicCompletionContributor
+import kotx.minecraft.libs.flylib.command.complete.providers.ChildrenCompletionContributor
+import kotx.minecraft.libs.flylib.command.complete.providers.UsageCompletionContributor
+import kotx.minecraft.libs.flylib.command.internal.Permission
+import kotx.minecraft.libs.flylib.command.internal.Usage
 import kotx.minecraft.libs.flylib.get
 import org.bukkit.command.CommandSender
 import org.bukkit.plugin.java.JavaPlugin
@@ -14,9 +20,10 @@ import org.slf4j.Logger
 
 class CommandHandler(
     private val commands: List<Command>,
-    val disableAutoTabSelection: Boolean,
-    val disableAutoTabCompletion: Boolean,
-    val usageReplacementTemplates: Map<(String) -> Boolean, CommandConsumer.() -> List<String>>
+    val autoTabSelect: Boolean,
+    val autoTabCompletion: Boolean,
+    val usageReplacements: Map<(String) -> Boolean, CommandConsumer.() -> List<String>>,
+    val completionContributors: List<CompletionContributor>
 ) : KoinComponent {
     private val plugin: JavaPlugin by inject()
     private val logger: Logger by inject()
@@ -62,44 +69,37 @@ class CommandHandler(
     ): List<String> {
         val cmd = commands[alias] ?: return emptyList()
 
-        val result = mutableListOf<String>()
-
-        result.addAll(cmd.handleTabComplete(sender, alias, args))
-
-        if (disableAutoTabSelection)
-            return result
-
-        return result.filter {
-            if (args.lastOrNull().isNullOrBlank()) true else !it.matches("<.+>|\\[.+]|\\(.+\\)|\\.\\.\\.".toRegex())
-        }.filter {
-            it.startsWith(args.lastOrNull() ?: "")
-        }
+        return cmd.handleTabComplete(sender, alias, args)
     }
 
     class Builder {
         private val commands = mutableListOf<Command>()
-        private var disableAutoTabSelection = false
-        private var disableAutoTabCompletion = false
-        private val usageReplacementTemplates = mutableMapOf<(String) -> Boolean, CommandConsumer.() -> List<String>>()
-        //: Map<(String) -> Boolean, CommandConsumer.() -> List<String>>
+        private var autoTabSelect = true
+        private var autoTabCompletion = true
+        private val usageReplacements = mutableMapOf<(String) -> Boolean, CommandConsumer.() -> List<String>>()
+        var completionContributors = listOf(
+            BasicCompletionContributor(),
+            ChildrenCompletionContributor(),
+            UsageCompletionContributor()
+        )
 
-        fun disableAutoTabSelection() {
-            disableAutoTabSelection = true
+        fun disableAutoTabSelect() {
+            autoTabSelect = false
         }
 
         fun disableAutoTabCompletion() {
-            disableAutoTabCompletion = true
+            autoTabCompletion = false
         }
 
-        fun addUsageReplacementTemplate(
+        fun addUsageReplacement(
             templatePredicateProvider: (String) -> Boolean,
             resultProvider: CommandConsumer.() -> List<String>
         ) {
-            usageReplacementTemplates[templatePredicateProvider] = resultProvider
+            usageReplacements[templatePredicateProvider] = resultProvider
         }
 
-        fun addUsageReplacementTemplate(vararg template: String, resultProvider: CommandConsumer.() -> List<String>) {
-            usageReplacementTemplates[{ s ->
+        fun addUsageReplacement(vararg template: String, resultProvider: CommandConsumer.() -> List<String>) {
+            usageReplacements[{ s ->
                 arrayOf(*template).any { s.equals(it, true) }
             }] = resultProvider
         }
@@ -145,9 +145,10 @@ class CommandHandler(
 
         fun build() = CommandHandler(
             commands,
-            disableAutoTabSelection,
-            disableAutoTabCompletion,
-            usageReplacementTemplates
+            autoTabSelect,
+            autoTabCompletion,
+            usageReplacements,
+            completionContributors
         )
     }
 }

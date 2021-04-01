@@ -7,6 +7,8 @@ package kotx.minecraft.libs.flylib.command
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotx.minecraft.libs.flylib.command.internal.Permission
+import kotx.minecraft.libs.flylib.command.internal.Usage
 import kotx.minecraft.libs.flylib.get
 import kotx.minecraft.libs.flylib.send
 import net.md_5.bungee.api.ChatColor
@@ -126,44 +128,23 @@ abstract class Command(
             args.toList().toTypedArray()
         )
 
-        val r = children[args.firstOrNull() ?: ""]?.handleTabComplete(sender, alias, args.drop(1).toTypedArray())
-        if (r == null) {
-            val result = mutableListOf<String>()
-            if (!commandHandler.disableAutoTabCompletion)
-                result.addAll(children.map {
-                    it.name
-                } + usages.mapNotNull {
-                    it.context.split(" ").getOrNull(args.size)
-                }.flatMap {
-                    val templateReg1 = "<(.+?)>".toRegex()
-                    val templateReg2 = "\\[(.+?)]".toRegex()
-                    val templateReg3 = "\\((.+?)\\)".toRegex()
+        val subCommand = children[args.firstOrNull() ?: ""]
 
-                    val templateResult = templateReg1.find(it) ?: templateReg2.find(it) ?: templateReg3.find(it)
-                    val templateContentSplit = templateResult?.groupValues?.get(1)?.split("[/|]".toRegex())
-
-                    when {
-                        it.startsWith("<..") || it.startsWith("[..") || it.startsWith("(..") -> listOf("...")
-                        templateContentSplit?.size ?: 0 == 1 -> {
-                            val replacements =
-                                commandHandler.usageReplacementTemplates.filter { it.key(templateResult!!.groupValues[1]) }
-                                    .flatMap { it.value.invoke(consumer) }
-                            if (replacements.isEmpty()) listOf(it) else replacements
-                        }
-                        templateContentSplit?.size ?: 0 > 1 -> templateContentSplit!!.flatMap { s ->
-                            val replacements = commandHandler.usageReplacementTemplates.filter { it.key(s) }
-                                .flatMap { it.value.invoke(consumer) }
-                            if (replacements.isNotEmpty()) replacements else listOf(s)
-                        }
-                        else -> listOf(it)
-                    }
-                })
-
+        return if (subCommand == null) {
+            var result = mutableListOf<String>()
             result.addAll(consumer.tabComplete())
-            return result
-        }
 
-        return r
+            if (commandHandler.autoTabCompletion)
+                result.addAll(commandHandler.completionContributors.flatMap { it.suggest(this, consumer) })
+
+            if (commandHandler.autoTabSelect) commandHandler.completionContributors.forEach {
+                result = it.postProcess(result, this, consumer).toMutableList()
+            }
+
+            return result
+        } else {
+            subCommand.handleTabComplete(sender, alias, args.drop(1).toTypedArray())
+        }
     }
 
     /**
