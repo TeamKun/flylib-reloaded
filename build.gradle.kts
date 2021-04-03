@@ -48,7 +48,7 @@ afterEvaluate {
         publications {
             create<MavenPublication>("release") {
                 groupId = "kotx.minecraft.libs"
-                artifactId = "flylibreloaded"
+                artifactId = "FlyLib-Reloaded"
                 version = project.version.toString()
                 from(components["kotlin"])
             }
