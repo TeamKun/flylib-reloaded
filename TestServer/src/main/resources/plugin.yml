@@ -1,0 +1,4 @@
+name: TestPlugin
+version: 0.1
+author: Kotx
+main: kotx.minecraft.testserver.TestPlugin
