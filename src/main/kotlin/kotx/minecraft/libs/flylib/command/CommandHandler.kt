@@ -13,6 +13,7 @@ import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
 import kotx.minecraft.libs.flylib.get
 import org.bukkit.command.CommandSender
+import org.bukkit.permissions.PermissionDefault
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -29,6 +30,14 @@ class CommandHandler(
     private val logger: Logger by inject()
 
     fun initialize() {
+        logger.info("Registering command handling permission")
+        plugin.server.pluginManager.addPermission(
+            org.bukkit.permissions.Permission(
+                "flylib",
+                "flylib command handling permission.",
+                PermissionDefault.TRUE
+            )
+        )
         logger.info("Registering commands: (${commands.size})")
         commands.forEach {
             plugin.server.commandMap.register("flylib", object : org.bukkit.command.Command(it.name) {
@@ -46,10 +55,10 @@ class CommandHandler(
                 label = it.name
                 aliases = it.aliases
                 description = it.description
-                permission = "true"
-                permissionMessage = "You don't have permission to execute this command!"
+                permission = "flylib"
+                permissionMessage = "You can't execute ${it.name} command! (permission required)"
             })
-            logger.info("Registered command: ${it.name} - ${it.description}")
+            logger.info("Registered command: ${it.name}")
         }
         logger.info("Finished registering commands.")
     }
