@@ -5,8 +5,6 @@
 
 package kotx.minecraft.libs.flylib.command
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
 import kotx.minecraft.libs.flylib.get
@@ -21,8 +19,7 @@ import org.slf4j.LoggerFactory
 
 abstract class Command(
     val name: String
-) : CoroutineScope, KoinComponent {
-    override val coroutineContext = Dispatchers.Default
+) : KoinComponent {
     protected val logger = LoggerFactory.getLogger(this::class.java)!!
     protected val plugin by inject<JavaPlugin>()
     private val commandHandler by inject<CommandHandler>()
@@ -87,7 +84,6 @@ abstract class Command(
 
     private fun validate(sender: CommandSender): Boolean {
         if (sender !is Player) {
-            sender.sendMessage("Only the player can execute this command!")
             return true
         }
 
@@ -96,14 +92,16 @@ abstract class Command(
                 || permission == Permission.EVERYONE
 
         if (!canExecute) {
-            sender.sendMessage("You can't execute this command!")
             return true
         }
         return false
     }
 
     fun handleExecute(sender: CommandSender, label: String, args: Array<out String>) {
-        if (validate(sender)) return
+        if (validate(sender)) {
+            sender.sendMessage("You can't execute this command!")
+            return
+        }
         val consumer = CommandConsumer(
             sender as Player,
             sender.server,
