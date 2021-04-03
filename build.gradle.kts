@@ -23,9 +23,8 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation("org.koin:koin-core:2.2.2")
     implementation("org.koin:koin-core-ext:2.2.2")
-    implementation("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.4.2")
     implementation("ch.qos.logback", "logback-classic", "1.2.3")
-    implementation("com.destroystokyo.paper", "paper-api", "1.15.2-R0.1-SNAPSHOT")
+    implementation("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
 }
 
 tasks {
