@@ -17,7 +17,19 @@ class UsageCompletionContributor : CompletionContributor() {
             val templateContentSplit = templateResult?.groupValues?.get(1)?.split("[/|]".toRegex())
 
             when {
-                it.startsWith("<..") || it.startsWith("[..") || it.startsWith("(..") -> listOf("...")
+                it.startsWith("<..") || it.startsWith("[..") || it.startsWith("(..") -> {
+                    val before = command.usages.mapNotNull { it.context.split(" ").getOrNull(context.args.size - 1) }
+                        .mapNotNull {
+                            val tempResult = templateReg1.find(it) ?: templateReg2.find(it) ?: templateReg3.find(it)
+                            ?: return@mapNotNull null
+                            "${tempResult.groupValues[1]}.."
+                        }
+
+                    if (before.isNotEmpty())
+                        before
+                    else
+                        listOf("...")
+                }
                 templateContentSplit?.size ?: 0 == 1 -> {
                     val replacements = commandHandler.usageReplacements
                         .filter { it.key(templateResult!!.groupValues[1]) }
