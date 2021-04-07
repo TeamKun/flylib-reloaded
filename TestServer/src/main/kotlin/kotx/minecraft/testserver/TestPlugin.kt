@@ -2,6 +2,7 @@ package kotx.minecraft.testserver
 
 import kotx.minecraft.libs.flylib.command.Command
 import kotx.minecraft.libs.flylib.command.CommandConsumer
+import kotx.minecraft.libs.flylib.command.internal.Option
 import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
 import kotx.minecraft.libs.flylib.injectFlyLib
@@ -21,7 +22,12 @@ class TestPlugin : JavaPlugin() {
 class TestCommand : Command("test") {
     override val permission: Permission = Permission.EVERYONE
     override val usages: List<Usage> = listOf(
-        Usage("test <aaa/bbb/ccc> <user> <arg1> [..")
+        Usage(
+            "test <aaa/bbb/ccc> <user> <arg1> [..", options = listOf(
+                Option("opt", aliases = listOf("o")),
+                Option("tst", aliases = listOf("t")),
+            )
+        )
     )
 
     override fun CommandConsumer.execute() {
