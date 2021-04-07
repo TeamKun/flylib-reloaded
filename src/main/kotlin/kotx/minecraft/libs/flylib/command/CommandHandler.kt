@@ -8,6 +8,7 @@ package kotx.minecraft.libs.flylib.command
 import kotx.minecraft.libs.flylib.command.complete.CompletionContributor
 import kotx.minecraft.libs.flylib.command.complete.providers.BasicCompletionContributor
 import kotx.minecraft.libs.flylib.command.complete.providers.ChildrenCompletionContributor
+import kotx.minecraft.libs.flylib.command.complete.providers.OptionCompletionContributor
 import kotx.minecraft.libs.flylib.command.complete.providers.UsageCompletionContributor
 import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
@@ -90,7 +91,8 @@ class CommandHandler(
         var completionContributors = listOf(
             BasicCompletionContributor(),
             ChildrenCompletionContributor(),
-            UsageCompletionContributor()
+            UsageCompletionContributor(),
+            OptionCompletionContributor()
         )
 
         fun disableAutoTabSelect() {
