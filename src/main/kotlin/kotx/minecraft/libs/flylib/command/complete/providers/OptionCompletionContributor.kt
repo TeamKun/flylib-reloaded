@@ -7,7 +7,7 @@ import kotx.minecraft.libs.flylib.command.complete.CompletionContributor
 class OptionCompletionContributor : CompletionContributor() {
     override fun suggest(command: Command, consumer: CommandConsumer): List<String> {
         return command.usages.filter {
-            it.context.split(" ").size > consumer.args.size
+            consumer.args.size >= it.context.split(" ").size
         }.flatMap {
             it.options.map { it.name } + it.options.flatMap { it.aliases }
         }.map {
