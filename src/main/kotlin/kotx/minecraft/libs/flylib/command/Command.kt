@@ -159,6 +159,10 @@ abstract class Command(
      */
     protected open fun CommandConsumer.tabComplete(): List<String> = emptyList()
 
+    /**
+     * A method that sends command usage, aliases, examples, etc. to the user in the current context.
+     * It is supposed to be executed within execute.
+     */
     fun CommandConsumer.sendHelp() {
         var fullName = name
         fun Command.getFullName() {
