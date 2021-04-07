@@ -7,7 +7,8 @@ possible and easy to maintain.
 This mod is developed by [Kotx\_\_](https://twitter.com/kotx__)
 
 Just write as follows, tab completion according to usages, execution of subcommands, and generation of help commands
-will all be done.
+will all be done. There is no need for the user to register the command in plugin.yml. Fly Lib will automatically
+register everything in bukkit.
 
 [Preview](https://imgur.com/Wy5yUvI)
 
