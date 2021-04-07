@@ -45,8 +45,8 @@ class TestCommand : Command("test") {
 
 ## Requirements
 
-Minecraft: 1.15.2  
-Paper: 1.15.2-R0.1-SNAPSHOT
+Minecraft: 1.16.5  
+Paper: 1.16.5-R0.1-SNAPSHOT
 
 ## Installation
 
@@ -60,9 +60,11 @@ repositories {
 
 Add dependency
 
+[![](https://jitpack.io/v/TeamKun/FlyLib-Reloaded.svg)](https://jitpack.io/#TeamKun/FlyLib-Reloaded)
+
 ```gradle
 dependencies {
-    implementation 'com.github.TeamKun:FlyLib-Reloaded:<REPLACE_VERSION>'
+    implementation 'com.github.TeamKun:FlyLib-Reloaded:<RELEASE_VERSION>'
 }
 ```
 
