@@ -6,7 +6,6 @@
 package kotx.minecraft.libs.flylib.command
 
 import kotx.minecraft.libs.flylib.command.complete.CompletionContributor
-import kotx.minecraft.libs.flylib.command.complete.providers.BasicCompletionContributor
 import kotx.minecraft.libs.flylib.command.complete.providers.ChildrenCompletionContributor
 import kotx.minecraft.libs.flylib.command.complete.providers.OptionCompletionContributor
 import kotx.minecraft.libs.flylib.command.complete.providers.UsageCompletionContributor
@@ -89,7 +88,6 @@ class CommandHandler(
         private var autoTabCompletion = true
         private val usageReplacements = mutableMapOf<(String) -> Boolean, CommandConsumer.() -> List<String>>()
         var completionContributors = listOf(
-            BasicCompletionContributor(),
             ChildrenCompletionContributor(),
             UsageCompletionContributor(),
             OptionCompletionContributor()

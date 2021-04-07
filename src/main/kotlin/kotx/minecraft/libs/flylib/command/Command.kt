@@ -5,17 +5,19 @@
 
 package kotx.minecraft.libs.flylib.command
 
+import kotx.minecraft.libs.flylib.append
+import kotx.minecraft.libs.flylib.color
 import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
 import kotx.minecraft.libs.flylib.get
 import kotx.minecraft.libs.flylib.send
-import net.md_5.bungee.api.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.slf4j.LoggerFactory
+import java.awt.Color
 
 abstract class Command(
     val name: String
@@ -132,11 +134,11 @@ abstract class Command(
             var result = mutableListOf<String>()
             result.addAll(consumer.tabComplete())
 
-            if (commandHandler.autoTabCompletion)
-                result.addAll(commandHandler.completionContributors.flatMap { it.suggest(this, consumer) })
-
-            if (commandHandler.autoTabSelect) commandHandler.completionContributors.forEach {
-                result = it.postProcess(result, this, consumer).toMutableList()
+            commandHandler.completionContributors.forEach {
+                if (commandHandler.autoTabCompletion)
+                    result.addAll(it.suggest(this, consumer))
+                if (commandHandler.autoTabSelect)
+                    result = it.postProcess(result, this, consumer).toMutableList()
             }
 
             return result
@@ -183,19 +185,19 @@ abstract class Command(
         children.handleChildren()
 
         player.send {
-            append("-----------------------------------\n").color(ChatColor.GRAY)
-            append("Information of ").color(ChatColor.WHITE)
-            append("/$fullName\n").color(ChatColor.GREEN)
+            append("-----------------------------------\n").color(Color.GRAY)
+            append("Information of ").color(Color.WHITE)
+            append("/$fullName\n").color(Color.GREEN)
             if (description.isNotBlank()) {
-                append("Description: ").color(ChatColor.GRAY)
-                append(description + "\n").color(ChatColor.WHITE)
+                append("Description: ").color(Color.GRAY)
+                append(description + "\n").color(Color.WHITE)
             }
             if (aliases.isNotEmpty()) {
-                append("Aliases: ").color(ChatColor.GRAY)
-                append(aliases.joinToString(" ") + "\n").color(ChatColor.WHITE)
+                append("Aliases: ").color(Color.GRAY)
+                append(aliases.joinToString(" ") + "\n").color(Color.WHITE)
             }
             if (allUsages.isNotEmpty()) {
-                append("Usages:\n").color(ChatColor.GRAY)
+                append("Usages:\n").color(Color.GRAY)
                 allUsages.forEach { cmd, usages ->
                     usages.forEach {
                         fun Command.handleUsages(current: String): String = if (parent != null)
@@ -203,9 +205,9 @@ abstract class Command(
                         else
                             "/$current"
 
-                        append(cmd.handleUsages(it.context)).color(ChatColor.WHITE)
+                        append(cmd.handleUsages(it.context)).color(Color.WHITE)
                         if (it.description.isNotBlank())
-                            append(": ").append(it.description).color(ChatColor.GRAY)
+                            append(": ").append(it.description).color(Color.GRAY)
 
                         append("\n")
                         val aliasMap = it.options.map {
@@ -263,13 +265,13 @@ abstract class Command(
                 }
             }
             if (allExamples.isNotEmpty()) {
-                append("Examples:\n").color(ChatColor.GRAY)
+                append("Examples:\n").color(Color.GRAY)
                 allExamples.forEach {
                     append("/$it")
                     append("\n")
                 }
             }
-            append("-----------------------------------").color(ChatColor.GRAY)
+            append("-----------------------------------").color(Color.GRAY)
         }
     }
 }

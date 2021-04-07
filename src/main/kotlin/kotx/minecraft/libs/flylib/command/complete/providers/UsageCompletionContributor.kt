@@ -46,5 +46,5 @@ class UsageCompletionContributor : CompletionContributor() {
             if (consumer.args.lastOrNull()
                     .isNullOrBlank()
             ) true else !it.matches("<.+>|\\[.+]|\\(.+\\)|\\.\\.\\.".toRegex())
-        }
+        }.filter { it.startsWith(consumer.args.lastOrNull() ?: "", true) }
 }
