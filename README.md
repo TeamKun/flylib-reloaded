@@ -4,10 +4,44 @@
 [![](https://jitpack.io/v/TeamKun/FlyLib-Reloaded.svg)](https://jitpack.io/#TeamKun/FlyLib-Reloaded)  
 A utility librarry for Minecraft developed in Kotlin. We are developing it with the aim of making it as easy to write as
 possible and easy to maintain.  
-This mod is developed by [Kotx__](https://twitter.com/kotx__)
+This mod is developed by [Kotx\_\_](https://twitter.com/kotx__)
 
 Just write as follows, tab completion according to usages, execution of subcommands, and generation of help commands
 will all be done.
+
+[Preview](https://imgur.com/Wy5yUvI)
+
+Check the [Wiki](https://github.com/TeamKun/FlyLib-Reloaded/wiki/FlyLib-Reloaded-Docs:-Welcome) for more information.
+
+```kotlin
+class TestPlugin : JavaPlugin() {
+    val flyLib = injectFlyLib {
+        commandHandler {
+            registerCommand(TestCommand())
+            addUsageReplacement("user") {
+                server.onlinePlayers.mapNotNull { it.playerProfile.name }
+            }
+        }
+    }
+}
+
+class TestCommand : Command("test") {
+    override val permission: Permission = Permission.EVERYONE
+    override val usages: List<Usage> = listOf(
+        Usage(
+            "test <aaa/bbb/ccc> <user> <arg> [..", options = listOf(
+                Option("opt", "Option!!", aliases = listOf("o")),
+                Option("tst", "test", aliases = listOf("t")),
+                Option("hoge", "hogeeeeee", aliases = listOf("h", "hg")),
+            )
+        )
+    )
+
+    override fun CommandContext.execute() {
+        sendHelp()
+    }
+}
+```
 
 ## Requirements
 
