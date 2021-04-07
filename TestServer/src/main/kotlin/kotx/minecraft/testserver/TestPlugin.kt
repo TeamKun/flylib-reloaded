@@ -24,8 +24,9 @@ class TestCommand : Command("test") {
     override val usages: List<Usage> = listOf(
         Usage(
             "test <aaa/bbb/ccc> <user> <arg1> [..", options = listOf(
-                Option("opt", aliases = listOf("o")),
-                Option("tst", aliases = listOf("t")),
+                Option("opt", "Option!!", aliases = listOf("o")),
+                Option("tst", "test", aliases = listOf("t")),
+                Option("hoge", "hogeeeeee", aliases = listOf("h", "hg")),
             )
         )
     )

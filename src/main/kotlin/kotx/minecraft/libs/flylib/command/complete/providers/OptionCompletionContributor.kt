@@ -14,4 +14,14 @@ class OptionCompletionContributor : CompletionContributor() {
             if (it.length == 1) "-$it" else "--$it"
         }
     }
+
+    override fun postProcess(currentCompletion: List<String>, command: Command, context: CommandContext): List<String> {
+        val lastOption = "-([a-z]+)".toRegex(RegexOption.IGNORE_CASE).find(context.args.lastOrNull() ?: "")
+            ?: return currentCompletion.filter { it.startsWith(context.args.lastOrNull() ?: "", true) }
+        return currentCompletion.mapNotNull { "-([a-z])".toRegex(RegexOption.IGNORE_CASE).find(it) }.filter { r ->
+            lastOption.groupValues[1].none { it.toString() == r.groupValues[1] }
+        }.map {
+            "-${lastOption.groupValues[1]}${it.groupValues[1]}"
+        }
+    }
 }
