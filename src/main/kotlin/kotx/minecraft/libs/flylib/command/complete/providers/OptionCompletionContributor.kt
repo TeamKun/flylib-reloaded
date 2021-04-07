@@ -16,11 +16,12 @@ class OptionCompletionContributor : CompletionContributor() {
     }
 
     override fun postProcess(currentCompletion: List<String>, command: Command, context: CommandContext): List<String> {
-        val lastOption = "-([a-z]+)".toRegex(RegexOption.IGNORE_CASE).find(context.args.lastOrNull() ?: "")
+        val lastOption = "-([a-z]+)".toRegex(RegexOption.IGNORE_CASE).matchEntire(context.args.lastOrNull() ?: "")
             ?: return currentCompletion.filter { it.startsWith(context.args.lastOrNull() ?: "", true) }
-        return currentCompletion.mapNotNull { "-([a-z])".toRegex(RegexOption.IGNORE_CASE).find(it) }.filter { r ->
-            lastOption.groupValues[1].none { it.toString() == r.groupValues[1] }
-        }.map {
+        return currentCompletion.mapNotNull { "-([a-z])".toRegex(RegexOption.IGNORE_CASE).matchEntire(it) }
+            .filter { r ->
+                lastOption.groupValues[1].none { it.toString() == r.groupValues[1] }
+            }.map {
             "-${lastOption.groupValues[1]}${it.groupValues[1]}"
         }
     }
