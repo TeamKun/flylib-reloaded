@@ -1,15 +1,15 @@
 package kotx.minecraft.libs.flylib.command.complete
 
 import kotx.minecraft.libs.flylib.command.Command
-import kotx.minecraft.libs.flylib.command.CommandConsumer
+import kotx.minecraft.libs.flylib.command.CommandContext
 import kotx.minecraft.libs.flylib.command.CommandHandler
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 /**
  * A class that provides tab completion for commands.
- * It has suggest(command: Command, consumer: CommandConsumer): List<String> and
- * postProcess(currentCompletion: List<String>, command: Command, consumer: CommandConsumer): List<String>, each of which corresponds to autoTabSelect and autoTabCompletion of
+ * It has suggest(command: Command, context: CommandContext): List<String> and
+ * postProcess(currentCompletion: List<String>, command: Command, context: CommandContext): List<String>, each of which corresponds to autoTabSelect and autoTabCompletion of
  * Each of them corresponds to autoTabSelect and autoTabCompletion of CommandHandler.
  *
  * If these parameters are valid, the corresponding methods will be executed in the following order.
@@ -28,11 +28,11 @@ open class CompletionContributor : KoinComponent {
      * Executed only when auto Tab Completion of Command Handler is true.
      *
      * @param command Command to perform tab completion
-     * @param consumer Context to perform tab completion, player and arguments running, server, etc.
+     * @param context Context to perform tab completion, player and arguments running, server, etc.
      *
      * @return Tab completion list you want to add
      */
-    open fun suggest(command: Command, consumer: CommandConsumer): List<String> = emptyList()
+    open fun suggest(command: Command, context: CommandContext): List<String> = emptyList()
 
     /**
      * A method for adding, editing, filtering, etc. to the current suggest.
@@ -40,10 +40,10 @@ open class CompletionContributor : KoinComponent {
      *
      * @param currentCompletion Current tab completion list
      * @param command Command to perform tab completion
-     * @param consumer Context to perform tab completion, player and arguments running, server, etc.
+     * @param context Context to perform tab completion, player and arguments running, server, etc.
      *
      * @return The result of filtering the current Completion
      */
-    open fun postProcess(currentCompletion: List<String>, command: Command, consumer: CommandConsumer): List<String> =
+    open fun postProcess(currentCompletion: List<String>, command: Command, context: CommandContext): List<String> =
         currentCompletion
 }

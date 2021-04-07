@@ -23,7 +23,7 @@ class CommandHandler(
     private val commands: List<Command>,
     val autoTabSelect: Boolean,
     val autoTabCompletion: Boolean,
-    val usageReplacements: Map<(String) -> Boolean, CommandConsumer.() -> List<String>>,
+    val usageReplacements: Map<(String) -> Boolean, CommandContext.() -> List<String>>,
     val completionContributors: List<CompletionContributor>
 ) : KoinComponent {
     private val plugin: JavaPlugin by inject()
@@ -86,7 +86,7 @@ class CommandHandler(
         private val commands = mutableListOf<Command>()
         private var autoTabSelect = true
         private var autoTabCompletion = true
-        private val usageReplacements = mutableMapOf<(String) -> Boolean, CommandConsumer.() -> List<String>>()
+        private val usageReplacements = mutableMapOf<(String) -> Boolean, CommandContext.() -> List<String>>()
         var completionContributors = listOf(
             ChildrenCompletionContributor(),
             UsageCompletionContributor(),
@@ -103,12 +103,12 @@ class CommandHandler(
 
         fun addUsageReplacement(
             templatePredicateProvider: (String) -> Boolean,
-            resultProvider: CommandConsumer.() -> List<String>
+            resultProvider: CommandContext.() -> List<String>
         ) {
             usageReplacements[templatePredicateProvider] = resultProvider
         }
 
-        fun addUsageReplacement(vararg template: String, resultProvider: CommandConsumer.() -> List<String>) {
+        fun addUsageReplacement(vararg template: String, resultProvider: CommandContext.() -> List<String>) {
             usageReplacements[{ s ->
                 arrayOf(*template).any { s.equals(it, true) }
             }] = resultProvider
@@ -132,8 +132,8 @@ class CommandHandler(
             examples: List<String> = emptyList(),
             permission: Permission = Permission.OP,
             children: List<Command> = emptyList(),
-            tabComplete: CommandConsumer.() -> List<String> = { emptyList() },
-            execute: CommandConsumer.() -> Unit
+            tabComplete: CommandContext.() -> List<String> = { emptyList() },
+            execute: CommandContext.() -> Unit
         ) {
             object : Command(name) {
                 override val description: String = description
@@ -143,9 +143,9 @@ class CommandHandler(
                 override val permission: Permission = permission
                 override val children: List<Command> = children
 
-                override fun CommandConsumer.tabComplete(): List<String> = tabComplete()
+                override fun CommandContext.tabComplete(): List<String> = tabComplete()
 
-                override fun CommandConsumer.execute() {
+                override fun CommandContext.execute() {
                     execute()
                 }
             }.also {

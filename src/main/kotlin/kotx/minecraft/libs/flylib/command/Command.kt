@@ -27,7 +27,7 @@ abstract class Command(
     private val commandHandler by inject<CommandHandler>()
 
     /**
-     * Command description. It is automatically displayed as a description when you execute sendHelp() from within the CommandConsumer.
+     * Command description. It is automatically displayed as a description when you execute sendHelp() from within the CommandContext.
      * By default, it is set to blank
      * You can also write the description over multiple lines. In that case, it will be automatically formatted by sendHelp().
      */
@@ -39,12 +39,12 @@ abstract class Command(
     open val aliases: List<String> = listOf()
 
     /**
-     * How to use the command. It is automatically formatted and displayed when you use sendHelp() in CommandConsumer.
+     * How to use the command. It is automatically formatted and displayed when you use sendHelp() in CommandContext.
      */
     open val usages: List<Usage> = listOf()
 
     /**
-     * Command usage example. It is displayed in a list when you use sendHelp() in CommandConsumer.
+     * Command usage example. It is displayed in a list when you use sendHelp() in CommandContext.
      */
     open val examples: List<String> = listOf()
 
@@ -104,7 +104,7 @@ abstract class Command(
             sender.sendMessage("You can't execute this command!")
             return
         }
-        val consumer = CommandConsumer(
+        val context = CommandContext(
             sender as Player,
             sender.server,
             "$label ${args.joinToString(" ")}",
@@ -112,7 +112,7 @@ abstract class Command(
         )
 
         children[args.firstOrNull() ?: ""]?.handleExecute(sender, label, args.drop(1).toTypedArray())
-            ?: consumer.execute()
+            ?: context.execute()
     }
 
     fun handleTabComplete(
@@ -121,7 +121,7 @@ abstract class Command(
         args: Array<out String>
     ): List<String> {
         if (validate(sender)) return emptyList()
-        val consumer = CommandConsumer(
+        val context = CommandContext(
             sender as Player,
             sender.server,
             "$alias ${args.joinToString(" ")}",
@@ -132,13 +132,13 @@ abstract class Command(
 
         return if (subCommand == null) {
             var result = mutableListOf<String>()
-            result.addAll(consumer.tabComplete())
+            result.addAll(context.tabComplete())
 
             commandHandler.completionContributors.forEach {
                 if (commandHandler.autoTabCompletion)
-                    result.addAll(it.suggest(this, consumer))
+                    result.addAll(it.suggest(this, context))
                 if (commandHandler.autoTabSelect)
-                    result = it.postProcess(result, this, consumer).toMutableList()
+                    result = it.postProcess(result, this, context).toMutableList()
             }
 
             return result
@@ -151,19 +151,19 @@ abstract class Command(
      * Called when this command is executed. Since FlyLib has completed the authority check etc., please describe only the execution part.
      * Of course, this is not the case if you implement your own permission check.
      */
-    protected abstract fun CommandConsumer.execute()
+    protected abstract fun CommandContext.execute()
 
     /**
      * Where to implement tab completion. FlyLib automatically sorts and selects according to the user's input, so you only need to provide the list according to the size of the argument.
      * To disable the FlyLib auto tab selection feature, set disableAutoTabSelection to true in the injectFlyLib in commandHandler.
      */
-    protected open fun CommandConsumer.tabComplete(): List<String> = emptyList()
+    protected open fun CommandContext.tabComplete(): List<String> = emptyList()
 
     /**
      * A method that sends command usage, aliases, examples, etc. to the user in the current context.
      * It is supposed to be executed within execute.
      */
-    fun CommandConsumer.sendHelp() {
+    fun CommandContext.sendHelp() {
         var fullName = name
         fun Command.getFullName() {
             if (parent != null) {

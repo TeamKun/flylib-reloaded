@@ -1,7 +1,7 @@
 package kotx.minecraft.testserver
 
 import kotx.minecraft.libs.flylib.command.Command
-import kotx.minecraft.libs.flylib.command.CommandConsumer
+import kotx.minecraft.libs.flylib.command.CommandContext
 import kotx.minecraft.libs.flylib.command.internal.Option
 import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
@@ -30,7 +30,7 @@ class TestCommand : Command("test") {
         )
     )
 
-    override fun CommandConsumer.execute() {
+    override fun CommandContext.execute() {
         sendHelp()
     }
 }
