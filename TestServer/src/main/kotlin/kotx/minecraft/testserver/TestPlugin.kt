@@ -23,7 +23,7 @@ class TestCommand : Command("test") {
     override val permission: Permission = Permission.EVERYONE
     override val usages: List<Usage> = listOf(
         Usage(
-            "test <aaa/bbb/ccc> <user> <arg1> [..", options = listOf(
+            "test <aaa/bbb/ccc> <user> <arg> [..", options = listOf(
                 Option("opt", "Option!!", aliases = listOf("o")),
                 Option("tst", "test", aliases = listOf("t")),
                 Option("hoge", "hogeeeeee", aliases = listOf("h", "hg")),
