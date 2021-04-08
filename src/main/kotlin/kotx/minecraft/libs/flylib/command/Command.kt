@@ -9,21 +9,17 @@ import kotx.minecraft.libs.flylib.appendText
 import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
 import kotx.minecraft.libs.flylib.get
-import kotx.minecraft.libs.flylib.send
-import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import org.slf4j.LoggerFactory
 import java.awt.Color
 
 abstract class Command(
     val name: String
 ) : KoinComponent {
-    protected val logger = LoggerFactory.getLogger(this::class.java)!!
-    protected val plugin by inject<JavaPlugin>()
+    private val plugin by inject<JavaPlugin>()
     private val commandHandler by inject<CommandHandler>()
 
     /**
@@ -85,10 +81,6 @@ abstract class Command(
     var parent: Command? = null
 
     private fun validate(sender: CommandSender): Boolean {
-        if (sender !is Player) {
-            return true
-        }
-
         val canExecute = (permission == Permission.OP && sender.isOp)
                 || (permission == Permission.NOT_OP && !sender.isOp)
                 || permission == Permission.EVERYONE
@@ -104,8 +96,11 @@ abstract class Command(
             sender.sendMessage("You can't execute this command!")
             return
         }
+
         val context = CommandContext(
-            sender as Player,
+            plugin,
+            sender,
+            sender as? Player,
             sender.server,
             "$label ${args.joinToString(" ")}",
             args.toList().toTypedArray()
@@ -122,7 +117,9 @@ abstract class Command(
     ): List<String> {
         if (validate(sender)) return emptyList()
         val context = CommandContext(
-            sender as Player,
+            plugin,
+            sender,
+            sender as? Player,
             sender.server,
             "$alias ${args.joinToString(" ")}",
             args.toList().toTypedArray()
@@ -188,15 +185,7 @@ abstract class Command(
 
         children.handleChildren()
 
-        player.send {
-            appendText("something ")
-            appendText("red ", Color.RED)
-            appendText("blue ", Color.BLUE)
-            appendText("bold ", TextDecoration.BOLD)
-            appendText("italic ", TextDecoration.ITALIC)
-        }
-
-        player.send {
+        send {
             /**
             ---------------------------------
             /help(h): Show all commands list and usages.
