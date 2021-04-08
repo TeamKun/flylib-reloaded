@@ -1,7 +1,7 @@
 # FlyLib Reloaded
 
-![Java CI with Gradle](https://github.com/TeamKun/FlyLib-Reloaded/workflows/Java%20CI%20with%20Gradle/badge.svg)  
-[![](https://jitpack.io/v/TeamKun/FlyLib-Reloaded.svg)](https://jitpack.io/#TeamKun/FlyLib-Reloaded)  
+![Java CI with Gradle](https://github.com/TeamKun/flylib-reloaded/workflows/Java%20CI%20with%20Gradle/badge.svg)  
+[![](https://jitpack.io/v/TeamKun/flylib-reloaded.svg)](https://jitpack.io/#TeamKun/flylib-reloaded)  
 A utility librarry for Minecraft developed in Kotlin. We are developing it with the aim of making it as easy to write as
 possible and easy to maintain.  
 This mod is developed by [Kotx\_\_](https://twitter.com/kotx__)
@@ -12,7 +12,7 @@ register everything in bukkit.
 
 **[Preview](https://imgur.com/Wy5yUvI)**
 
-Check the **[Wiki](https://github.com/TeamKun/FlyLib-Reloaded/wiki/FlyLib-Reloaded-Docs:-Welcome)** for more
+Check the **[Wiki](https://github.com/TeamKun/flylib-reloaded/wiki/FlyLib-Reloaded-Docs:-Welcome)** for more
 information.
 
 ```kotlin
@@ -62,14 +62,14 @@ repositories {
 
 Add dependency
 
-[![](https://jitpack.io/v/TeamKun/FlyLib-Reloaded.svg)](https://jitpack.io/#TeamKun/FlyLib-Reloaded)
+[![](https://jitpack.io/v/TeamKun/flylib-reloaded.svg)](https://jitpack.io/#TeamKun/flylib-reloaded)
 
 ```gradle
 dependencies {
-    implementation 'com.github.TeamKun:FlyLib-Reloaded:<RELEASE_VERSION>'
+    implementation 'com.github.TeamKun:flylib-reloaded:<RELEASE_VERSION>'
 }
 ```
 
 ## License
 
-[MIT](https://github.com/TeamKun/FlyLib-Reloaded/blob/master/LICENSE)
+[MIT](https://github.com/TeamKun/flylib-reloaded/blob/master/LICENSE)
