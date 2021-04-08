@@ -2,6 +2,8 @@ name: Release Drafter
 
 on:
   push:
+    tags:
+      - 'v*.*.*'
     branches:
       - master
 
@@ -9,6 +11,12 @@ jobs:
   update_release_draft:
     runs-on: ubuntu-latest
     steps:
-      - uses: release-drafter/release-drafter@v5
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Release
+        uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          prerelease: false
+          draft: false
