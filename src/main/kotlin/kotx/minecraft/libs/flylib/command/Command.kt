@@ -5,12 +5,12 @@
 
 package kotx.minecraft.libs.flylib.command
 
-import kotx.minecraft.libs.flylib.append
-import kotx.minecraft.libs.flylib.color
+import kotx.minecraft.libs.flylib.appendText
 import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
 import kotx.minecraft.libs.flylib.get
 import kotx.minecraft.libs.flylib.send
+import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
@@ -189,93 +189,104 @@ abstract class Command(
         children.handleChildren()
 
         player.send {
-            append("-----------------------------------\n").color(Color.GRAY)
-            append("Information of ").color(Color.WHITE)
-            append("/$fullName\n").color(Color.GREEN)
-            if (description.isNotBlank()) {
-                append("Description: ").color(Color.GRAY)
-                append(description + "\n").color(Color.WHITE)
-            }
+            appendText("something ")
+            appendText("red ", Color.RED)
+            appendText("blue ", Color.BLUE)
+            appendText("bold ", TextDecoration.BOLD)
+            appendText("italic ", TextDecoration.ITALIC)
+        }
+
+        player.send {
+            /**
+            ---------------------------------
+            /help(h): Show all commands list and usages.
+            Usage: /help - Show all commands list
+            Usages:
+            /help - Show all commands list
+            /help <command> - Show usages of <command>.
+
+            Examples:
+            /help
+            /help ban
+            ----------------------------------
+             */
+            val textColor = Color.CYAN
+            appendText("-----------------------------------\n", Color.DARK_GRAY)
+            appendText("/$fullName", textColor)
             if (aliases.isNotEmpty()) {
-                append("Aliases: ").color(Color.GRAY)
-                append(aliases.joinToString(" ") + "\n").color(Color.WHITE)
+                appendText("(", Color.WHITE)
+                aliases.forEachIndexed { i, it ->
+                    appendText(it, textColor)
+                    if (i < aliases.size - 1)
+                        appendText(", ", Color.WHITE)
+                }
+                appendText(")", Color.WHITE)
             }
-            if (allUsages.isNotEmpty()) {
-                append("Usages:\n").color(Color.GRAY)
-                allUsages.forEach { cmd, usages ->
-                    usages.forEach {
-                        fun Command.handleUsages(current: String): String = if (parent != null)
-                            parent!!.handleUsages("${parent!!.name} $current")
-                        else
-                            "/$current"
 
-                        append(cmd.handleUsages(it.context)).color(Color.WHITE)
-                        if (it.description.isNotBlank())
-                            append(": ").append(it.description).color(Color.GRAY)
+            if (description.isNotEmpty()) {
+                appendText(": ", Color.WHITE)
+                appendText(description, textColor)
+            }
 
-                        append("\n")
-                        val aliasMap = it.options.map {
-                            it.aliases.joinToString(", ") {
-                                if (it.length == 1)
-                                    "-$it"
-                                else
-                                    "--$it"
-                            }
+            appendText("\n")
+
+            fun Command.handleUsages(current: String): String = if (parent != null)
+                parent!!.handleUsages("${parent!!.name} $current")
+            else
+                "/$current"
+
+            when (allUsages.values.flatten().size) {
+                0 -> {
+                }
+                1 -> {
+                    val usage = allUsages.values.flatten().first()
+                    val cmd = allUsages.keys.first()
+
+                    appendText("Usage: ", Color.WHITE)
+                    appendText(cmd.handleUsages(usage.context), textColor)
+                    if (usage.description.isNotEmpty()) {
+                        appendText(" - ", Color.WHITE)
+                        appendText(usage.description, textColor)
+                    }
+
+                    appendText("\n")
+                }
+                else -> {
+                    appendText("Usages:\n", Color.WHITE)
+                    allUsages.flatMap { (cmd, usages) ->
+                        usages.map { cmd.handleUsages(it.context) to it.description }
+                    }.toMap().forEach { (usg, desc) ->
+                        appendText(usg, textColor)
+                        if (desc.isNotEmpty()) {
+                            appendText(" - ", Color.WHITE)
+                            appendText(desc, textColor)
                         }
-
-                        val nameMap = it.options.map {
-                            if (it.name.length == 1)
-                                "-${it.name}"
-                            else
-                                "--${it.name}"
-                        }
-
-                        it.options.forEach {
-                            append("    ")
-                            if (it.aliases.isNotEmpty()) {
-                                val len = aliasMap.maxByOrNull { it.length }?.length ?: 0
-                                val aliases = it.aliases.joinToString(", ") {
-                                    if (it.length == 1)
-                                        "-$it"
-                                    else
-                                        "--$it"
-                                }
-                                append(aliases)
-                                repeat(len - aliases.length) {
-                                    append(" ")
-                                }
-                                append(", ")
-                            }
-
-                            val len = nameMap.maxByOrNull { it.length }?.length ?: 0
-                            val name = if (it.name.length == 1)
-                                "-${it.name}"
-                            else
-                                "--${it.name}"
-                            append(name)
-                            repeat(len - name.length) {
-                                append(" ")
-                            }
-                            if (it.description.isNotBlank()) {
-                                append(": ")
-                                append(it.description)
-                            }
-                            if (it.required)
-                                append(" (required)")
-                            append("\n")
-                        }
-                        append("\n")
+                        appendText("\n")
                     }
                 }
             }
-            if (allExamples.isNotEmpty()) {
-                append("Examples:\n").color(Color.GRAY)
-                allExamples.forEach {
-                    append("/$it")
-                    append("\n")
+
+            when (allExamples.size) {
+                0 -> {
+
+                }
+
+                1 -> {
+                    appendText("Example: ", Color.WHITE)
+                    appendText("/${allExamples.first()}\n", textColor)
+                }
+
+                else -> {
+                    appendText("Examples:\n", Color.WHITE)
+                    allExamples.forEachIndexed { i, it ->
+                        appendText("/$it", textColor)
+                        if (i < allExamples.size)
+                            appendText("\n")
+                    }
                 }
             }
-            append("-----------------------------------").color(Color.GRAY)
+
+            appendText("-----------------------------------", Color.DARK_GRAY)
         }
     }
 }
