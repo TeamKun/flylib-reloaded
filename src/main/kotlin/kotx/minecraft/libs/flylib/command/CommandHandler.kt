@@ -33,8 +33,19 @@ class CommandHandler(
         logger.info("Registering command handling permission")
         plugin.server.pluginManager.addPermission(
             org.bukkit.permissions.Permission(
-                "flylib",
-                "flylib command handling permission.",
+                "flylib.op",
+                PermissionDefault.OP
+            )
+        )
+        plugin.server.pluginManager.addPermission(
+            org.bukkit.permissions.Permission(
+                "flylib.notop",
+                PermissionDefault.NOT_OP
+            )
+        )
+        plugin.server.pluginManager.addPermission(
+            org.bukkit.permissions.Permission(
+                "flylib.everyone",
                 PermissionDefault.TRUE
             )
         )
@@ -55,7 +66,11 @@ class CommandHandler(
                 label = it.name
                 aliases = it.aliases
                 description = it.description
-                permission = "flylib"
+                permission = when (it.permission) {
+                    Permission.OP -> "flylib.op"
+                    Permission.NOT_OP -> "flylib.notop"
+                    Permission.EVERYONE -> "flylib.everyone"
+                }
                 permissionMessage = "You can't execute ${it.name} command! (permission required)"
             })
             logger.info("Registered command: ${it.name}")
