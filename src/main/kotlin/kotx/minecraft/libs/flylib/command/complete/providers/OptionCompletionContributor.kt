@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2021 kotx__.
+ * Twitter: https://twitter.com/kotx__
+ */
+
 package kotx.minecraft.libs.flylib.command.complete.providers
 
 import kotx.minecraft.libs.flylib.command.Command
@@ -22,7 +27,7 @@ class OptionCompletionContributor : CompletionContributor() {
             .filter { r ->
                 lastOption.groupValues[1].none { it.toString() == r.groupValues[1] }
             }.map {
-            "-${lastOption.groupValues[1]}${it.groupValues[1]}"
-        }
+                "-${lastOption.groupValues[1]}${it.groupValues[1]}"
+            }
     }
 }
