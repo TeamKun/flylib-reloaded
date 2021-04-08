@@ -51,6 +51,11 @@ abstract class Command(
     open val permission: Permission = Permission.OP
 
     /**
+     * Can only the player execute this command? By default it can also be run from the server console. (default: false)
+     */
+    open val playerOnly: Boolean = false
+
+    /**
      * A subcommand of this command. If the string entered as an argument matches the name or alias of these commands, the matching command will be executed.
      * This command will only be executed if there is no match.
      *
@@ -81,18 +86,23 @@ abstract class Command(
     var parent: Command? = null
 
     private fun validate(sender: CommandSender): Boolean {
-        val canExecute = (permission == Permission.OP && sender.isOp)
-                || (permission == Permission.NOT_OP && !sender.isOp)
-                || permission == Permission.EVERYONE
-
-        if (!canExecute) {
-            return true
+        val validPermission = when (permission) {
+            Permission.OP -> sender.isOp
+            Permission.NOT_OP -> !sender.isOp
+            Permission.EVERYONE -> true
         }
-        return false
+
+        if (!validPermission) return false
+
+        val validSender = !playerOnly || playerOnly && sender is Player
+
+        if (!validSender) return false
+
+        return true
     }
 
     fun handleExecute(sender: CommandSender, label: String, args: Array<out String>) {
-        if (validate(sender)) {
+        if (!validate(sender)) {
             sender.sendMessage("You can't execute this command!")
             return
         }
