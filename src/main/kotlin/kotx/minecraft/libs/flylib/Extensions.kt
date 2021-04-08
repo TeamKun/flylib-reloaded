@@ -13,6 +13,7 @@ import net.kyori.adventure.text.format.Style
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.command.CommandSender
+import org.bukkit.plugin.java.JavaPlugin
 import java.awt.Color
 
 operator fun List<Command>.get(query: String) =
@@ -29,3 +30,37 @@ fun TextComponent.Builder.appendText(text: String, decoration: TextDecoration): 
     append(Component.text(text).decorate(decoration))
 
 fun TextComponent.color(color: Color) = color(TextColor.color(color.red, color.green, color.blue))
+
+
+fun CommandSender.sendPluginMessage(plugin: JavaPlugin, block: TextComponent.Builder.() -> Unit) {
+    send {
+        appendText("[", Color.GRAY)
+        appendText(plugin.name, Color.RED)
+        appendText("] ", Color.GRAY)
+        apply(block)
+    }
+}
+
+fun CommandSender.sendPluginMessage(plugin: JavaPlugin, text: String) {
+    sendPluginMessage(plugin) {
+        appendText(text, Color.WHITE)
+    }
+}
+
+fun CommandSender.sendErrorMessage(plugin: JavaPlugin, text: String) {
+    sendPluginMessage(plugin) {
+        appendText(text, Color.RED)
+    }
+}
+
+fun CommandSender.sendWarnMessage(plugin: JavaPlugin, text: String) {
+    sendPluginMessage(plugin) {
+        appendText(text, Color.YELLOW)
+    }
+}
+
+fun CommandSender.sendSuccessMessage(plugin: JavaPlugin, text: String) {
+    sendPluginMessage(plugin) {
+        appendText(text, Color.GREEN)
+    }
+}
