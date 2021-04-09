@@ -21,6 +21,7 @@ import org.bukkit.plugin.java.JavaPlugin
  * which improves the visibility.
  */
 class CommandContext(
+    val command: Command,
     val plugin: JavaPlugin,
     val sender: CommandSender,
     val player: Player?,

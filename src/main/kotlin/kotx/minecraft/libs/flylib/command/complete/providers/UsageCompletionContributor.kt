@@ -5,13 +5,12 @@
 
 package kotx.minecraft.libs.flylib.command.complete.providers
 
-import kotx.minecraft.libs.flylib.command.Command
 import kotx.minecraft.libs.flylib.command.CommandContext
 import kotx.minecraft.libs.flylib.command.complete.CompletionContributor
 
 class UsageCompletionContributor : CompletionContributor() {
-    override fun suggest(command: Command, context: CommandContext): List<String> {
-        return command.usages.mapNotNull {
+    override fun suggest(context: CommandContext): List<String> {
+        return context.command.usages.mapNotNull {
             it.context.split(" ").getOrNull(context.args.size)
         }.flatMap {
             val templateReg1 = "<(.+?)>".toRegex()
@@ -46,7 +45,6 @@ class UsageCompletionContributor : CompletionContributor() {
 
     override fun postProcess(
         currentCompletion: List<String>,
-        command: Command,
         context: CommandContext
     ): List<String> =
         currentCompletion.filter {

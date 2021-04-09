@@ -5,13 +5,12 @@
 
 package kotx.minecraft.libs.flylib.command.complete.providers
 
-import kotx.minecraft.libs.flylib.command.Command
 import kotx.minecraft.libs.flylib.command.CommandContext
 import kotx.minecraft.libs.flylib.command.complete.CompletionContributor
 
 class OptionCompletionContributor : CompletionContributor() {
-    override fun suggest(command: Command, context: CommandContext): List<String> {
-        return command.usages.filter {
+    override fun suggest(context: CommandContext): List<String> {
+        return context.command.usages.filter {
             context.args.size >= it.context.split(" ").size
         }.flatMap {
             it.options.map { it.name } + it.options.flatMap { it.aliases }
@@ -20,7 +19,7 @@ class OptionCompletionContributor : CompletionContributor() {
         }
     }
 
-    override fun postProcess(currentCompletion: List<String>, command: Command, context: CommandContext): List<String> {
+    override fun postProcess(currentCompletion: List<String>, context: CommandContext): List<String> {
         val lastOption = "-([a-z]+)".toRegex(RegexOption.IGNORE_CASE).matchEntire(context.args.lastOrNull() ?: "")
             ?: return currentCompletion.filter { it.startsWith(context.args.lastOrNull() ?: "", true) }
         return currentCompletion.mapNotNull { "-([a-z])".toRegex(RegexOption.IGNORE_CASE).matchEntire(it) }

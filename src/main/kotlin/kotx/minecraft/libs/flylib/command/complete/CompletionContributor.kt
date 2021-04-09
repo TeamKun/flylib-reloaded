@@ -5,7 +5,6 @@
 
 package kotx.minecraft.libs.flylib.command.complete
 
-import kotx.minecraft.libs.flylib.command.Command
 import kotx.minecraft.libs.flylib.command.CommandContext
 import kotx.minecraft.libs.flylib.command.CommandHandler
 import org.koin.core.component.KoinComponent
@@ -32,23 +31,21 @@ open class CompletionContributor : KoinComponent {
      * A method that provides a list of tab completions.
      * Executed only when auto Tab Completion of Command Handler is true.
      *
-     * @param command Command to perform tab completion
      * @param context Context to perform tab completion, player and arguments running, server, etc.
      *
      * @return Tab completion list you want to add
      */
-    open fun suggest(command: Command, context: CommandContext): List<String> = emptyList()
+    open fun suggest(context: CommandContext): List<String> = emptyList()
 
     /**
      * A method for adding, editing, filtering, etc. to the current suggest.
      * Executed only when auto Tab Select of Command Handler is true.
      *
      * @param currentCompletion Current tab completion list
-     * @param command Command to perform tab completion
      * @param context Context to perform tab completion, player and arguments running, server, etc.
      *
      * @return The result of filtering the current Completion
      */
-    open fun postProcess(currentCompletion: List<String>, command: Command, context: CommandContext): List<String> =
+    open fun postProcess(currentCompletion: List<String>, context: CommandContext): List<String> =
         currentCompletion
 }
