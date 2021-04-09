@@ -143,9 +143,9 @@ abstract class Command(
 
             commandHandler.completionContributors.forEach {
                 if (commandHandler.autoTabCompletion)
-                    result.addAll(it.suggest(this, context))
+                    result.addAll(it.suggest(context))
                 if (commandHandler.autoTabSelect)
-                    result = it.postProcess(result, this, context).toMutableList()
+                    result = it.postProcess(result, context).toMutableList()
             }
 
             return result
