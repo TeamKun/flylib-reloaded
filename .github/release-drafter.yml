@@ -28,6 +28,5 @@ template: |
   ## Contributions
   $CONTRIBUTORS
     
-  ---
   ## ChangeLog
   $CHANGES
