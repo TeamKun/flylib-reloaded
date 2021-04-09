@@ -23,44 +23,51 @@ fun CommandSender.send(block: TextComponent.Builder.() -> Unit) {
     sendMessage(Component.text().apply(block).build(), MessageType.CHAT)
 }
 
-fun TextComponent.Builder.appendText(text: String): TextComponent.Builder = append(Component.text(text))
-fun TextComponent.Builder.appendText(text: String, color: Color): TextComponent.Builder = append(Component.text(text).color(color))
-fun TextComponent.Builder.appendText(text: String, style: Style): TextComponent.Builder = append(Component.text(text).style(style))
-fun TextComponent.Builder.appendText(text: String, decoration: TextDecoration): TextComponent.Builder =
+fun TextComponent.Builder.append(text: String): TextComponent.Builder = append(Component.text(text))
+fun TextComponent.Builder.append(text: String, color: Color): TextComponent.Builder = append(Component.text(text).color(color))
+fun TextComponent.Builder.append(text: String, style: Style): TextComponent.Builder = append(Component.text(text).style(style))
+fun TextComponent.Builder.append(text: String, decoration: TextDecoration): TextComponent.Builder =
     append(Component.text(text).decorate(decoration))
+
+fun TextComponent.Builder.appendln(text: String): TextComponent.Builder = append("$text\n")
+fun TextComponent.Builder.appendln(text: String, color: Color): TextComponent.Builder = append("$text\n", color)
+fun TextComponent.Builder.appendln(text: String, style: Style): TextComponent.Builder = append("$text\n", style)
+fun TextComponent.Builder.appendln(text: String, decoration: TextDecoration): TextComponent.Builder = append("$text\n", decoration)
+
+fun TextComponent.Builder.appendln(): TextComponent.Builder = this@appendln.append("\n")
 
 fun TextComponent.color(color: Color) = color(TextColor.color(color.red, color.green, color.blue))
 
 
 fun CommandSender.sendPluginMessage(plugin: JavaPlugin, block: TextComponent.Builder.() -> Unit) {
     send {
-        appendText("[", Color.GRAY)
-        appendText(plugin.name, Color.RED)
-        appendText("] ", Color.GRAY)
+        append("[", Color.GRAY)
+        append(plugin.name, Color.RED)
+        append("] ", Color.GRAY)
         apply(block)
     }
 }
 
 fun CommandSender.sendPluginMessage(plugin: JavaPlugin, text: String) {
     sendPluginMessage(plugin) {
-        appendText(text, Color.WHITE)
+        append(text, Color.WHITE)
     }
 }
 
 fun CommandSender.sendErrorMessage(plugin: JavaPlugin, text: String) {
     sendPluginMessage(plugin) {
-        appendText(text, Color.RED)
+        append(text, Color.RED)
     }
 }
 
 fun CommandSender.sendWarnMessage(plugin: JavaPlugin, text: String) {
     sendPluginMessage(plugin) {
-        appendText(text, Color.YELLOW)
+        append(text, Color.YELLOW)
     }
 }
 
 fun CommandSender.sendSuccessMessage(plugin: JavaPlugin, text: String) {
     sendPluginMessage(plugin) {
-        appendText(text, Color.GREEN)
+        append(text, Color.GREEN)
     }
 }

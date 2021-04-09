@@ -5,7 +5,7 @@
 
 package kotx.minecraft.libs.flylib.command
 
-import kotx.minecraft.libs.flylib.appendText
+import kotx.minecraft.libs.flylib.append
 import kotx.minecraft.libs.flylib.command.complete.CompletionContributor
 import kotx.minecraft.libs.flylib.command.complete.providers.ChildrenCompletionContributor
 import kotx.minecraft.libs.flylib.command.complete.providers.OptionCompletionContributor
@@ -162,24 +162,24 @@ class CommandHandler(
 
             send {
                 val textColor = Color.CYAN
-                appendText("-----------------------------------\n", Color.DARK_GRAY)
-                appendText("/$fullName", textColor)
+                append("-----------------------------------\n", Color.DARK_GRAY)
+                append("/$fullName", textColor)
                 if (command.aliases.isNotEmpty()) {
-                    appendText("(", Color.WHITE)
+                    append("(", Color.WHITE)
                     command.aliases.forEachIndexed { i, it ->
-                        appendText(it, textColor)
+                        append(it, textColor)
                         if (i < command.aliases.size - 1)
-                            appendText(", ", Color.WHITE)
+                            append(", ", Color.WHITE)
                     }
-                    appendText(")", Color.WHITE)
+                    append(")", Color.WHITE)
                 }
 
                 if (command.description.isNotEmpty()) {
-                    appendText(": ", Color.WHITE)
-                    appendText(command.description, textColor)
+                    append(": ", Color.WHITE)
+                    append(command.description, textColor)
                 }
 
-                appendText("\n")
+                append("\n")
 
                 fun Command.handleUsages(current: String): String = if (parent != null)
                     parent!!.handleUsages("${parent!!.name} $current")
@@ -193,26 +193,26 @@ class CommandHandler(
                         val usage = allUsages.values.flatten().first()
                         val cmd = allUsages.keys.first()
 
-                        appendText("Usage: ", Color.WHITE)
-                        appendText(cmd.handleUsages(usage.context), textColor)
+                        append("Usage: ", Color.WHITE)
+                        append(cmd.handleUsages(usage.context), textColor)
                         if (usage.description.isNotEmpty()) {
-                            appendText(" - ", Color.WHITE)
-                            appendText(usage.description, textColor)
+                            append(" - ", Color.WHITE)
+                            append(usage.description, textColor)
                         }
 
-                        appendText("\n")
+                        append("\n")
                     }
                     else -> {
-                        appendText("Usages:\n", Color.WHITE)
+                        append("Usages:\n", Color.WHITE)
                         allUsages.flatMap { (cmd, usages) ->
                             usages.map { cmd.handleUsages(it.context) to it.description }
                         }.toMap().forEach { (usg, desc) ->
-                            appendText(usg, textColor)
+                            append(usg, textColor)
                             if (desc.isNotEmpty()) {
-                                appendText(" - ", Color.WHITE)
-                                appendText(desc, textColor)
+                                append(" - ", Color.WHITE)
+                                append(desc, textColor)
                             }
-                            appendText("\n")
+                            append("\n")
                         }
                     }
                 }
@@ -223,21 +223,21 @@ class CommandHandler(
                     }
 
                     1 -> {
-                        appendText("Example: ", Color.WHITE)
-                        appendText("/${allExamples.first()}\n", textColor)
+                        append("Example: ", Color.WHITE)
+                        append("/${allExamples.first()}\n", textColor)
                     }
 
                     else -> {
-                        appendText("Examples:\n", Color.WHITE)
+                        append("Examples:\n", Color.WHITE)
                         allExamples.forEachIndexed { i, it ->
-                            appendText("/$it", textColor)
+                            append("/$it", textColor)
                             if (i < allExamples.size)
-                                appendText("\n")
+                                append("\n")
                         }
                     }
                 }
 
-                appendText("-----------------------------------", Color.DARK_GRAY)
+                append("-----------------------------------", Color.DARK_GRAY)
             }
         }
 
