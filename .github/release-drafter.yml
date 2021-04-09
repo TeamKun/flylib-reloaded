@@ -1,17 +1,16 @@
-name-template: 'v$RESOLVED_VERSION 🌈'
-tag-template: 'v$RESOLVED_VERSION'
+name-template: '$MAJOR.$MINOR.$PATCH'
+tag-template: '$MAJOR.$MINOR.$PATCH'
 categories:
-  - title: '🚀 Features'
+  - title: 'Features'
     labels:
       - 'feature'
       - 'add'
       - 'new'
-  - title: '🐛 Bug Fixes'
+  - title: 'Fixes'
     labels:
       - 'fix'
-  - title: '🧰 Maintenance'
+  - title: 'Workspace'
     labels:
-      - 'chore'
       - 'update'
       - 'environment'
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
@@ -27,8 +26,7 @@ version-resolver:
     labels:
       - 'patch'
 template: |
-  ## Contributions
-  $CONTRIBUTORS
-
   ## ChangeLog
-  $CHANGES
+    $CHANGES
+  ## Contributors
+  $CONTRIBUTORS
