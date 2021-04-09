@@ -5,7 +5,6 @@
 
 package kotx.minecraft.libs.flylib.command
 
-import kotx.minecraft.libs.flylib.appendText
 import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
 import kotx.minecraft.libs.flylib.get
@@ -14,7 +13,6 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import java.awt.Color
 
 abstract class Command(
     val name: String
@@ -27,7 +25,7 @@ abstract class Command(
      * By default, it is set to blank
      * You can also write the description over multiple lines. In that case, it will be automatically formatted by sendHelp().
      */
-    open val description: String = ""
+    open val description: String = commandHandler.defaultDescription
 
     /**
      * Command alias. A list of strings that can be used as abbreviations instead of using the official name of the command.
@@ -48,12 +46,12 @@ abstract class Command(
      * Permission to use the command. Permission.OP can be used only by OP, Permission.NOT_OP can be used by everyone except OP, and Permission.EVERYONE can be used by everyone.
      * By default, Permission.OP is specified.
      */
-    open val permission: Permission = Permission.OP
+    open val permission: Permission = commandHandler.defaultPermission
 
     /**
      * Can only the player execute this command? By default it can also be run from the server console. (default: false)
      */
-    open val playerOnly: Boolean = false
+    open val playerOnly: Boolean = commandHandler.defaultPlayerOnly
 
     /**
      * A subcommand of this command. If the string entered as an argument matches the name or alias of these commands, the matching command will be executed.
@@ -103,11 +101,12 @@ abstract class Command(
 
     fun handleExecute(sender: CommandSender, label: String, args: Array<out String>) {
         if (!validate(sender)) {
-            sender.sendMessage("You can't execute this command!")
+            sender.sendMessage(commandHandler.invalidCommandMessage(this))
             return
         }
 
         val context = CommandContext(
+            this,
             plugin,
             sender,
             sender as? Player,
@@ -127,6 +126,7 @@ abstract class Command(
     ): List<String> {
         if (validate(sender)) return emptyList()
         val context = CommandContext(
+            this,
             plugin,
             sender,
             sender as? Player,
@@ -171,121 +171,6 @@ abstract class Command(
      * It is supposed to be executed within execute.
      */
     fun CommandContext.sendHelp() {
-        var fullName = name
-        fun Command.getFullName() {
-            if (parent != null) {
-                fullName = "${parent!!.name} $fullName"
-                parent!!.getFullName()
-            }
-        }
-        getFullName()
-
-        val allUsages = mutableMapOf(
-            this@Command to usages
-        )
-        val allExamples = mutableListOf<String>()
-
-        fun List<Command>.handleChildren() {
-            forEach {
-                allUsages[it] = it.usages
-                allExamples.addAll(it.examples)
-                it.children.handleChildren()
-            }
-        }
-
-        children.handleChildren()
-
-        send {
-            /**
-            ---------------------------------
-            /help(h): Show all commands list and usages.
-            Usage: /help - Show all commands list
-            Usages:
-            /help - Show all commands list
-            /help <command> - Show usages of <command>.
-
-            Examples:
-            /help
-            /help ban
-            ----------------------------------
-             */
-            val textColor = Color.CYAN
-            appendText("-----------------------------------\n", Color.DARK_GRAY)
-            appendText("/$fullName", textColor)
-            if (aliases.isNotEmpty()) {
-                appendText("(", Color.WHITE)
-                aliases.forEachIndexed { i, it ->
-                    appendText(it, textColor)
-                    if (i < aliases.size - 1)
-                        appendText(", ", Color.WHITE)
-                }
-                appendText(")", Color.WHITE)
-            }
-
-            if (description.isNotEmpty()) {
-                appendText(": ", Color.WHITE)
-                appendText(description, textColor)
-            }
-
-            appendText("\n")
-
-            fun Command.handleUsages(current: String): String = if (parent != null)
-                parent!!.handleUsages("${parent!!.name} $current")
-            else
-                "/$current"
-
-            when (allUsages.values.flatten().size) {
-                0 -> {
-                }
-                1 -> {
-                    val usage = allUsages.values.flatten().first()
-                    val cmd = allUsages.keys.first()
-
-                    appendText("Usage: ", Color.WHITE)
-                    appendText(cmd.handleUsages(usage.context), textColor)
-                    if (usage.description.isNotEmpty()) {
-                        appendText(" - ", Color.WHITE)
-                        appendText(usage.description, textColor)
-                    }
-
-                    appendText("\n")
-                }
-                else -> {
-                    appendText("Usages:\n", Color.WHITE)
-                    allUsages.flatMap { (cmd, usages) ->
-                        usages.map { cmd.handleUsages(it.context) to it.description }
-                    }.toMap().forEach { (usg, desc) ->
-                        appendText(usg, textColor)
-                        if (desc.isNotEmpty()) {
-                            appendText(" - ", Color.WHITE)
-                            appendText(desc, textColor)
-                        }
-                        appendText("\n")
-                    }
-                }
-            }
-
-            when (allExamples.size) {
-                0 -> {
-
-                }
-
-                1 -> {
-                    appendText("Example: ", Color.WHITE)
-                    appendText("/${allExamples.first()}\n", textColor)
-                }
-
-                else -> {
-                    appendText("Examples:\n", Color.WHITE)
-                    allExamples.forEachIndexed { i, it ->
-                        appendText("/$it", textColor)
-                        if (i < allExamples.size)
-                            appendText("\n")
-                    }
-                }
-            }
-
-            appendText("-----------------------------------", Color.DARK_GRAY)
-        }
+        commandHandler.defaultSendHelp(this)
     }
 }
