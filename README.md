@@ -10,7 +10,8 @@ Just write as follows, tab completion according to usages, execution of subcomma
 will all be done. There is no need for the user to register the command in plugin.yml. Fly Lib will automatically
 register everything in bukkit.
 
-**[Preview](https://imgur.com/Wy5yUvI)**
+**[Preview](https://imgur.com/Wy5yUvI)**  
+**[Examples](https://github.com/TeamKun/flylib-reloaded/tree/master/TestServer)**
 
 Check the **[Wiki](https://github.com/TeamKun/flylib-reloaded/wiki/FlyLib-Reloaded-Docs:-Welcome)** for more
 information.
