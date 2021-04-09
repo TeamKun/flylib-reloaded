@@ -1,5 +1,5 @@
-name-template: '$MAJOR.$MINOR.$PATCH'
-tag-template: '$MAJOR.$MINOR.$PATCH'
+name-template: 'Latest Release'
+tag-template: 'Latest Release'
 categories:
   - title: 'Features'
     labels:
