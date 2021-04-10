@@ -1,0 +1,32 @@
+name: Create a release pull request
+on:
+  pull_request:
+    types: [ closed ]
+    branches:
+      - master
+
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: get-gradle-project-vesrion
+        id: gradle-project-version
+        uses: Kotlin-chan/get-gradle-project-version@0.0.1
+
+      - name: echo-gradle-version
+        run: |
+          echo ${{ steps.gradle-project-version.outputs.current-version }}
+
+      - name: Create a release
+        uses: bakunyo/git-pr-release-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_PR_RELEASE_BRANCH_PRODUCTION: release
+          GIT_PR_RELEASE_BRANCH_STAGING: master
+          GIT_PR_RELEASE_LABELS: release
+          GARDLE_PROJECT_VERSION: ${{ steps.gradle-project-version.outputs.current-version }}
+          GIT_PR_RELEASE_TEMPLATE: ./.github/.git-pr-release-template
