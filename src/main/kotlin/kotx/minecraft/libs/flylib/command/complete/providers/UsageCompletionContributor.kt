@@ -46,10 +46,12 @@ class UsageCompletionContributor : CompletionContributor() {
     override fun postProcess(
         currentCompletion: List<String>,
         context: CommandContext
-    ): List<String> =
+    ): List<String> = if (currentCompletion.isEmpty())
         currentCompletion.filter {
             if (context.args.lastOrNull()
                     .isNullOrBlank()
             ) true else !it.matches("<.+>|\\[.+]|\\(.+\\)|\\.\\.\\.".toRegex())
         }.filter { it.startsWith(context.args.lastOrNull() ?: "", true) }
+    else
+        currentCompletion.filter { !it.matches("<.+>|\\[.+]|\\(.+\\)|\\.\\.\\.".toRegex()) }
 }
