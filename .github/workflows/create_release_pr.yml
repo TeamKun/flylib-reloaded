@@ -16,9 +16,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: get-gradle-project-vesrion
+      - name: gradle-project-vesrion
         id: gradle-project-version
-        uses: Kotlin-chan/get-gradle-project-version@0.0.3
+        uses: Kotlin-chan/get-gradle-project-version@0.0.4
 
       - name: echo-gradle-version
         run: |
