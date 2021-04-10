@@ -2,19 +2,17 @@
 
 ![Java CI with Gradle](https://github.com/TeamKun/flylib-reloaded/workflows/Java%20CI%20with%20Gradle/badge.svg)  
 [![](https://jitpack.io/v/TeamKun/flylib-reloaded.svg)](https://jitpack.io/#TeamKun/flylib-reloaded)  
-A utility librarry for Minecraft developed in Kotlin. We are developing it with the aim of making it as easy to write as
-possible and easy to maintain.  
+A utility librarry for Minecraft developed in Kotlin. We are developing it with the aim of making it as easy to write as possible and easy to
+maintain.  
 This mod is developed by [Kotx\_\_](https://twitter.com/kotx__)
-
-Just write as follows, tab completion according to usages, execution of subcommands, and generation of help commands
-will all be done. There is no need for the user to register the command in plugin.yml. Fly Lib will automatically
-register everything in bukkit.
 
 **[Preview](https://imgur.com/Wy5yUvI)**  
 **[Examples](https://github.com/TeamKun/flylib-reloaded/tree/master/TestServer)**
 
-Check the **[Wiki](https://github.com/TeamKun/flylib-reloaded/wiki/FlyLib-Reloaded-Docs:-Welcome)** for more
-information.
+Check the **[Wiki](https://github.com/TeamKun/flylib-reloaded/wiki/FlyLib-Reloaded-Docs:-Welcome)** for more information.
+
+Just write as follows, tab completion according to usages, execution of subcommands, and generation of help commands will all be done. There is no
+need for the user to register the command in plugin.yml. Fly Lib will automatically register everything in bukkit.
 
 ```kotlin
 class TestPlugin : JavaPlugin() {
