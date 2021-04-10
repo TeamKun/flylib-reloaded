@@ -13,6 +13,8 @@ import kotx.minecraft.libs.flylib.command.internal.Usage
 import kotx.minecraft.libs.flylib.injectFlyLib
 import org.bukkit.plugin.java.JavaPlugin
 
+
+//Something updated
 class TestPlugin : JavaPlugin() {
     val flyLib = injectFlyLib {
         commandHandler {
