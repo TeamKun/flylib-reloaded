@@ -13,21 +13,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: get-gradle-project-vesrion
+        id: gradle-project-version
+        uses: Kotlin-chan/get-gradle-project-version@0.0.3
 
       - name: echo-gradle-version
         run: |
-          TARGET_FILE="./build.gradle"
-          if [ ! -e $TARGET_FILE ]; then
-              TARGET_FILE="./build.gradle.kts"
-              if [ ! -e $TARGET_FILE ]; then
-                  echo "Gradle configuration file not found!"
-                  exit
-              fi
-          fi
-
-          PROJECT_VERSION=cat $TARGET_FILE | grep -m 1 "version = " | awk 'match($0, /version = "(.+)"/, groups) { print groups[1] }'
-
-          echo $PROJECT_VERSION
+          echo ${{ steps.gradle-project-version.outputs.current-version }}
 
       - name: Create a release
         uses: bakunyo/git-pr-release-action@master
