@@ -18,7 +18,7 @@ jobs:
 
       - name: get-gradle-project-vesrion
         id: gradle-project-version
-        uses: Kotlin-chan/get-gradle-project-version@0.0.1
+        uses: Kotlin-chan/get-gradle-project-version@0.0.2
 
       - name: echo-gradle-version
         run: |
