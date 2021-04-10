@@ -71,3 +71,7 @@ fun CommandSender.sendSuccessMessage(plugin: JavaPlugin, text: String) {
         append(text, Color.GREEN)
     }
 }
+
+fun String.asTextComponent(color: Color = Color.WHITE) = Component.text(this, TextColor.color(color.red, color.green, color.blue))
+fun String.asTextComponent(style: Style) = Component.text(this, style)
+fun String.asTextComponent(decoration: TextDecoration) = Component.text(this, Style.style(decoration))
