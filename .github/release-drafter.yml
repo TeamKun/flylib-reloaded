@@ -1,5 +1,5 @@
-name-template: '$MAJOR.$MINOR.$PATCH'
-tag-template: '$MAJOR.$MINOR.$PATCH'
+name-template: 'FlyLib Reloaded v$RESOLVED_VERSION'
+tag-template: '$RESOLVED_VERSION'
 categories:
   - title: 'Features'
     labels:
@@ -9,9 +9,11 @@ categories:
   - title: 'Fixes'
     labels:
       - 'fix'
-  - title: 'Workspace'
+  - title: 'Update'
     labels:
       - 'update'
+  - title: 'Workspace'
+    labels:
       - 'environment'
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 change-title-escapes: '\<*_&' # You can add # and @ to disable mentions, and add ` to disable code blocks.
@@ -25,6 +27,7 @@ version-resolver:
   patch:
     labels:
       - 'patch'
+  default: patch
 template: |
   ## ChangeLog
     $CHANGES
