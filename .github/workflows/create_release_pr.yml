@@ -1,5 +1,8 @@
 name: Create a release pull request
 on:
+  push:
+    branches:
+      - master
   pull_request:
     types: [ closed ]
     branches:
