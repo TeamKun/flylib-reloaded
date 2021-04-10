@@ -18,8 +18,6 @@ jobs:
 
       - name: echo-gradle-version
         run: |
-          pwd
-          ls
           TARGET_FILE="./build.gradle"
           if [ ! -e $TARGET_FILE ]; then
               TARGET_FILE="./build.gradle.kts"
