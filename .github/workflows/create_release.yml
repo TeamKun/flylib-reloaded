@@ -1,26 +1,23 @@
 name: Create Release
-
 on:
-  pull_request:
-    types: [ closed ]
+  push:
+    tags:
+      - '*.*.*'
     branches:
-      - release
+      - master
 
 jobs:
-  build:
+  update_release_draft:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@master
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.event.pull_request.title }}
-          release_name: ${{ github.event.pull_request.title }}
-          body: ${{ github.event.pull_request.body }}
-          draft: false
+          name: FlyLib Reloaded
           prerelease: false
+          draft: false

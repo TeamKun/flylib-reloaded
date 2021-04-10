@@ -1,4 +1,0 @@
-<%= ENV['GRADLE_PROJECT_VERSION'] %>
-<% pull_requests.each do |pr| -%>
-<%=  pr.to_checklist_item %>
-<% end -%>
