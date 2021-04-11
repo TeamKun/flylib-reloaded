@@ -25,7 +25,7 @@ abstract class Command(
      * By default, it is set to blank
      * You can also write the description over multiple lines. In that case, it will be automatically formatted by sendHelp().
      */
-    open val description: String = commandHandler.defaultDescription
+    open val description: String by lazy { commandHandler.defaultDescription }
 
     /**
      * Command alias. A list of strings that can be used as abbreviations instead of using the official name of the command.
@@ -46,12 +46,12 @@ abstract class Command(
      * Permission to use the command. Permission.OP can be used only by OP, Permission.NOT_OP can be used by everyone except OP, and Permission.EVERYONE can be used by everyone.
      * By default, Permission.OP is specified.
      */
-    open val permission: Permission = commandHandler.defaultPermission
+    open val permission: Permission by lazy { commandHandler.defaultPermission }
 
     /**
      * Can only the player execute this command? By default it can also be run from the server console. (default: false)
      */
-    open val playerOnly: Boolean = commandHandler.defaultPlayerOnly
+    open val playerOnly: Boolean by lazy { commandHandler.defaultPlayerOnly }
 
     /**
      * A subcommand of this command. If the string entered as an argument matches the name or alias of these commands, the matching command will be executed.
