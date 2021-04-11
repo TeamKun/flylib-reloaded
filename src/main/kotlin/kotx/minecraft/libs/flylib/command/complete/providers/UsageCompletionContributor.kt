@@ -10,7 +10,7 @@ import kotx.minecraft.libs.flylib.command.complete.CompletionContributor
 
 class UsageCompletionContributor(
     private val onlyCompleteIfEmpty: Boolean = true,
-    private val usageReplacements: Map<(String) -> Boolean, CommandContext.() -> List<String>> = emptyMap()
+    private val usageReplacements: Map<(String) -> Boolean, CommandContext.(String) -> List<String>> = emptyMap()
 ) : CompletionContributor() {
     override fun suggest(context: CommandContext): List<String> {
         return context.command.usages.mapNotNull {
@@ -30,14 +30,14 @@ class UsageCompletionContributor(
                 templateContentSplit?.size ?: 0 == 1 -> {
                     val replacements = usageReplacements
                         .filter { it.key(templateResult!!.groupValues[1]) }
-                        .flatMap { it.value.invoke(context) }
+                        .flatMap { it.value.invoke(context, templateResult!!.groupValues[1]) }
 
                     if (replacements.isEmpty()) listOf(it) else replacements
                 }
                 templateContentSplit?.size ?: 0 > 1 -> templateContentSplit!!.flatMap { s ->
                     val replacements = usageReplacements
                         .filter { it.key(s) }
-                        .flatMap { it.value.invoke(context) }
+                        .flatMap { it.value.invoke(context, s) }
 
                     replacements.ifEmpty { listOf(s) }
                 }
