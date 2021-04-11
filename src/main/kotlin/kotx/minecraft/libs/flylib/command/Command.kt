@@ -90,8 +90,6 @@ abstract class Command(
             Permission.EVERYONE -> true
         }
 
-        println("Valid Permission: $validPermission")
-
         if (!validPermission) return false
 
         val validSender = !playerOnly || playerOnly && sender is Player
