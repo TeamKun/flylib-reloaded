@@ -90,6 +90,8 @@ abstract class Command(
             Permission.EVERYONE -> true
         }
 
+        println("Valid Permission: $validPermission")
+
         if (!validPermission) return false
 
         val validSender = !playerOnly || playerOnly && sender is Player
@@ -124,7 +126,7 @@ abstract class Command(
         alias: String,
         args: Array<out String>
     ): List<String> {
-        if (validate(sender)) return emptyList()
+        if (!validate(sender)) return emptyList()
         val context = CommandContext(
             this,
             plugin,

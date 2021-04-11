@@ -9,7 +9,7 @@ import kotx.minecraft.libs.flylib.command.CommandContext
 import kotx.minecraft.libs.flylib.command.complete.CompletionContributor
 
 class UsageCompletionContributor(
-    private val onlyCompleteIfEmpty: Boolean = false,
+    private val onlyCompleteIfEmpty: Boolean = true,
     private val usageReplacements: Map<(String) -> Boolean, CommandContext.() -> List<String>> = emptyMap()
 ) : CompletionContributor() {
     override fun suggest(context: CommandContext): List<String> {
