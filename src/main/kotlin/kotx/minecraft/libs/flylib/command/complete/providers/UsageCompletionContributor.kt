@@ -49,7 +49,7 @@ class UsageCompletionContributor(
     override fun postProcess(
         currentCompletion: List<String>,
         context: CommandContext
-    ): List<String> = if (!onlyCompleteIfEmpty || (onlyCompleteIfEmpty && currentCompletion.isNotEmpty())) {
+    ): List<String> = if (!onlyCompleteIfEmpty || (onlyCompleteIfEmpty && currentCompletion.isEmpty())) {
         currentCompletion.filter {
             if (context.args.lastOrNull().isNullOrBlank())
                 true
