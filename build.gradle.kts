@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "kotx.minecraft.libs"
-version = "0.0.7"
+version = "0.0.13"
 
 repositories {
     mavenCentral()
@@ -48,7 +48,7 @@ afterEvaluate {
         publications {
             create<MavenPublication>("release") {
                 groupId = "kotx.minecraft.libs"
-                artifactId = "FlyLib-Reloaded"
+                artifactId = "flylib-reloaded"
                 version = project.version.toString()
                 from(components["kotlin"])
             }
