@@ -13,6 +13,7 @@ import kotx.minecraft.libs.flylib.command.complete.providers.UsageCompletionCont
 import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
 import kotx.minecraft.libs.flylib.get
+import kotx.minecraft.libs.flylib.send
 import org.bukkit.command.CommandSender
 import org.bukkit.permissions.PermissionDefault
 import org.bukkit.plugin.java.JavaPlugin
@@ -159,7 +160,7 @@ class CommandHandler(
 
             command.children.handleChildren()
 
-            send {
+            sender.send {
                 val textColor = Color.CYAN
                 append("-----------------------------------\n", Color.DARK_GRAY)
                 append("/$fullName", textColor)
