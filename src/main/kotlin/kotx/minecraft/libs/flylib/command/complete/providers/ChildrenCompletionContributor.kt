@@ -10,7 +10,7 @@ import kotx.minecraft.libs.flylib.command.complete.CompletionContributor
 
 class ChildrenCompletionContributor : CompletionContributor() {
     override fun suggest(context: CommandContext): List<String> =
-        context.command.children.map { it.name }
+        if (context.args.size == 1) context.command.children.map { it.name } else emptyList()
 
     override fun postProcess(
         currentCompletion: List<String>, selfCompletion: List<String>, context: CommandContext
