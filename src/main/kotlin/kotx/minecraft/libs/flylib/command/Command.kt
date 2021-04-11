@@ -142,10 +142,15 @@ abstract class Command(
             result.addAll(context.tabComplete())
 
             commandHandler.completionContributors.forEach {
-                if (commandHandler.autoTabCompletion)
-                    result.addAll(it.suggest(context))
+                val selfCompletion = if (commandHandler.autoTabCompletion)
+                    it.suggest(context)
+                else
+                    emptyList()
+
                 if (commandHandler.autoTabSelect)
-                    result = it.postProcess(result, context).toMutableList()
+                    result = it.postProcess(result, selfCompletion, context).toMutableList()
+
+                result.addAll(selfCompletion)
             }
 
             return result

@@ -47,18 +47,12 @@ class UsageCompletionContributor(
     }
 
     override fun postProcess(
-        currentCompletion: List<String>,
-        context: CommandContext
+        currentCompletion: List<String>, selfCompletion: List<String>, context: CommandContext
     ): List<String> = if (!onlyCompleteIfEmpty || (onlyCompleteIfEmpty && currentCompletion.isEmpty())) {
-        currentCompletion.filter {
-            if (context.args.lastOrNull().isNullOrBlank())
-                true
-            else
-                !it.matches("<.+>|\\[.+]|\\(.+\\)|\\.\\.\\.".toRegex())
+        selfCompletion.filter {
+            context.args.lastOrNull().isNullOrBlank()
         }.filter {
             it.startsWith(context.args.lastOrNull() ?: "", true)
-        }
-    } else currentCompletion.filterNot {
-        it.matches("<.+>|\\[.+]|\\(.+\\)|\\.\\.\\.".toRegex())
-    }
+        } + currentCompletion
+    } else currentCompletion
 }

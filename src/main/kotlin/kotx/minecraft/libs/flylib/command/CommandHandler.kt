@@ -7,6 +7,7 @@ package kotx.minecraft.libs.flylib.command
 
 import kotx.minecraft.libs.flylib.append
 import kotx.minecraft.libs.flylib.command.complete.CompletionContributor
+import kotx.minecraft.libs.flylib.command.complete.providers.BasicCompletionContributor
 import kotx.minecraft.libs.flylib.command.complete.providers.ChildrenCompletionContributor
 import kotx.minecraft.libs.flylib.command.complete.providers.OptionCompletionContributor
 import kotx.minecraft.libs.flylib.command.complete.providers.UsageCompletionContributor
@@ -255,7 +256,8 @@ class CommandHandler(
         var completionContributors = listOf(
             ChildrenCompletionContributor(),
             UsageCompletionContributor(),
-            OptionCompletionContributor()
+            OptionCompletionContributor(),
+            BasicCompletionContributor()
         )
 
         /**

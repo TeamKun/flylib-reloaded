@@ -13,7 +13,6 @@ class ChildrenCompletionContributor : CompletionContributor() {
         context.command.children.map { it.name }
 
     override fun postProcess(
-        currentCompletion: List<String>,
-        context: CommandContext
-    ) = currentCompletion.filter { it.startsWith(context.args.lastOrNull() ?: "", true) }
+        currentCompletion: List<String>, selfCompletion: List<String>, context: CommandContext
+    ) = selfCompletion.filter { it.startsWith(context.args.lastOrNull() ?: "", true) } + currentCompletion
 }

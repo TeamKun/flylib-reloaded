@@ -6,9 +6,7 @@
 package kotx.minecraft.libs.flylib.command.complete
 
 import kotx.minecraft.libs.flylib.command.CommandContext
-import kotx.minecraft.libs.flylib.command.CommandHandler
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 /**
  * A class that provides tab completion for commands.
@@ -25,8 +23,6 @@ import org.koin.core.component.inject
  * 4. All the List<String> provided by BContributor#suggest are added and overwritten in the output of BContributor#postProcess.
  */
 open class CompletionContributor : KoinComponent {
-    protected val commandHandler by inject<CommandHandler>()
-
     /**
      * A method that provides a list of tab completions.
      * Executed only when auto Tab Completion of Command Handler is true.
@@ -46,6 +42,6 @@ open class CompletionContributor : KoinComponent {
      *
      * @return The result of filtering the current Completion
      */
-    open fun postProcess(currentCompletion: List<String>, context: CommandContext): List<String> =
+    open fun postProcess(currentCompletion: List<String>, selfCompletion: List<String>, context: CommandContext): List<String> =
         currentCompletion
 }

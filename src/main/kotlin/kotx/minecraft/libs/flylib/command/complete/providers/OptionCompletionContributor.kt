@@ -35,15 +35,16 @@ class OptionCompletionContributor : CompletionContributor() {
         }
     }
 
-    override fun postProcess(currentCompletion: List<String>, context: CommandContext): List<String> {
+    override fun postProcess(currentCompletion: List<String>, selfCompletion: List<String>, context: CommandContext): List<String> {
         val lastOption = "-([a-z]+)".toRegex(RegexOption.IGNORE_CASE).matchEntire(context.args.lastOrNull() ?: "")
-            ?: return currentCompletion.filter { it.startsWith(context.args.lastOrNull() ?: "", true) }
+            ?: return selfCompletion.filter { it.startsWith(context.args.lastOrNull() ?: "", true) } + currentCompletion
         val lastOpt = lastOption.groupValues[1]
-        return currentCompletion.mapNotNull { "-([a-z])".toRegex(RegexOption.IGNORE_CASE).matchEntire(it) }
-            .filter { r ->
-                lastOpt.none { it.toString() == r.groupValues[1] }
-            }.map {
-                "-${lastOpt}${it.groupValues[1]}"
-            }
+        return selfCompletion.mapNotNull {
+            "-([a-z])".toRegex(RegexOption.IGNORE_CASE).matchEntire(it)
+        }.filter { r ->
+            lastOpt.none { it.toString() == r.groupValues[1] }
+        }.map {
+            "-${lastOpt}${it.groupValues[1]}"
+        } + currentCompletion
     }
 }
