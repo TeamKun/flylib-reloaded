@@ -25,7 +25,6 @@ class CommandHandler(
     private val commands: List<Command>,
     val autoTabSelect: Boolean,
     val autoTabCompletion: Boolean,
-    val usageReplacements: Map<(String) -> Boolean, CommandContext.() -> List<String>>,
     val completionContributors: List<CompletionContributor>,
     val defaultDescription: String,
     val defaultPermission: Permission,
@@ -273,25 +272,6 @@ class CommandHandler(
         }
 
         /**
-         * If Usage Completion Contributor is specified, specify the conversion parameters specified in usages in a format like <...>.
-         */
-        fun addUsageReplacement(
-            templatePredicateProvider: (String) -> Boolean,
-            resultProvider: CommandContext.() -> List<String>
-        ) {
-            usageReplacements[templatePredicateProvider] = resultProvider
-        }
-
-        /**
-         * If Usage Completion Contributor is specified, specify the conversion parameters specified in usages in a format like <...>.
-         */
-        fun addUsageReplacement(vararg template: String, resultProvider: CommandContext.() -> List<String>) {
-            usageReplacements[{ s ->
-                arrayOf(*template).any { s.equals(it, true) }
-            }] = resultProvider
-        }
-
-        /**
          * Registers the specified command. It is not necessary to register commands or permissions in plugin.yml.
          */
         fun registerCommand(command: Command) {
@@ -354,7 +334,6 @@ class CommandHandler(
             commands,
             autoTabSelect,
             autoTabCompletion,
-            usageReplacements,
             completionContributors,
             defaultDescription,
             defaultPermission,

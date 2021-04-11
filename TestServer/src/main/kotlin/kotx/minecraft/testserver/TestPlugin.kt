@@ -7,6 +7,9 @@ package kotx.minecraft.testserver
 
 import kotx.minecraft.libs.flylib.command.Command
 import kotx.minecraft.libs.flylib.command.CommandContext
+import kotx.minecraft.libs.flylib.command.complete.providers.ChildrenCompletionContributor
+import kotx.minecraft.libs.flylib.command.complete.providers.OptionCompletionContributor
+import kotx.minecraft.libs.flylib.command.complete.providers.UsageCompletionContributor
 import kotx.minecraft.libs.flylib.command.internal.Option
 import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
@@ -18,9 +21,13 @@ class TestPlugin : JavaPlugin() {
     val flyLib = injectFlyLib {
         commandHandler {
             registerCommand(TestCommand())
-            addUsageReplacement("user") {
-                server.onlinePlayers.mapNotNull { it.playerProfile.name }
-            }
+            completionContributors = listOf(
+                ChildrenCompletionContributor(),
+                OptionCompletionContributor(),
+                UsageCompletionContributor(usageReplacements = mapOf(
+                    { it: String -> it == "user" } to { server.onlinePlayers.mapNotNull { it.playerProfile.name } }
+                ))
+            )
         }
     }
 }
