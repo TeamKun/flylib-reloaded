@@ -24,6 +24,16 @@ fun CommandSender.send(block: TextComponent.Builder.() -> Unit) {
 }
 
 fun TextComponent.Builder.append(text: String): TextComponent.Builder = append(Component.text(text))
+fun TextComponent.Builder.append(
+    text: String,
+    color: Color = Color.WHITE,
+    style: Style = Style.empty(),
+    decoration: TextDecoration? = null
+): TextComponent.Builder = append(Component.text(text).color(color).style(style).apply {
+    if (decoration != null)
+        decorate(decoration)
+})
+
 fun TextComponent.Builder.append(text: String, color: Color): TextComponent.Builder = append(Component.text(text).color(color))
 fun TextComponent.Builder.append(text: String, style: Style): TextComponent.Builder = append(Component.text(text).style(style))
 fun TextComponent.Builder.append(text: String, decoration: TextDecoration): TextComponent.Builder = append(Component.text(text).decorate(decoration))
@@ -32,6 +42,12 @@ fun TextComponent.Builder.appendln(text: String): TextComponent.Builder = append
 fun TextComponent.Builder.appendln(text: String, color: Color): TextComponent.Builder = append("$text\n", color)
 fun TextComponent.Builder.appendln(text: String, style: Style): TextComponent.Builder = append("$text\n", style)
 fun TextComponent.Builder.appendln(text: String, decoration: TextDecoration): TextComponent.Builder = append("$text\n", decoration)
+fun TextComponent.Builder.appendln(
+    text: String,
+    color: Color = Color.WHITE,
+    style: Style = Style.empty(),
+    decoration: TextDecoration? = null
+): TextComponent.Builder = append("$text\n", color, style, decoration)
 
 fun TextComponent.Builder.appendln(): TextComponent.Builder = this@appendln.append("\n")
 
