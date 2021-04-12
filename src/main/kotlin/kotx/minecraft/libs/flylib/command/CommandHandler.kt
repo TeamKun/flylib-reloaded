@@ -146,23 +146,25 @@ class CommandHandler(
             command.getFullName()
 
             sender.send {
-                val textColor = Color.CYAN
+                val nameColor = Color.RED
+                val mainColor = Color.CYAN
+                val subColor = Color.LIGHT_GRAY
                 val highlightTextColor = Color.ORANGE
                 append("-----------------------------------\n", Color.DARK_GRAY)
-                append("/$fullName", textColor)
+                append("/$fullName", nameColor)
                 if (command.aliases.isNotEmpty()) {
                     append("(", Color.WHITE)
                     command.aliases.forEachIndexed { i, it ->
-                        append(it, textColor)
+                        append(it, mainColor)
                         if (i < command.aliases.size - 1)
-                            append(", ", Color.WHITE)
+                            append(", ", subColor)
                     }
                     append(")", Color.WHITE)
                 }
 
                 if (command.description.isNotEmpty()) {
-                    append(": ", Color.WHITE)
-                    append(command.description, textColor)
+                    append(" - ", subColor)
+                    append(command.description, subColor)
                 }
 
                 append("\n")
@@ -179,10 +181,10 @@ class CommandHandler(
                         val usage = command.usages.first()
 
                         append("Usage: ", Color.WHITE, decoration = TextDecoration.BOLD)
-                        append(command.handleParent(usage.context), textColor)
+                        append(command.handleParent(usage.context), mainColor)
                         if (usage.description.isNotEmpty()) {
-                            append(" - ", Color.WHITE)
-                            append(usage.description, textColor)
+                            append(" - ", subColor)
+                            append(usage.description, subColor)
                         }
 
                         append("\n")
@@ -190,13 +192,13 @@ class CommandHandler(
                     else -> {
                         appendln()
                         append("# ", Color.WHITE)
-                        append("Usages:\n", highlightTextColor)
+                        append("Usages:\n", highlightTextColor, decoration = TextDecoration.BOLD)
 
                         command.usages.associate { command.handleParent(it.context) to it.description }.forEach { (usage, description) ->
-                            append(usage, textColor)
+                            append(usage, mainColor)
                             if (description.isNotEmpty()) {
-                                append(" - ", Color.WHITE)
-                                append(description, textColor)
+                                append(" - ", subColor)
+                                append(description, subColor)
                             }
                             append("\n")
                         }
@@ -210,14 +212,14 @@ class CommandHandler(
 
                     1 -> {
                         append("Example: ", Color.WHITE, decoration = TextDecoration.BOLD)
-                        append("/${command.examples.first()}\n", textColor)
+                        append("/${command.examples.first()}\n", mainColor)
                     }
 
                     else -> {
                         appendln()
                         append("# ", Color.WHITE)
                         append("Examples:\n", highlightTextColor, decoration = TextDecoration.BOLD)
-                        command.examples.map { "/$it".asTextComponent(textColor) }.joint("\n".asTextComponent()) {
+                        command.examples.map { "/$it".asTextComponent(mainColor) }.joint("\n".asTextComponent()) {
                             append(it)
                         }
                     }
