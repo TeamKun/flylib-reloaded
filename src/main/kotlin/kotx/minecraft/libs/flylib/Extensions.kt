@@ -29,9 +29,11 @@ fun TextComponent.Builder.append(
     color: Color = Color.WHITE,
     style: Style = Style.empty(),
     decoration: TextDecoration? = null
-): TextComponent.Builder = append(Component.text(text).color(color).style(style).apply {
+): TextComponent.Builder = append(Component.text(text).color(color).style(style).run {
     if (decoration != null)
         decorate(decoration)
+    else
+        this
 })
 
 fun TextComponent.Builder.append(text: String, color: Color): TextComponent.Builder = append(Component.text(text).color(color))
