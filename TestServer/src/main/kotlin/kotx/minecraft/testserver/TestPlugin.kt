@@ -48,6 +48,7 @@ class TestCommand : Command("test") {
     override val examples: List<String> = listOf("test bbb Kotlinx hoge fuga --opt -th")
 
     override fun CommandContext.execute() {
+        sendMessage("$options")
         sendHelp()
     }
 }

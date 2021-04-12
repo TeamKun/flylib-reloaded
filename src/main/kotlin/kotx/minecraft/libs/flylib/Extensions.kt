@@ -26,8 +26,7 @@ fun CommandSender.send(block: TextComponent.Builder.() -> Unit) {
 fun TextComponent.Builder.append(text: String): TextComponent.Builder = append(Component.text(text))
 fun TextComponent.Builder.append(text: String, color: Color): TextComponent.Builder = append(Component.text(text).color(color))
 fun TextComponent.Builder.append(text: String, style: Style): TextComponent.Builder = append(Component.text(text).style(style))
-fun TextComponent.Builder.append(text: String, decoration: TextDecoration): TextComponent.Builder =
-    append(Component.text(text).decorate(decoration))
+fun TextComponent.Builder.append(text: String, decoration: TextDecoration): TextComponent.Builder = append(Component.text(text).decorate(decoration))
 
 fun TextComponent.Builder.appendln(text: String): TextComponent.Builder = append("$text\n")
 fun TextComponent.Builder.appendln(text: String, color: Color): TextComponent.Builder = append("$text\n", color)
@@ -37,6 +36,15 @@ fun TextComponent.Builder.appendln(text: String, decoration: TextDecoration): Te
 fun TextComponent.Builder.appendln(): TextComponent.Builder = this@appendln.append("\n")
 
 fun TextComponent.color(color: Color) = color(TextColor.color(color.red, color.green, color.blue))
+fun TextComponent.append(text: String): TextComponent = append(Component.text(text))
+fun TextComponent.append(text: String, color: Color): TextComponent = append(Component.text(text).color(color))
+fun TextComponent.append(text: String, style: Style): TextComponent = append(Component.text(text).style(style))
+fun TextComponent.append(text: String, decoration: TextDecoration): TextComponent = append(Component.text(text).decorate(decoration))
+fun TextComponent.appendln(text: String): TextComponent = append("$text\n")
+fun TextComponent.appendln(text: String, color: Color): TextComponent = append("$text\n", color)
+fun TextComponent.appendln(text: String, style: Style): TextComponent = append("$text\n", style)
+fun TextComponent.appendln(text: String, decoration: TextDecoration): TextComponent = append("$text\n", decoration)
+fun TextComponent.appendln(): TextComponent = this@appendln.append("\n")
 
 
 fun CommandSender.sendPluginMessage(plugin: JavaPlugin, block: TextComponent.Builder.() -> Unit) {
@@ -75,3 +83,34 @@ fun CommandSender.sendSuccessMessage(plugin: JavaPlugin, text: String) {
 fun String.asTextComponent(color: Color = Color.WHITE) = Component.text(this, TextColor.color(color.red, color.green, color.blue))
 fun String.asTextComponent(style: Style) = Component.text(this, style)
 fun String.asTextComponent(decoration: TextDecoration) = Component.text(this, Style.style(decoration))
+
+fun <T> List<T>.joint(other: T): List<T> {
+    val res = mutableListOf<T>()
+    forEachIndexed { i, it ->
+        res.add(it)
+        if (i < size - 1)
+            res.add(other)
+    }
+
+    return res.toList()
+}
+
+fun <T, E> List<T>.joint(joiner: E, target: (T) -> E) {
+    map(target).joint(joiner)
+}
+
+@JvmName("jointT")
+fun <T> List<T>.joint(joiner: T, action: (T) -> Unit) {
+    joint(joiner).forEach(action)
+}
+
+fun <T> List<T>.joint(other: (T) -> T): List<T> {
+    val res = mutableListOf<T>()
+    forEachIndexed { i, it ->
+        res.add(it)
+        if (i < size - 1)
+            res.add(other(it))
+    }
+
+    return res.toList()
+}
