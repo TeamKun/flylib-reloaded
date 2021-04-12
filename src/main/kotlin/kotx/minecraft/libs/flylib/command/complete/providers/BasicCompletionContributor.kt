@@ -10,5 +10,5 @@ import kotx.minecraft.libs.flylib.command.complete.CompletionContributor
 
 class BasicCompletionContributor : CompletionContributor() {
     override fun postProcess(currentCompletion: List<String>, selfCompletion: List<String>, context: CommandContext) =
-        currentCompletion.filter { it.startsWith(context.args.lastOrNull() ?: "") }
+        currentCompletion.distinct().filter { it.startsWith(context.args.lastOrNull() ?: "") }
 }
