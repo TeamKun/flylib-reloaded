@@ -13,6 +13,7 @@ import kotx.minecraft.libs.flylib.command.complete.providers.OptionCompletionCon
 import kotx.minecraft.libs.flylib.command.complete.providers.UsageCompletionContributor
 import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
+import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.command.CommandSender
 import org.bukkit.permissions.PermissionDefault
 import org.bukkit.plugin.java.JavaPlugin
@@ -177,7 +178,7 @@ class CommandHandler(
                     1 -> {
                         val usage = command.usages.first()
 
-                        append("Usage: ", Color.WHITE)
+                        append("Usage: ", Color.WHITE, decoration = TextDecoration.BOLD)
                         append(command.handleParent(usage.context), textColor)
                         if (usage.description.isNotEmpty()) {
                             append(" - ", Color.WHITE)
@@ -188,7 +189,8 @@ class CommandHandler(
                     }
                     else -> {
                         appendln()
-                        append("Usages:\n", Color.WHITE)
+                        append("# ", Color.WHITE)
+                        append("Usages:\n", highlightTextColor)
 
                         command.usages.associate { command.handleParent(it.context) to it.description }.forEach { (usage, description) ->
                             append(usage, textColor)
@@ -207,13 +209,14 @@ class CommandHandler(
                     }
 
                     1 -> {
-                        append("Example: ", Color.WHITE)
+                        append("Example: ", Color.WHITE, decoration = TextDecoration.BOLD)
                         append("/${command.examples.first()}\n", textColor)
                     }
 
                     else -> {
                         appendln()
-                        append("Examples:\n", Color.WHITE)
+                        append("# ", Color.WHITE)
+                        append("Examples:\n", highlightTextColor, decoration = TextDecoration.BOLD)
                         command.examples.map { "/$it".asTextComponent(textColor) }.joint("\n".asTextComponent()) {
                             append(it)
                         }
@@ -244,6 +247,7 @@ class CommandHandler(
          */
         var completionContributors = listOf(
             UsageCompletionContributor(),
+
             ChildrenCompletionContributor(),
             OptionCompletionContributor(),
             BasicCompletionContributor()
