@@ -32,11 +32,11 @@ class CommandContext(
     val options = args.getOptions()
     val withoutOptions = args.withoutOptionList()
 
-    private fun Array<String>.getOptions(): Map<String, List<String>> {
+    fun Array<String>.getOptions(prefix: String = "-"): Map<String, List<String>> {
         val groups = mutableMapOf<String, List<String>>()
         val groupCache = mutableListOf<String>()
         reversed().forEach {
-            if (it.startsWith("-")) {
+            if (it.startsWith(prefix)) {
                 groups[it] = groupCache.toList().reversed()
                 groupCache.clear()
             } else {
@@ -47,10 +47,10 @@ class CommandContext(
         return groups
     }
 
-    private fun Array<String>.withoutOptionList(): List<String> {
+    fun Array<String>.withoutOptionList(prefix: String = "-"): List<String> {
         val messages = mutableListOf<String>()
         forEach {
-            if (it.startsWith("-"))
+            if (it.startsWith(prefix))
                 return messages
             else
                 messages.add(it)
