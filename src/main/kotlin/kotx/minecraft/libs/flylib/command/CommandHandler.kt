@@ -5,7 +5,7 @@
 
 package kotx.minecraft.libs.flylib.command
 
-import kotx.minecraft.libs.flylib.append
+import kotx.minecraft.libs.flylib.*
 import kotx.minecraft.libs.flylib.command.complete.CompletionContributor
 import kotx.minecraft.libs.flylib.command.complete.providers.BasicCompletionContributor
 import kotx.minecraft.libs.flylib.command.complete.providers.ChildrenCompletionContributor
@@ -13,8 +13,6 @@ import kotx.minecraft.libs.flylib.command.complete.providers.OptionCompletionCon
 import kotx.minecraft.libs.flylib.command.complete.providers.UsageCompletionContributor
 import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
-import kotx.minecraft.libs.flylib.get
-import kotx.minecraft.libs.flylib.send
 import org.bukkit.command.CommandSender
 import org.bukkit.permissions.PermissionDefault
 import org.bukkit.plugin.java.JavaPlugin
@@ -146,23 +144,9 @@ class CommandHandler(
             }
             command.getFullName()
 
-            val allUsages = mutableMapOf(
-                command to command.usages
-            )
-            val allExamples = mutableListOf<String>()
-
-            fun List<Command>.handleChildren() {
-                forEach {
-                    allUsages[it] = it.usages
-                    allExamples.addAll(it.examples)
-                    it.children.handleChildren()
-                }
-            }
-
-            command.children.handleChildren()
-
             sender.send {
                 val textColor = Color.CYAN
+                val highlightTextColor = Color.ORANGE
                 append("-----------------------------------\n", Color.DARK_GRAY)
                 append("/$fullName", textColor)
                 if (command.aliases.isNotEmpty()) {
@@ -182,20 +166,19 @@ class CommandHandler(
 
                 append("\n")
 
-                fun Command.handleUsages(current: String): String = if (parent != null)
-                    parent!!.handleUsages("${parent!!.name} $current")
+                fun Command.handleParent(current: String): String = if (parent != null)
+                    parent!!.handleParent("${parent!!.name} $current")
                 else
                     "/$current"
 
-                when (allUsages.values.flatten().size) {
+                when (command.usages.size) {
                     0 -> {
                     }
                     1 -> {
-                        val usage = allUsages.values.flatten().first()
-                        val cmd = allUsages.keys.first()
+                        val usage = command.usages.first()
 
                         append("Usage: ", Color.WHITE)
-                        append(cmd.handleUsages(usage.context), textColor)
+                        append(command.handleParent(usage.context), textColor)
                         if (usage.description.isNotEmpty()) {
                             append(" - ", Color.WHITE)
                             append(usage.description, textColor)
@@ -204,37 +187,42 @@ class CommandHandler(
                         append("\n")
                     }
                     else -> {
+                        appendln()
                         append("Usages:\n", Color.WHITE)
-                        allUsages.flatMap { (cmd, usages) ->
-                            usages.map { cmd.handleUsages(it.context) to it.description }
-                        }.toMap().forEach { (usg, desc) ->
-                            append(usg, textColor)
-                            if (desc.isNotEmpty()) {
+
+                        command.usages.associate { command.handleParent(it.context) to it.description }.forEach { (usage, description) ->
+                            append(usage, textColor)
+                            if (description.isNotEmpty()) {
                                 append(" - ", Color.WHITE)
-                                append(desc, textColor)
+                                append(description, textColor)
                             }
                             append("\n")
                         }
                     }
                 }
 
-                when (allExamples.size) {
+                when (command.examples.size) {
                     0 -> {
 
                     }
 
                     1 -> {
                         append("Example: ", Color.WHITE)
-                        append("/${allExamples.first()}\n", textColor)
+                        append("/${command.examples.first()}\n", textColor)
                     }
 
                     else -> {
+                        appendln()
                         append("Examples:\n", Color.WHITE)
-                        allExamples.forEachIndexed { i, it ->
-                            append("/$it", textColor)
-                            if (i < allExamples.size)
-                                append("\n")
+                        command.examples.map { "/$it".asTextComponent(textColor) }.joint("\n".asTextComponent()) {
+                            append(it)
                         }
+                    }
+                }
+
+                if (command.children.isNotEmpty()) {
+                    command.children.map { "\t${it.name}".asTextComponent(highlightTextColor) }.joint("\n".asTextComponent()) {
+                        append(it)
                     }
                 }
 
