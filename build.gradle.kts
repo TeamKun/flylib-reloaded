@@ -34,7 +34,17 @@ tasks {
         options.encoding = "UTF-8"
     }
 
+    compileTestJava {
+        sourceCompatibility = "1.8"
+        targetCompatibility = "1.8"
+        options.encoding = "UTF-8"
+    }
+
     compileKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+
+    compileTestKotlin {
         kotlinOptions.jvmTarget = "1.8"
     }
 
