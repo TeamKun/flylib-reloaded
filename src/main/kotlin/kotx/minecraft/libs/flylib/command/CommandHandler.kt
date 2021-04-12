@@ -221,9 +221,10 @@ class CommandHandler(
                 }
 
                 if (command.children.isNotEmpty()) {
-                    command.children.map { "\t${it.name}".asTextComponent(highlightTextColor) }.joint("\n".asTextComponent()) {
+                    command.children.map { "    ${it.name}".asTextComponent(highlightTextColor) }.joint("\n".asTextComponent()) {
                         append(it)
                     }
+                    appendln()
                 }
 
                 append("-----------------------------------", Color.DARK_GRAY)
@@ -242,8 +243,8 @@ class CommandHandler(
          * 4. All the List<String> provided by BContributor#suggest are added and overwritten in the output of BContributor#postProcess.
          */
         var completionContributors = listOf(
-            ChildrenCompletionContributor(),
             UsageCompletionContributor(),
+            ChildrenCompletionContributor(),
             OptionCompletionContributor(),
             BasicCompletionContributor()
         )

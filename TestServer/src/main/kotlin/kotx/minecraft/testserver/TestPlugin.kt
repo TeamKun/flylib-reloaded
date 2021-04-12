@@ -22,11 +22,11 @@ class TestPlugin : JavaPlugin() {
         commandHandler {
             registerCommand(TestCommand())
             completionContributors = listOf(
-                ChildrenCompletionContributor(),
-                OptionCompletionContributor(),
                 UsageCompletionContributor(usageReplacements = mapOf(
                     { it: String -> it == "user" } to { server.onlinePlayers.mapNotNull { it.playerProfile.name } }
-                ))
+                )),
+                ChildrenCompletionContributor(),
+                OptionCompletionContributor(),
             )
         }
     }
@@ -45,10 +45,23 @@ class TestCommand : Command("test") {
             )
         )
     )
+    override val children: List<Command> = listOf(SubCommandA(), SubCommandB())
     override val examples: List<String> = listOf("test bbb Kotlinx hoge fuga --opt -th")
 
     override fun CommandContext.execute() {
         sendMessage("$options")
         sendHelp()
+    }
+}
+
+class SubCommandA : Command("a") {
+    override fun CommandContext.execute() {
+
+    }
+}
+
+class SubCommandB : Command("a") {
+    override fun CommandContext.execute() {
+
     }
 }

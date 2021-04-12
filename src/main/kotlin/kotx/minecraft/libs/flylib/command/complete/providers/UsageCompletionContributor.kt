@@ -32,14 +32,14 @@ class UsageCompletionContributor(
                         .filter { it.key(templateResult!!.groupValues[1]) }
                         .flatMap { it.value.invoke(context, templateResult!!.groupValues[1]) }
 
-                    replacements
+                    replacements.ifEmpty { templateContentSplit }
                 }
                 templateContentSplit?.size ?: 0 > 1 -> templateContentSplit!!.flatMap { s ->
                     val replacements = usageReplacements
                         .filter { it.key(s) }
                         .flatMap { it.value.invoke(context, s) }
 
-                    replacements
+                    replacements.ifEmpty { listOf(s) }
                 }
                 else -> listOf(it)
             }
