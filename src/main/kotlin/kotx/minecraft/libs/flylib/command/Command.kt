@@ -142,13 +142,13 @@ abstract class Command(
             var result = mutableListOf<String>()
             result.addAll(context.tabComplete())
 
-            commandHandler.completionContributors.forEach {
-                val selfCompletion = if (commandHandler.autoTabCompletion)
+            commandHandler.commandCompletion.contributors.forEach {
+                val selfCompletion = if (commandHandler.commandCompletion.autoCompletion)
                     it.suggest(context)
                 else
                     emptyList()
 
-                if (commandHandler.autoTabSelect)
+                if (commandHandler.commandCompletion.autoSort)
                     result = it.postProcess(result, selfCompletion, context).toMutableList()
                 else
                     result.addAll(selfCompletion)

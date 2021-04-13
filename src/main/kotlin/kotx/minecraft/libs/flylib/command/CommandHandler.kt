@@ -6,7 +6,7 @@
 package kotx.minecraft.libs.flylib.command
 
 import kotx.minecraft.libs.flylib.*
-import kotx.minecraft.libs.flylib.command.complete.CompletionContributor
+import kotx.minecraft.libs.flylib.command.internal.CommandCompletion
 import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
 import net.kyori.adventure.text.format.TextDecoration
@@ -20,9 +20,7 @@ import java.awt.Color
 
 class CommandHandler(
     private val commands: List<Command>,
-    val autoTabSelect: Boolean,
-    val autoTabCompletion: Boolean,
-    val completionContributors: List<CompletionContributor>,
+    val commandCompletion: CommandCompletion,
     val defaultDescription: String,
     val defaultPermission: Permission,
     val defaultPlayerOnly: Boolean,
@@ -102,9 +100,8 @@ class CommandHandler(
 
     class Builder {
         private val commands = mutableListOf<Command>()
-        private var autoTabSelect = true
-        private var autoTabCompletion = true
-        private val usageReplacements = mutableMapOf<(String) -> Boolean, CommandContext.() -> List<String>>()
+
+        private var commandCompletion: CommandCompletion = CommandCompletion.Builder().build()
 
         /**
          * Description specified by default when nothing is specified when creating a Command instance
@@ -233,32 +230,13 @@ class CommandHandler(
             }
         }
 
-        /**
-         * A list of classes that inherit from Completion Contributor, which supports tab completion.
-         * The processing is executed in order from the top as follows.
-         * If these parameters are valid, the corresponding methods will be executed in the following order.
-         * If AContributor and BContributor are present:
-         * The result is
-         * 1. Add all the List<String> provided by AContributor#suggest, and
-         * 2. Overwritten by the output of AContributor#postProcess, and
-         * 3. If there is a BContributor: result will add all of the List<String> provided by AContributor#suggest, and will be overwritten by the output of AContributor#postProcess.
-         * 4. All the List<String> provided by BContributor#suggest are added and overwritten in the output of BContributor#postProcess.
-         */
-        private val completionContributors = mutableListOf<CompletionContributor>()
-
-        /**
-         * Disables automatic tab selection / sorting.
-         */
-        fun disableAutoTabSelect(): Builder {
-            autoTabSelect = false
+        fun commandCompletion(commandCompletion: CommandCompletion): Builder {
+            this.commandCompletion = commandCompletion
             return this
         }
 
-        /**
-         * Disables automatic tab completion.
-         */
-        fun disableAutoTabCompletion(): Builder {
-            autoTabCompletion = false
+        fun commandCompletion(init: CommandCompletion.Builder.() -> Unit): Builder {
+            commandCompletion = CommandCompletion.Builder().apply(init).build()
             return this
         }
 
@@ -274,11 +252,6 @@ class CommandHandler(
 
         fun defaultPlayerOnly(defaultPlayerOnly: Boolean): Builder {
             this.defaultPlayerOnly = defaultPlayerOnly
-            return this
-        }
-
-        fun registerCompletionContributor(vararg completionContributor: CompletionContributor): Builder {
-            completionContributors.addAll(completionContributor)
             return this
         }
 
@@ -347,9 +320,7 @@ class CommandHandler(
 
         fun build() = CommandHandler(
             commands,
-            autoTabSelect,
-            autoTabCompletion,
-            completionContributors,
+            commandCompletion,
             defaultDescription,
             defaultPermission,
             defaultPlayerOnly,
