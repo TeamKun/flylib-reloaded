@@ -29,28 +29,43 @@ class CommandContext(
     val message: String,
     val args: Array<String>
 ) {
-    val options = args.getOptions()
-    val withoutOptions = args.withoutOptionList()
+    val options = getOptions()
+    val argsWithoutOptions = withoutOptionList()
 
-    fun Array<String>.getOptions(prefix: String = "-"): Map<String, List<String>> {
+    @JvmName("getOptions1")
+    private fun getOptions(): Map<String, List<String>> {
+        val singleHyphenRegex = "-([a-zA-Z0-9]+)".toRegex()
+        val doubleHyphenRegex = "--([a-zA-Z0-9]+)".toRegex()
+
         val groups = mutableMapOf<String, List<String>>()
         val groupCache = mutableListOf<String>()
-        reversed().forEach {
-            if (it.startsWith(prefix)) {
-                groups[it] = groupCache.toList().reversed()
-                groupCache.clear()
-            } else {
-                groupCache.add(it)
+        args.reversed().forEach {
+
+            when {
+                it.matches(singleHyphenRegex) -> {
+                    singleHyphenRegex.find(it)!!.groupValues[1].map(Char::toString).forEach {
+                        groups[it] = emptyList()
+                    }
+
+                    groupCache.clear()
+                }
+
+                it.matches(doubleHyphenRegex) -> {
+                    groups[doubleHyphenRegex.find(it)!!.groupValues[1]] = groupCache.toList().reversed()
+                    groupCache.clear()
+                }
+
+                else -> groupCache.add(it)
             }
         }
 
         return groups
     }
 
-    fun Array<String>.withoutOptionList(prefix: String = "-"): List<String> {
+    private fun withoutOptionList(): List<String> {
         val messages = mutableListOf<String>()
-        forEach {
-            if (it.startsWith(prefix))
+        args.forEach {
+            if (it.startsWith("-"))
                 return messages
             else
                 messages.add(it)
