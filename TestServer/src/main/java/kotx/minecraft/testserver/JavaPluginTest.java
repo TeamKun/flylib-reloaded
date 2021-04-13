@@ -11,6 +11,7 @@ import kotx.minecraft.libs.flylib.command.complete.providers.BasicCompletionCont
 import kotx.minecraft.libs.flylib.command.complete.providers.ChildrenCompletionContributor;
 import kotx.minecraft.libs.flylib.command.complete.providers.OptionCompletionContributor;
 import kotx.minecraft.libs.flylib.command.complete.providers.UsageCompletionContributor;
+import kotx.minecraft.libs.flylib.command.internal.CommandCompletion;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class JavaPluginTest extends JavaPlugin {
@@ -19,12 +20,12 @@ public class JavaPluginTest extends JavaPlugin {
         new FlyLib.Builder(this).commandHandler(
                 new CommandHandler.Builder()
                         .registerCommand(new TestCommand())
-                        .registerCompletionContributor(
+                        .commandCompletion(new CommandCompletion.Builder().registerContributor(
                                 new ChildrenCompletionContributor(),
                                 new OptionCompletionContributor(),
                                 new UsageCompletionContributor(),
                                 new BasicCompletionContributor()
-                        )
+                        ).build())
                         .build()
         ).build();
     }
