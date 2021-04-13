@@ -11,6 +11,7 @@ import kotx.minecraft.libs.flylib.get
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
+import org.koin.core.Koin
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -177,5 +178,9 @@ abstract class Command(
      */
     fun CommandContext.sendHelp() {
         commandHandler.defaultSendHelp(this)
+    }
+
+    override fun getKoin(): Koin {
+        return super.getKoin()
     }
 }

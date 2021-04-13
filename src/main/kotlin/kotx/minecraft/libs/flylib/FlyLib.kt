@@ -53,15 +53,21 @@ class FlyLib(
     class Builder(
         private val plugin: JavaPlugin
     ) {
-        private var commandHandler: CommandHandler.Builder.() -> Unit = {}
+        private var commandHandler: CommandHandler = CommandHandler.Builder().build()
 
-        fun commandHandler(init: CommandHandler.Builder.() -> Unit) {
-            commandHandler = init
+        fun commandHandler(init: CommandHandler.Builder.() -> Unit): Builder {
+            commandHandler = CommandHandler.Builder().apply(init).build()
+            return this
+        }
+
+        fun commandHandler(commandHandler: CommandHandler): Builder {
+            this.commandHandler = commandHandler
+            return this
         }
 
         fun build(): FlyLib = FlyLib(
             plugin,
-            CommandHandler.Builder().apply(commandHandler).build()
+            commandHandler
         )
     }
 }

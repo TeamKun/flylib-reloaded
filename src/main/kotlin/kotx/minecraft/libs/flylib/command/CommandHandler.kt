@@ -7,10 +7,6 @@ package kotx.minecraft.libs.flylib.command
 
 import kotx.minecraft.libs.flylib.*
 import kotx.minecraft.libs.flylib.command.complete.CompletionContributor
-import kotx.minecraft.libs.flylib.command.complete.providers.BasicCompletionContributor
-import kotx.minecraft.libs.flylib.command.complete.providers.ChildrenCompletionContributor
-import kotx.minecraft.libs.flylib.command.complete.providers.OptionCompletionContributor
-import kotx.minecraft.libs.flylib.command.complete.providers.UsageCompletionContributor
 import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
 import net.kyori.adventure.text.format.TextDecoration
@@ -113,17 +109,18 @@ class CommandHandler(
         /**
          * Description specified by default when nothing is specified when creating a Command instance
          */
-        var defaultDescription: String = ""
+        private var defaultDescription: String = ""
 
         /**
          * Privileges specified by default if nothing is specified when creating a command instance
          */
-        var defaultPermission: Permission = Permission.OP
+        private var defaultPermission: Permission = Permission.OP
+
 
         /**
          * Whether or not only the player specified by default can be executed if nothing is specified when creating a command instance
          */
-        var defaultPlayerOnly: Boolean = false
+        private var defaultPlayerOnly: Boolean = false
 
         /**
          * Message sent when the command is unavailable
@@ -247,48 +244,67 @@ class CommandHandler(
          * 3. If there is a BContributor: result will add all of the List<String> provided by AContributor#suggest, and will be overwritten by the output of AContributor#postProcess.
          * 4. All the List<String> provided by BContributor#suggest are added and overwritten in the output of BContributor#postProcess.
          */
-        var completionContributors = listOf(
-            UsageCompletionContributor(),
-
-            ChildrenCompletionContributor(),
-            OptionCompletionContributor(),
-            BasicCompletionContributor()
-        )
+        private val completionContributors = mutableListOf<CompletionContributor>()
 
         /**
          * Disables automatic tab selection / sorting.
          */
-        fun disableAutoTabSelect() {
+        fun disableAutoTabSelect(): Builder {
             autoTabSelect = false
+            return this
         }
 
         /**
          * Disables automatic tab completion.
          */
-        fun disableAutoTabCompletion() {
+        fun disableAutoTabCompletion(): Builder {
             autoTabCompletion = false
+            return this
+        }
+
+        fun defaultDescription(defaultDescription: String): Builder {
+            this.defaultDescription = defaultDescription
+            return this
+        }
+
+        fun defaultPermission(defaultDescription: Permission): Builder {
+            this.defaultPermission = defaultPermission
+            return this
+        }
+
+        fun defaultPlayerOnly(defaultPlayerOnly: Boolean): Builder {
+            this.defaultPlayerOnly = defaultPlayerOnly
+            return this
+        }
+
+        fun registerCompletionContributor(vararg completionContributor: CompletionContributor): Builder {
+            completionContributors.addAll(completionContributor)
+            return this
         }
 
         /**
          * Registers the specified command. It is not necessary to register commands or permissions in plugin.yml.
          */
-        fun registerCommand(command: Command) {
+        fun registerCommand(command: Command): Builder {
             command.children.setParent(command)
             commands.add(command)
+            return this
         }
 
         /**
          * Message sent when the command is unavailable
          */
-        fun invalidCommandMessage(provider: (Command) -> String) {
+        fun invalidCommandMessage(provider: (Command) -> String): Builder {
             invalidCommandMessage = provider
+            return this
         }
 
         /**
          * Contents of send Help used by default when not overridden
          */
-        fun defaultSendHelp(provider: CommandContext.() -> Unit) {
+        fun defaultSendHelp(provider: CommandContext.() -> Unit): Builder {
             defaultSendHelp = provider
+            return this
         }
 
         private fun List<Command>.setParent(parent: Command): Unit = forEach {
@@ -309,7 +325,7 @@ class CommandHandler(
             children: List<Command> = emptyList(),
             tabComplete: CommandContext.() -> List<String> = { emptyList() },
             execute: CommandContext.() -> Unit
-        ) {
+        ): Builder {
             object : Command(name) {
                 override val description: String = description
                 override val aliases: List<String> = aliases
@@ -326,6 +342,7 @@ class CommandHandler(
             }.also {
                 registerCommand(it)
             }
+            return this
         }
 
         fun build() = CommandHandler(
