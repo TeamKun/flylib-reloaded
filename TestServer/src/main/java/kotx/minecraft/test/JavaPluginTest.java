@@ -3,7 +3,7 @@
  * Twitter: https://twitter.com/kotx__
  */
 
-package kotx.minecraft.testserver;
+package kotx.minecraft.test;
 
 import kotx.minecraft.libs.flylib.FlyLib;
 import kotx.minecraft.libs.flylib.command.CommandHandler;
