@@ -32,4 +32,12 @@ public class TestCommand extends Command {
 
         context.sendMessage("Hello " + context.getArgs()[0] + "!");
     }
+
+    @Override
+    protected List<String> tabComplete(CommandContext context) {
+        ArrayList<String> result = new ArrayList<>();
+        result.add("hoge");
+        result.add("fuga");
+        return result;
+    }
 }

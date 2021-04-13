@@ -12,9 +12,12 @@ import org.koin.core.component.KoinComponent
 
 class PagedMenu(
     player: Player,
-    size: Int,
     items: MutableList<MenuItem>
-) : Menu(player, size, items), KoinComponent {
+) : Menu(player, 45, items), KoinComponent {
+    init {
+        items.size / 9 > 4
+    }
+
     override fun display() {
         items.forEach {
             inventory.setItem(it.index, it.stack)
