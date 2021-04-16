@@ -48,11 +48,7 @@ class UsageCompletionContributor(
 
     override fun postProcess(
         currentCompletion: List<String>, selfCompletion: List<String>, context: CommandContext
-    ): List<String> = if (!onlyCompleteIfEmpty || (onlyCompleteIfEmpty && currentCompletion.isEmpty())) {
-        selfCompletion.filter {
-            context.args.lastOrNull().isNullOrBlank()
-        }.filter {
-            it.startsWith(context.args.lastOrNull() ?: "", true)
-        } + currentCompletion
-    } else currentCompletion
+    ): List<String> = if (onlyCompleteIfEmpty && currentCompletion.isEmpty()) selfCompletion.filter {
+        context.args.lastOrNull().isNullOrBlank()
+    } + currentCompletion else selfCompletion + currentCompletion
 }
