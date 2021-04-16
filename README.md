@@ -37,6 +37,26 @@ class PluginTest : JavaPlugin() {
 }
 ```
 
+### Java
+```
+public class JavaPluginTest extends JavaPlugin {
+    @Override
+    public void onEnable() {
+        new FlyLib.Builder(this).commandHandler(
+                new CommandHandler.Builder()
+                        .registerCommand(new TestCommand())
+                        .commandCompletion(new CommandCompletion.Builder().registerContributor(
+                                new ChildrenCompletionContributor(),
+                                new OptionCompletionContributor(),
+                                new UsageCompletionContributor(),
+                                new BasicCompletionContributor()
+                        ).build())
+                        .build()
+        ).build();
+    }
+}
+```
+
 ## Requirements
 
 Minecraft: 1.16.5  
