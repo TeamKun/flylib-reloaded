@@ -81,6 +81,22 @@ public class JavaPluginTest extends JavaPlugin {
         ).build();
     }
 }
+
+public class TestCommand extends Command {
+    public void TestCommand() {
+        super("test")
+    }
+    
+    @Override
+    public void execute(CommandContext context) {
+        if (context.args.size == 0) {
+            sendHelp();
+            return;
+        }
+        
+        send("Hello " + context.args[0] + "!");
+    }
+}
 ```
 
 ## Requirements
