@@ -16,32 +16,23 @@ Check the **[Wiki](https://github.com/TeamKun/flylib-reloaded/wiki/FlyLib-Reload
 Just write as follows, tab completion according to usages, execution of subcommands, and generation of help commands will all be done. There is no
 need for the user to register the command in plugin.yml. Fly Lib will automatically register everything in bukkit.
 
+### Kotlin
 ```kotlin
-class TestPlugin : JavaPlugin() {
-    val flyLib = injectFlyLib {
-        commandHandler {
-            registerCommand(TestCommand())
-            addUsageReplacement("user") {
-                server.onlinePlayers.mapNotNull { it.playerProfile.name }
+class PluginTest : JavaPlugin() {
+    override fun onEnable() {
+        injectFlyLib {
+            commandHandler {
+                registerCommand(TestCommand())
+                commandCompletion {
+                    registerContributor(
+                        ChildrenCompletionContributor(),
+                        OptionCompletionContributor(),
+                        UsageCompletionContributor(),
+                        BasicCompletionContributor()
+                    )
+                }
             }
         }
-    }
-}
-
-class TestCommand : Command("test") {
-    override val permission: Permission = Permission.EVERYONE
-    override val usages: List<Usage> = listOf(
-        Usage(
-            "test <aaa/bbb/ccc> <user> <arg> [..", options = listOf(
-                Option("opt", "Option!!", aliases = listOf("o")),
-                Option("tst", "test", aliases = listOf("t")),
-                Option("hoge", "hogeeeeee", aliases = listOf("h", "hg")),
-            )
-        )
-    )
-
-    override fun CommandContext.execute() {
-        sendHelp()
     }
 }
 ```
