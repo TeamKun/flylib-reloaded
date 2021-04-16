@@ -60,8 +60,8 @@ public class JavaPluginTest extends JavaPlugin {
     public void onEnable() {
         new FlyLib.Builder(this).commandHandler(
                 new CommandHandler.Builder()
-                        .registerCommand(new TestCommand())
-                        .commandCompletion(new CommandCompletion.Builder().registerContributor(
+                        .register(new TestCommand())
+                        .completion(new CommandCompletion.Builder().register(
                                 new ChildrenCompletionContributor(),
                                 new OptionCompletionContributor(),
                                 new UsageCompletionContributor(),
