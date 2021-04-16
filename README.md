@@ -6,7 +6,7 @@ __**FlyLib Reloaded is currently under development and is buggy and will undergo
 [![](https://jitpack.io/v/TeamKun/flylib-reloaded.svg)](https://jitpack.io/#TeamKun/flylib-reloaded)  
 A utility librarry for Minecraft developed in Kotlin. We are developing it with the aim of making it as easy to write as possible and easy to
 maintain.  
-This mod is developed by [Kotx\_\_](https://twitter.com/kotx__)
+This library is mainly developed by [Kotx\_\_](https://twitter.com/kotx__)
 
 **[Preview](https://imgur.com/Wy5yUvI)**  
 **[Examples](https://github.com/TeamKun/flylib-reloaded/tree/master/TestServer)**
