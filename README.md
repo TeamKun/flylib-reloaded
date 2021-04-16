@@ -11,7 +11,7 @@ This mod is developed by [Kotx\_\_](https://twitter.com/kotx__)
 **[Preview](https://imgur.com/Wy5yUvI)**  
 **[Examples](https://github.com/TeamKun/flylib-reloaded/tree/master/TestServer)**
 
-Check the **[Wiki](https://github.com/TeamKun/flylib-reloaded/wiki/FlyLib-Reloaded-Docs:-Welcome)** for more information.
+Check the **[Wiki](https://kotlin-chan.gitbook.io/flylib-reloaded/)** for more information.
 
 Just write as follows, tab completion according to usages, execution of subcommands, and generation of help commands will all be done. There is no
 need for the user to register the command in plugin.yml. Fly Lib will automatically register everything in bukkit.
