@@ -23,6 +23,12 @@ class PluginTest : JavaPlugin() {
         flyLib {
             command {
                 register(TestCommand())
+                
+                default {
+                    description = "No description provided."
+                    permission = Permission.EVERYONE
+                }
+                
                 completion {
                     register(
                         ChildrenCompletionContributor(),
@@ -61,6 +67,10 @@ public class JavaPluginTest extends JavaPlugin {
         new FlyLib.Builder(this).commandHandler(
                 new CommandHandler.Builder()
                         .register(new TestCommand())
+                        .default(new CommandDefault.Builder()
+                            .setDescription("No description provided")
+                            .setPermission(Permission.EVERYONE)
+                        .build())
                         .completion(new CommandCompletion.Builder().register(
                                 new ChildrenCompletionContributor(),
                                 new OptionCompletionContributor(),
