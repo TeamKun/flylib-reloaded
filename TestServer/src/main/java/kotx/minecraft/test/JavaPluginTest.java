@@ -17,10 +17,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class JavaPluginTest extends JavaPlugin {
     @Override
     public void onEnable() {
-        new FlyLib.Builder(this).commandHandler(
+        new FlyLib.Builder(this).command(
                 new CommandHandler.Builder()
                         .registerCommand(new TestCommand())
-                        .commandCompletion(new CommandCompletion.Builder().registerContributor(
+                        .completion(new CommandCompletion.Builder().registerContributor(
                                 new ChildrenCompletionContributor(),
                                 new OptionCompletionContributor(),
                                 new UsageCompletionContributor(),

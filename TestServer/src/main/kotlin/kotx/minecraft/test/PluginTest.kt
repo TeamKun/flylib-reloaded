@@ -9,15 +9,15 @@ import kotx.minecraft.libs.flylib.command.complete.providers.BasicCompletionCont
 import kotx.minecraft.libs.flylib.command.complete.providers.ChildrenCompletionContributor
 import kotx.minecraft.libs.flylib.command.complete.providers.OptionCompletionContributor
 import kotx.minecraft.libs.flylib.command.complete.providers.UsageCompletionContributor
-import kotx.minecraft.libs.flylib.injectFlyLib
+import kotx.minecraft.libs.flylib.flyLib
 import org.bukkit.plugin.java.JavaPlugin
 
 class PluginTest : JavaPlugin() {
     override fun onEnable() {
-        injectFlyLib {
-            commandHandler {
+        flyLib {
+            command {
                 registerCommand(TestCommand())
-                commandCompletion {
+                completion {
                     registerContributor(
                         ChildrenCompletionContributor(),
                         OptionCompletionContributor(),
