@@ -20,11 +20,11 @@ need for the user to register the command in plugin.yml. Fly Lib will automatica
 ```kotlin
 class PluginTest : JavaPlugin() {
     override fun onEnable() {
-        injectFlyLib {
-            commandHandler {
-                registerCommand(TestCommand())
-                commandCompletion {
-                    registerContributor(
+        flyLib {
+            command {
+                register(TestCommand())
+                completion {
+                    register(
                         ChildrenCompletionContributor(),
                         OptionCompletionContributor(),
                         UsageCompletionContributor(),
@@ -47,13 +47,14 @@ class TestCommand: Command("test") {
             sendHelp()
             return
         }
+        
         send("Hello ${args.first()}!")
     }
 }
 ```
 
 ### Java
-```
+```java
 public class JavaPluginTest extends JavaPlugin {
     @Override
     public void onEnable() {
