@@ -98,21 +98,39 @@ class CommandHandler(
         private var commandCompletion: CommandCompletion = CommandCompletion.Builder().build()
         private var commandDefault: CommandDefault = CommandDefault.Builder().build()
 
+        /**
+         * Configure settings for tab storage. See Javadoc in CommandCompletion below for details.
+         * @see CommandCompletion
+         */
         fun completion(commandCompletion: CommandCompletion): Builder {
             this.commandCompletion = commandCompletion
             return this
         }
 
+        /**
+         * Configure settings for tab storage. See Javadoc in CommandCompletion below for details.
+         * This is a method that corresponds to Kotlin's apply builder pattern.
+         * @see CommandCompletion
+         */
         fun completion(init: CommandCompletion.Builder.() -> Unit): Builder {
             commandCompletion = CommandCompletion.Builder().apply(init).build()
             return this
         }
 
+        /**
+         * Changes the default command settings. See CommandDefault below for details.
+         * @see CommandDefault
+         */
         fun defaultConfiguration(commandDefault: CommandDefault): Builder {
             this.commandDefault = commandDefault
             return this
         }
 
+        /**
+         * Changes the default command settings. See CommandDefault below for details.
+         * This is a method that corresponds to Kotlin's apply builder pattern.
+         * @see CommandDefault
+         */
         fun defaultConfiguration(init: CommandDefault.Builder.() -> Unit): Builder {
             commandDefault = CommandDefault.Builder().apply(init).build()
             return this

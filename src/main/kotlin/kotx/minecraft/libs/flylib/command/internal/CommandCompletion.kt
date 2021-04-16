@@ -13,6 +13,10 @@ class CommandCompletion(
     class Builder {
         private val contributors = mutableListOf<CompletionContributor>()
 
+        /**
+         * タブ保管をサポートするCompletionContributorのインスタンスを追加します。CompletionContributorの詳細については以下のJavadocを参照してください。
+         * @see CompletionContributor
+         */
         fun register(vararg contributor: CompletionContributor): Builder {
             contributors.addAll(contributor)
             return this

@@ -19,12 +19,31 @@ class CommandDefault(
     val sendHelp: CommandContext.() -> Unit,
 ) {
     class Builder {
+        /**
+         * Descriptive text that is specified by default when nothing is specified
+         */
         private var description: String = "No description provided."
+
+        /**
+         * Privileges specified by default when nothing is specified
+         */
         private var permission: Permission = Permission.OP
+
+        /**
+         * Whether only the player specified by default can execute when nothing is specified
+         */
         private var playerOnly: Boolean = false
+
+        /**
+         * A message that is displayed when a command other than the player tries to execute a command that can be executed only by the player or if the authority is insufficient.
+         */
         private var invalidCommandMessage: (Command) -> String = {
             "You can't execute ${it.name} command!"
         }
+
+        /**
+         * The method that will be executed when you call sendHelp() when nothing is implemented.
+         */
         private var sendHelp: CommandContext.() -> Unit = {
             var fullName = command.name
             fun Command.getFullName() {
@@ -126,26 +145,41 @@ class CommandDefault(
             }
         }
 
+        /**
+         * Descriptive text that is specified by default when nothing is specified
+         */
         fun description(defaultDescription: String): Builder {
             description = defaultDescription
             return this
         }
 
+        /**
+         * Privileges specified by default when nothing is specified
+         */
         fun permission(defaultPermission: Permission): Builder {
             permission = defaultPermission
             return this
         }
 
+        /**
+         * Whether only the player specified by default can execute when nothing is specified
+         */
         fun playerOnly(defaultPlayerOnly: Boolean): Builder {
             playerOnly = defaultPlayerOnly
             return this
         }
 
+        /**
+         * The method that will be executed when you call sendHelp() when nothing is implemented.
+         */
         fun help(defaultSendHelp: CommandContext.() -> Unit): Builder {
             sendHelp = defaultSendHelp
             return this
         }
 
+        /**
+         * A message that is displayed when a command other than the player tries to execute a command that can be executed only by the player or if the authority is insufficient.
+         */
         fun invalidMessage(invalidCommandMessage: (Command) -> String): Builder {
             this.invalidCommandMessage = invalidCommandMessage
             return this
