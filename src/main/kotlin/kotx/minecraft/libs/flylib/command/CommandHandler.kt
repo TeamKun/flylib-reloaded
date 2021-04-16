@@ -108,12 +108,12 @@ class CommandHandler(
             return this
         }
 
-        fun default(commandDefault: CommandDefault): Builder {
+        fun defaultConfiguration(commandDefault: CommandDefault): Builder {
             this.commandDefault = commandDefault
             return this
         }
 
-        fun default(init: CommandDefault.Builder.() -> Unit): Builder {
+        fun defaultConfiguration(init: CommandDefault.Builder.() -> Unit): Builder {
             commandDefault = CommandDefault.Builder().apply(init).build()
             return this
         }
