@@ -35,6 +35,21 @@ class PluginTest : JavaPlugin() {
         }
     }
 }
+
+class TestCommand: Command("test") {
+    override val description: String = "A test command for describe usage"
+    override val usages = listOf(
+        Usage("test <name>", "Say hello to you"),
+    )
+    
+    override fun CommandContext.execute() {
+        if (args.isEmprty()) {
+            sendHelp()
+            return
+        }
+        send("Hello ${args.first()}!")
+    }
+}
 ```
 
 ### Java
