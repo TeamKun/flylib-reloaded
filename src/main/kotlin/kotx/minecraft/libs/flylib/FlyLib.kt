@@ -17,7 +17,7 @@ class FlyLib(
 ) {
     private val logger = LoggerFactory.getLogger("::FlyLib Reloaded::")!!
 
-    init {
+    fun initialize() {
         try {
             logger.info("injection start.")
             startKoin {
