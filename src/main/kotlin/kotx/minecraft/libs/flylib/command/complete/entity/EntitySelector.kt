@@ -14,7 +14,7 @@ class EntitySelector(
     val defaultValues: (JavaPlugin, String?) -> List<String> = { _, _ -> emptyList() }
 ) {
     companion object {
-        private val suggestOptions = listOf(
+        val suggestOptions = listOf(
             EntitySelector("advancements", EntitySelectorType.TEXT) { _, _ -> listOf("{}") },
             EntitySelector("distance", EntitySelectorType.RANGE) { _, s ->
                 if (s?.toIntOrNull() ?: 0 > 0)
@@ -104,78 +104,78 @@ class EntitySelector(
                     emptyList()
             },
         )
-
-        fun suggestEntities(input: String, plugin: JavaPlugin): MutableList<String> {
-            val selectors = listOf("@a", "@e", "@s", "@r")
-            val suggestions = mutableListOf<String>()
-
-            if (input.isBlank()) {
-                suggestions.addAll(plugin.server.onlinePlayers.map { it.name }.toMutableList())
-                suggestions.addAll(selectors)
-
-                return suggestions.map { "$input$it" }.toMutableList()
-            }
-
-            if (input == "@") {
-                suggestions.add("a")
-                suggestions.add("e")
-                suggestions.add("s")
-                suggestions.add("r")
-
-                return suggestions.map { "$input$it" }.toMutableList()
-            }
-
-            if (selectors.contains(input.toLowerCase())) {
-                suggestions.add("[]")
-                return suggestions.map { "$input$it" }.toMutableList()
-            }
-
-            if (selectors.any { input.toLowerCase().startsWith("$it[") && input.endsWith("]") }) {
-                return mutableListOf()
-            }
-
-            val selector = selectors.find { input.toLowerCase().startsWith("$it[") }
-            if (selector != null) {
-                val option = input.replace("$selector[", "").run {
-                    if (lastOrNull() == ']')
-                        substring(0 until length)
-                    else
-                        this
-                }
-
-                val currentOption = option.split(",").last()
-                val currentOptionKey = currentOption.split("=").getOrNull(0)
-                val currentOptionValue = currentOption.split("=").getOrNull(1)
-                val currentOptionInfo = suggestOptions.find { it.name == currentOptionKey }
-
-                when {
-                    currentOption.split("=").size == 1 -> {
-                        val options = suggestOptions.filter { it.name.startsWith(currentOption, true) }
-                        if (options.size == 1) {
-                            suggestions.addAll(options.first().defaultValues(plugin, null).map {
-                                "${options.first().name.drop(currentOption.length)}=${it}"
-                            })
-                        }
-                        suggestions.addAll(options.map { "${it.name.drop(currentOption.length)}=" })
-                    }
-                    currentOptionInfo != null && currentOptionValue.isNullOrEmpty() -> suggestions.addAll(
-                        currentOptionInfo.defaultValues(
-                            plugin,
-                            null
-                        )
-                    )
-                    currentOptionInfo != null && !currentOptionValue.isNullOrEmpty() -> suggestions.addAll(
-                        currentOptionInfo.defaultValues(
-                            plugin,
-                            currentOptionValue
-                        ).filter { it.startsWith(currentOptionValue, true) }
-                            .map { it.drop(currentOptionValue.length) })
-                }
-            } else {
-                suggestions.addAll(plugin.server.onlinePlayers.map { it.name }.filter { it.startsWith(input, true) }
-                    .map { it.drop(input.length) })
-            }
-            return suggestions.map { "$input$it" }.toMutableList()
-        }
     }
+}
+
+fun JavaPlugin.suggestEntities(input: String): MutableList<String> {
+    val selectors = listOf("@a", "@e", "@s", "@r")
+    val suggestions = mutableListOf<String>()
+
+    if (input.isBlank()) {
+        suggestions.addAll(server.onlinePlayers.map { it.name }.toMutableList())
+        suggestions.addAll(selectors)
+
+        return suggestions.map { "$input$it" }.toMutableList()
+    }
+
+    if (input == "@") {
+        suggestions.add("a")
+        suggestions.add("e")
+        suggestions.add("s")
+        suggestions.add("r")
+
+        return suggestions.map { "$input$it" }.toMutableList()
+    }
+
+    if (selectors.contains(input.toLowerCase())) {
+        suggestions.add("[]")
+        return suggestions.map { "$input$it" }.toMutableList()
+    }
+
+    if (selectors.any { input.toLowerCase().startsWith("$it[") && input.endsWith("]") }) {
+        return mutableListOf()
+    }
+
+    val selector = selectors.find { input.toLowerCase().startsWith("$it[") }
+    if (selector != null) {
+        val option = input.replace("$selector[", "").run {
+            if (lastOrNull() == ']')
+                substring(0 until length)
+            else
+                this
+        }
+
+        val currentOption = option.split(",").last()
+        val currentOptionKey = currentOption.split("=").getOrNull(0)
+        val currentOptionValue = currentOption.split("=").getOrNull(1)
+        val currentOptionInfo = EntitySelector.suggestOptions.find { it.name == currentOptionKey }
+
+        when {
+            currentOption.split("=").size == 1 -> {
+                val options = EntitySelector.suggestOptions.filter { it.name.startsWith(currentOption, true) }
+                if (options.size == 1) {
+                    suggestions.addAll(options.first().defaultValues(this, null).map {
+                        "${options.first().name.drop(currentOption.length)}=${it}"
+                    })
+                }
+                suggestions.addAll(options.map { "${it.name.drop(currentOption.length)}=" })
+            }
+            currentOptionInfo != null && currentOptionValue.isNullOrEmpty() -> suggestions.addAll(
+                currentOptionInfo.defaultValues(
+                    this,
+                    null
+                )
+            )
+            currentOptionInfo != null && !currentOptionValue.isNullOrEmpty() -> suggestions.addAll(
+                currentOptionInfo.defaultValues(
+                    this,
+                    currentOptionValue
+                ).filter { it.startsWith(currentOptionValue, true) }
+                    .map { it.drop(currentOptionValue.length) })
+        }
+    } else {
+        suggestions.addAll(server.onlinePlayers.map { it.name }.filter { it.startsWith(input, true) }
+            .map { it.drop(input.length) })
+    }
+    return suggestions.map { "$input$it" }.toMutableList()
 }
