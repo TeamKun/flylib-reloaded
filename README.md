@@ -16,32 +16,79 @@ Check the **[Wiki](https://github.com/TeamKun/flylib-reloaded/wiki/FlyLib-Reload
 Just write as follows, tab completion according to usages, execution of subcommands, and generation of help commands will all be done. There is no
 need for the user to register the command in plugin.yml. Fly Lib will automatically register everything in bukkit.
 
+### Examples
+
+**Kotlin**
+
 ```kotlin
-class TestPlugin : JavaPlugin() {
-    val flyLib = injectFlyLib {
-        commandHandler {
-            registerCommand(TestCommand())
-            addUsageReplacement("user") {
-                server.onlinePlayers.mapNotNull { it.playerProfile.name }
+class PluginTest : JavaPlugin() {
+    private val flyLib = flyLib {
+        command {
+            register(TestCommand())
+
+            default {
+                description("this is a description of the default command.")
+                permission(Permission.EVERYONE)
+                invalidMessage { "Hey! Looks like you don't have the necessary permissions to run the command!" }
+            }
+
+            completion {
+                register(
+                    ChildrenCompletionContributor(),
+                    OptionCompletionContributor(),
+                    UsageCompletionContributor(),
+                    BasicCompletionContributor()
+                )
             }
         }
+    }
+
+    override fun onEnable() {
+        flyLib.initialize()
     }
 }
 
 class TestCommand : Command("test") {
-    override val permission: Permission = Permission.EVERYONE
-    override val usages: List<Usage> = listOf(
-        Usage(
-            "test <aaa/bbb/ccc> <user> <arg> [..", options = listOf(
-                Option("opt", "Option!!", aliases = listOf("o")),
-                Option("tst", "test", aliases = listOf("t")),
-                Option("hoge", "hogeeeeee", aliases = listOf("h", "hg")),
-            )
-        )
-    )
-
     override fun CommandContext.execute() {
-        sendHelp()
+        if (args.isEmpty()) {
+            sendHelp()
+            return
+        }
+
+        sendMessage("Hello ${args.first()}!")
+    }
+}
+```
+
+**Java**
+
+```java
+public class JPluginTest extends JavaPlugin {
+    private final FlyLib flyLib = new FlyLib.Builder(this)
+            .command(new CommandHandler.Builder()
+                    .register(new JTestCommand())
+                    .defaultConfiguration(new CommandDefault.Builder()
+                            .description("this is a description of the default command.")
+                            .permission(Permission.EVERYONE)
+                            .invalidMessage(command -> "Hey! Looks like you don't have the necessary permissions to run the command!")
+                            .build()
+                    ).build()
+            ).build();
+}
+
+class JTestCommand extends Command {
+    public JTestCommand() {
+        super("test");
+    }
+
+    @Override
+    protected void execute(CommandContext context) {
+        if (context.getArgs().length == 0) {
+            sendHelp(context);
+            return;
+        }
+
+        context.sendMessage("Hello " + context.getArgs()[0] + "!");
     }
 }
 ```
@@ -53,23 +100,72 @@ Paper: 1.16.5-R0.1-SNAPSHOT
 
 ## Installation
 
-Add jitpack repository
+[![](https://jitpack.io/v/TeamKun/flylib-reloaded.svg)](https://jitpack.io/#TeamKun/flylib-reloaded)
+
+<details>
+<summary>Gradle Kotlin DSL</summary>
+<div>
 
 ```gradle
 repositories {
-    maven { url 'https://jitpack.io' }
+    maven("https://jitpack.io")
 }
 ```
-
-Add dependency
-
-[![](https://jitpack.io/v/TeamKun/flylib-reloaded.svg)](https://jitpack.io/#TeamKun/flylib-reloaded)
 
 ```gradle
 dependencies {
-    implementation 'com.github.TeamKun:flylib-reloaded:<RELEASE_VERSION>'
+    implementation("com.github.TeamKun:flylib-reloaded:<VERSION>")
+}
+
+```
+
+</div>
+</details>
+
+<details>
+<summary>Gradle</summary>
+<div>
+
+```gradle
+repositories {
+    maven { url "https://jitpack.io" }
 }
 ```
+
+```gradle
+dependencies {
+    implementation "com.github.TeamKun:flylib-reloaded:<VERSION>"
+}
+
+```
+
+</div>
+</details>
+
+<details>
+<summary>Maven</summary>
+<div>
+
+```maven
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+```
+
+```maven
+<dependency>
+    <groupId>com.github.TeamKun</groupId>
+    <artifactId>flylib-reloaded</artifactId>
+    <version>VERSION</version>
+</dependency>
+
+```
+
+</div>
+</details>
 
 ## License
 
