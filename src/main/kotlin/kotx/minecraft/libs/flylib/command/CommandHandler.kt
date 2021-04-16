@@ -8,7 +8,6 @@ package kotx.minecraft.libs.flylib.command
 import kotx.minecraft.libs.flylib.*
 import kotx.minecraft.libs.flylib.command.internal.CommandCompletion
 import kotx.minecraft.libs.flylib.command.internal.Permission
-import kotx.minecraft.libs.flylib.command.internal.Usage
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.command.CommandSender
 import org.bukkit.permissions.PermissionDefault
@@ -230,28 +229,13 @@ class CommandHandler(
             }
         }
 
-        fun commandCompletion(commandCompletion: CommandCompletion): Builder {
+        fun completion(commandCompletion: CommandCompletion): Builder {
             this.commandCompletion = commandCompletion
             return this
         }
 
-        fun commandCompletion(init: CommandCompletion.Builder.() -> Unit): Builder {
+        fun completion(init: CommandCompletion.Builder.() -> Unit): Builder {
             commandCompletion = CommandCompletion.Builder().apply(init).build()
-            return this
-        }
-
-        fun defaultDescription(defaultDescription: String): Builder {
-            this.defaultDescription = defaultDescription
-            return this
-        }
-
-        fun defaultPermission(defaultDescription: Permission): Builder {
-            this.defaultPermission = defaultPermission
-            return this
-        }
-
-        fun defaultPlayerOnly(defaultPlayerOnly: Boolean): Builder {
-            this.defaultPlayerOnly = defaultPlayerOnly
             return this
         }
 
@@ -259,62 +243,13 @@ class CommandHandler(
          * Registers the specified command. It is not necessary to register commands or permissions in plugin.yml.
          */
         fun registerCommand(command: Command): Builder {
+            fun List<Command>.setParent(parent: Command): Unit = forEach {
+                it.parent = parent
+                it.children.setParent(it)
+            }
+
             command.children.setParent(command)
             commands.add(command)
-            return this
-        }
-
-        /**
-         * Message sent when the command is unavailable
-         */
-        fun invalidCommandMessage(provider: (Command) -> String): Builder {
-            invalidCommandMessage = provider
-            return this
-        }
-
-        /**
-         * Contents of send Help used by default when not overridden
-         */
-        fun defaultSendHelp(provider: CommandContext.() -> Unit): Builder {
-            defaultSendHelp = provider
-            return this
-        }
-
-        private fun List<Command>.setParent(parent: Command): Unit = forEach {
-            it.parent = parent
-            it.children.setParent(it)
-        }
-
-        /**
-         * Registers the specified command. It is not necessary to register commands or permissions in plugin.yml.
-         */
-        fun registerCommand(
-            name: String,
-            description: String = "The description does not exist.",
-            aliases: List<String> = emptyList(),
-            usages: List<Usage> = emptyList(),
-            examples: List<String> = emptyList(),
-            permission: Permission = Permission.OP,
-            children: List<Command> = emptyList(),
-            tabComplete: CommandContext.() -> List<String> = { emptyList() },
-            execute: CommandContext.() -> Unit
-        ): Builder {
-            object : Command(name) {
-                override val description: String = description
-                override val aliases: List<String> = aliases
-                override val usages: List<Usage> = usages
-                override val examples: List<String> = examples
-                override val permission: Permission = permission
-                override val children: List<Command> = children
-
-                override fun CommandContext.tabComplete(): List<String> = tabComplete()
-
-                override fun CommandContext.execute() {
-                    execute()
-                }
-            }.also {
-                registerCommand(it)
-            }
             return this
         }
 
