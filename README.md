@@ -64,20 +64,24 @@ class TestCommand: Command("test") {
 public class JavaPluginTest extends JavaPlugin {
     @Override
     public void onEnable() {
-        new FlyLib.Builder(this).commandHandler(
+        new FlyLib.Builder(this).command(
                 new CommandHandler.Builder()
                         .register(new TestCommand())
-                        .default(new CommandDefault.Builder()
-                            .setDescription("No description provided")
-                            .setPermission(Permission.EVERYONE)
-                        .build())
-                        .completion(new CommandCompletion.Builder().register(
-                                new ChildrenCompletionContributor(),
-                                new OptionCompletionContributor(),
-                                new UsageCompletionContributor(),
-                                new BasicCompletionContributor()
-                        ).build())
-                        .build()
+                        .default(
+                            new CommandDefault.Builder()
+                                .setDescription("No description provided")
+                                .setPermission(Permission.EVERYONE)
+                                .build()
+                        ).completion(
+                            new CommandCompletion.Builder()
+                                .register(
+                                    new ChildrenCompletionContributor(),
+                                    new OptionCompletionContributor(),
+                                    new UsageCompletionContributor(),
+                                    new BasicCompletionContributor()
+                                )
+                                .build()
+                        ).build()
         ).build();
     }
 }
