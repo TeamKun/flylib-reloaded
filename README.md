@@ -37,7 +37,6 @@ class PluginTest : JavaPlugin() {
                     ChildrenCompletionContributor(),
                     OptionCompletionContributor(),
                     UsageCompletionContributor(),
-                    LikelyCompletionContributor(),
                     BasicCompletionContributor(),
                 )
             }
@@ -72,7 +71,6 @@ public class JPluginTest extends JavaPlugin {
                             .register(new ChildrenCompletionContributor(),
                                     new OptionCompletionContributor(),
                                     new UsageCompletionContributor(),
-                                    new LikelyCompletionContributor(),
                                     new BasicCompletionContributor())
                             .build())
                     .defaultConfiguration(new CommandDefault.Builder()
