@@ -26,7 +26,7 @@ abstract class Command(
      * By default, it is set to blank
      * You can also write the description over multiple lines. In that case, it will be automatically formatted by sendHelp().
      */
-    open val description: String by lazy { commandHandler.defaultDescription }
+    open val description: String by lazy { commandHandler.commandDefault.description }
 
     /**
      * Command alias. A list of strings that can be used as abbreviations instead of using the official name of the command.
@@ -47,12 +47,12 @@ abstract class Command(
      * Permission to use the command. Permission.OP can be used only by OP, Permission.NOT_OP can be used by everyone except OP, and Permission.EVERYONE can be used by everyone.
      * By default, Permission.OP is specified.
      */
-    open val permission: Permission by lazy { commandHandler.defaultPermission }
+    open val permission: Permission by lazy { commandHandler.commandDefault.permission }
 
     /**
      * Can only the player execute this command? By default it can also be run from the server console. (default: false)
      */
-    open val playerOnly: Boolean by lazy { commandHandler.defaultPlayerOnly }
+    open val playerOnly: Boolean by lazy { commandHandler.commandDefault.playerOnly }
 
     /**
      * A subcommand of this command. If the string entered as an argument matches the name or alias of these commands, the matching command will be executed.
@@ -102,7 +102,7 @@ abstract class Command(
 
     fun handleExecute(sender: CommandSender, label: String, args: Array<out String>) {
         if (!validate(sender)) {
-            sender.sendMessage(commandHandler.invalidCommandMessage(this))
+            sender.sendMessage(commandHandler.commandDefault.invalidCommandMessage(this))
             return
         }
 
@@ -143,15 +143,9 @@ abstract class Command(
             result.addAll(context.tabComplete())
 
             commandHandler.commandCompletion.contributors.forEach {
-                val selfCompletion = if (commandHandler.commandCompletion.autoCompletion)
-                    it.suggest(context)
-                else
-                    emptyList()
+                val selfCompletion = it.suggest(context)
 
-                if (commandHandler.commandCompletion.autoSort)
-                    result = it.postProcess(result, selfCompletion, context).toMutableList()
-                else
-                    result.addAll(selfCompletion)
+                result = it.postProcess(result, selfCompletion, context).toMutableList()
             }
 
             return result
@@ -177,7 +171,7 @@ abstract class Command(
      * It is supposed to be executed within execute.
      */
     fun CommandContext.sendHelp() {
-        commandHandler.defaultSendHelp(this)
+        commandHandler.commandDefault.sendHelp(this)
     }
 
     override fun getKoin(): Koin {
