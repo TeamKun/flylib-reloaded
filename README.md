@@ -80,23 +80,64 @@ Paper: 1.16.5-R0.1-SNAPSHOT
 
 ## Installation
 
-Add jitpack repository
+<details>
+<summary>Gradle Kotlin DSL</summary>
+<div>
 
 ```gradle
 repositories {
-    maven { url 'https://jitpack.io' }
+    maven("https://jitpack.io")
 }
 ```
-
-Add dependency
-
-[![](https://jitpack.io/v/TeamKun/flylib-reloaded.svg)](https://jitpack.io/#TeamKun/flylib-reloaded)
-
 ```gradle
 dependencies {
-    implementation 'com.github.TeamKun:flylib-reloaded:<RELEASE_VERSION>'
+    implementation("com.github.TeamKun:flylib-reloaded:<VERSION>")
+}
+
+```
+</div>
+</details>
+
+<details>
+<summary>Gradle</summary>
+<div>
+
+```gradle
+repositories {
+    maven { url "https://jitpack.io" }
 }
 ```
+```gradle
+dependencies {
+    implementation "com.github.TeamKun:flylib-reloaded:<VERSION>"
+}
+
+```
+</div>
+</details>
+
+<details>
+<summary>Maven</summary>
+<div>
+
+```maven
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+```
+```maven
+<dependency>
+    <groupId>com.github.TeamKun</groupId>
+    <artifactId>flylib-reloaded</artifactId>
+    <version>VERSION</version>
+</dependency>
+
+```
+</div>
+</details>
 
 ## License
 
