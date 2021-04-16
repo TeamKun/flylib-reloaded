@@ -84,7 +84,7 @@ public class JavaPluginTest extends JavaPlugin {
 
 public class TestCommand extends Command {
     public void TestCommand() {
-        super("test")
+        super("test");
     }
     
     @Override
