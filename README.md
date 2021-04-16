@@ -80,6 +80,8 @@ Paper: 1.16.5-R0.1-SNAPSHOT
 
 ## Installation
 
+[![](https://jitpack.io/v/TeamKun/flylib-reloaded.svg)](https://jitpack.io/#TeamKun/flylib-reloaded)  
+
 <details>
 <summary>Gradle Kotlin DSL</summary>
 <div>
