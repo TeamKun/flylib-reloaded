@@ -9,7 +9,10 @@ import kotx.minecraft.libs.flylib.FlyLib;
 import kotx.minecraft.libs.flylib.command.Command;
 import kotx.minecraft.libs.flylib.command.CommandContext;
 import kotx.minecraft.libs.flylib.command.CommandHandler;
-import kotx.minecraft.libs.flylib.command.complete.providers.*;
+import kotx.minecraft.libs.flylib.command.complete.providers.BasicCompletionContributor;
+import kotx.minecraft.libs.flylib.command.complete.providers.ChildrenCompletionContributor;
+import kotx.minecraft.libs.flylib.command.complete.providers.OptionCompletionContributor;
+import kotx.minecraft.libs.flylib.command.complete.providers.UsageCompletionContributor;
 import kotx.minecraft.libs.flylib.command.internal.CommandCompletion;
 import kotx.minecraft.libs.flylib.command.internal.CommandDefault;
 import kotx.minecraft.libs.flylib.command.internal.Permission;
@@ -23,7 +26,6 @@ public class JPluginTest extends JavaPlugin {
                             .register(new ChildrenCompletionContributor(),
                                     new OptionCompletionContributor(),
                                     new UsageCompletionContributor(),
-                                    new LikelyCompletionContributor(),
                                     new BasicCompletionContributor())
                             .build())
                     .defaultConfiguration(new CommandDefault.Builder()

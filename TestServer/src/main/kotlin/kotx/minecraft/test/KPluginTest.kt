@@ -7,7 +7,10 @@ package kotx.minecraft.test
 
 import kotx.minecraft.libs.flylib.command.Command
 import kotx.minecraft.libs.flylib.command.CommandContext
-import kotx.minecraft.libs.flylib.command.complete.providers.*
+import kotx.minecraft.libs.flylib.command.complete.providers.BasicCompletionContributor
+import kotx.minecraft.libs.flylib.command.complete.providers.ChildrenCompletionContributor
+import kotx.minecraft.libs.flylib.command.complete.providers.OptionCompletionContributor
+import kotx.minecraft.libs.flylib.command.complete.providers.UsageCompletionContributor
 import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
 import kotx.minecraft.libs.flylib.flyLib
@@ -28,9 +31,8 @@ class PluginTest : JavaPlugin() {
                 register(
                     ChildrenCompletionContributor(),
                     OptionCompletionContributor(),
-                    UsageCompletionContributor(),
-                    LikelyCompletionContributor(),
-                    BasicCompletionContributor()
+                    UsageCompletionContributor(false),
+                    BasicCompletionContributor(true)
                 )
             }
         }
