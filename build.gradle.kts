@@ -16,6 +16,7 @@ repositories {
     jcenter()
     maven("https://papermc.io/repo/repository/maven-public/")
     maven("https://oss.sonatype.org/content/groups/public/")
+    maven("https://libraries.minecraft.net")
     maven("https://kotlin.bintray.com/kotlinx/")
 }
 
@@ -25,6 +26,7 @@ dependencies {
     implementation("org.koin:koin-core-ext:2.2.2")
     implementation("ch.qos.logback", "logback-classic", "1.2.3")
     implementation("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
+    implementation("com.mojang", "brigadier", "1.0.17")
 }
 
 tasks {
