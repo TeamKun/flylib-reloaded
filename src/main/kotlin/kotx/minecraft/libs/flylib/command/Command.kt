@@ -84,7 +84,7 @@ abstract class Command(
      */
     var parent: Command? = null
 
-    private fun validate(sender: CommandSender): Boolean {
+    internal fun validate(sender: CommandSender): Boolean {
         val validPermission = when (permission) {
             Permission.OP -> sender.isOp
             Permission.NOT_OP -> !sender.isOp
@@ -120,51 +120,13 @@ abstract class Command(
             ?: context.execute()
     }
 
-    fun handleTabComplete(
-        sender: CommandSender,
-        alias: String,
-        args: Array<out String>
-    ): List<String> {
-        if (!validate(sender)) return emptyList()
-        val context = CommandContext(
-            this,
-            plugin,
-            sender,
-            sender as? Player,
-            sender.server,
-            "$alias ${args.joinToString(" ")}",
-            args.toList().toTypedArray()
-        )
-
-        val subCommand = children[args.firstOrNull() ?: ""]
-
-        return if (subCommand == null) {
-            var result = mutableListOf<String>()
-            result.addAll(context.tabComplete())
-
-            commandHandler.commandCompletion.contributors.forEach {
-                val selfCompletion = it.suggest(context)
-
-                result = it.postProcess(result, selfCompletion, context).toMutableList()
-            }
-
-            return result
-        } else {
-            subCommand.handleTabComplete(sender, alias, args.drop(1).toTypedArray())
-        }
-    }
-
     /**
      * Called when this command is executed. Since FlyLib has completed the authority check etc., please describe only the execution part.
      * Of course, this is not the case if you implement your own permission check.
      */
-    protected abstract fun CommandContext.execute()
-
-    /**
-     * Where to implement tab completion. FlyLib automatically sorts and selects according to the user's input, so you only need to provide the list according to the size of the argument.
-     * To disable the FlyLib auto tab selection feature, set disableAutoTabSelection to true in the injectFlyLib in commandHandler.
-     */
-    protected open fun CommandContext.tabComplete(): List<String> = emptyList()
+    protected open fun CommandContext.execute() {
+        sendHelp()
+    }
 
     /**
      * A method that sends command usage, aliases, examples, etc. to the user in the current context.
