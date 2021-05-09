@@ -19,7 +19,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Grant execute permission for gradlew
-        run: chmod +r ./build.gradle
+        run: chmod +r ./build.gradle.kts
 
       - name: Add permission to auto_release scripts.
         run: chmod +x ./auto_release.sh
