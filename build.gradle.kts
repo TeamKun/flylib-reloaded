@@ -6,10 +6,11 @@
 plugins {
     kotlin("jvm") version "1.4.32"
     `maven-publish`
+    `java-library`
 }
 
 group = "kotx.minecraft.libs"
-version = "0.0.24"
+version = "0.0.33"
 
 repositories {
     mavenCentral()
@@ -23,12 +24,11 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    implementation("org.koin:koin-core:2.2.2")
-    implementation("org.koin:koin-core-ext:2.2.2")
-    implementation("ch.qos.logback", "logback-classic", "1.2.3")
+    api("org.koin:koin-core:2.2.2")
+    api("org.koin:koin-core-ext:2.2.2")
+    api("ch.qos.logback", "logback-classic", "1.2.3")
+    api("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
     implementation("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
-    implementation("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
-    implementation("com.mojang", "brigadier", "1.0.17")
     implementation(fileTree("./libs"))
 }
 
@@ -36,11 +36,13 @@ tasks {
     compileJava {
         sourceCompatibility = "1.8"
         targetCompatibility = "1.8"
+        options.encoding = "UTF-8"
     }
 
     compileTestJava {
         sourceCompatibility = "1.8"
         targetCompatibility = "1.8"
+        options.encoding = "UTF-8"
     }
 
     compileKotlin {
