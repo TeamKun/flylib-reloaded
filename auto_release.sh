@@ -38,7 +38,6 @@ if [ ! -e $TARGET_FILE ]; then
   fi
 fi
 
-GITHUB_REPOSITORY="TeamKun/flylib-reloaded"
 REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}')
 
 PROJECT_VERSION=$(cat $TARGET_FILE | grep -m 1 "version = " | awk 'match($0, /version = "(.+)"/, groups) { print groups[1] }')
