@@ -51,7 +51,7 @@ echo "Release Version: $REMOTE_LATEST_VERSION"
 
 if [ -z $REMOTE_LATEST_VERSION ]; then
   createRelease
-elif [ $IS_RELEASEABLE == true ]; then
+elif [ $IS_RELEASEABLE = "true" ]; then
   createRelease
 else
   exit
