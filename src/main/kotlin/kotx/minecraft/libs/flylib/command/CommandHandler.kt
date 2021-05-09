@@ -5,27 +5,33 @@
 
 package kotx.minecraft.libs.flylib.command
 
-import kotx.minecraft.libs.flylib.command.internal.CommandCompletion
+import com.mojang.brigadier.builder.ArgumentBuilder
+import com.mojang.brigadier.builder.LiteralArgumentBuilder
+import com.mojang.brigadier.builder.RequiredArgumentBuilder
+import com.mojang.brigadier.context.CommandContext
+import kotx.minecraft.libs.flylib.command.internal.Argument
 import kotx.minecraft.libs.flylib.command.internal.CommandDefault
 import kotx.minecraft.libs.flylib.command.internal.Permission
-import kotx.minecraft.libs.flylib.get
-import org.bukkit.command.CommandSender
+import net.minecraft.server.v1_16_R3.CommandListenerWrapper
+import net.minecraft.server.v1_16_R3.MinecraftServer
+import org.bukkit.Bukkit
+import org.bukkit.craftbukkit.v1_16_R3.CraftServer
+import org.bukkit.entity.Player
 import org.bukkit.permissions.PermissionDefault
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.slf4j.Logger
 
+
 class CommandHandler(
     private val commands: List<Command>,
-    val commandCompletion: CommandCompletion,
     val commandDefault: CommandDefault
 ) : KoinComponent {
     private val plugin: JavaPlugin by inject()
     private val logger: Logger by inject()
 
     fun initialize() {
-        logger.info("Registering command handling permission")
         plugin.server.pluginManager.addPermission(
             org.bukkit.permissions.Permission(
                 "flylib.op",
@@ -44,78 +50,122 @@ class CommandHandler(
                 PermissionDefault.TRUE
             )
         )
-        logger.info("Registering commands: (${commands.size})")
-        commands.forEach {
-            plugin.server.commandMap.register("flylib", object : org.bukkit.command.Command(it.name) {
-                override fun execute(sender: CommandSender, commandLabel: String, args: Array<out String>): Boolean {
-                    handleCommand(sender, label, args)
-                    return true
-                }
 
-                override fun tabComplete(
-                    sender: CommandSender,
-                    alias: String,
-                    args: Array<out String>
-                ) = handleTabComplete(sender, alias, args).toMutableList()
-            }.apply {
-                label = it.name
-                aliases = it.aliases
-                description = it.description
-                permission = when (it.permission) {
+        logger.info("Registering commands: (${commands.size})")
+        commands.forEach { command ->
+            register(
+                command,
+                command.name
+            )
+
+            command.aliases.forEach {
+                register(
+                    command,
+                    it
+                )
+            }
+        }
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, {
+            commands.forEach { cmd ->
+                plugin.server.commandMap.getCommand(cmd.name)?.permission = when (cmd.permission) {
                     Permission.OP -> "flylib.op"
                     Permission.NOT_OP -> "flylib.notop"
                     Permission.EVERYONE -> "flylib.everyone"
                 }
-                permissionMessage = "You can't execute ${it.name} command! (permission required)"
-            })
-            logger.info("Registered command: ${it.name}")
-        }
-        logger.info("Finished registering commands.")
+
+                cmd.aliases.forEach {
+                    plugin.server.commandMap.getCommand(it)?.permission = when (cmd.permission) {
+                        Permission.OP -> "flylib.op"
+                        Permission.NOT_OP -> "flylib.notop"
+                        Permission.EVERYONE -> "flylib.everyone"
+                    }
+                }
+            }
+        }, 0L)
     }
 
-    private fun handleCommand(
-        sender: CommandSender,
-        label: String,
-        args: Array<out String>
+    private fun register(
+        command: Command,
+        name: String
     ) {
-        val cmd = commands[label] ?: return
-        cmd.handleExecute(sender, label, args)
+        val base = LiteralArgumentBuilder
+            .literal<CommandListenerWrapper?>(name)
+            .requires { command.validate(it.bukkitSender) }
+            .executes {
+                val userInput = it.input.replaceFirst("/", "").split(" ")
+                command.handleExecute(it.source.bukkitSender, userInput[0], userInput.drop(1).toTypedArray())
+                1
+            }
+
+        command.usages.forEach { usage ->
+            val outer = getArgumentBuilder(usage.args.first())
+
+            setupArgument(usage.args.first(), outer, command)
+
+            usage.args.drop(1).forEach {
+                val inner = getArgumentBuilder(it)
+                setupArgument(it, inner, command)
+                outer.then(inner)
+            }
+
+            base.then(outer)
+        }
+
+        ((Bukkit.getServer() as CraftServer).server as MinecraftServer).commandDispatcher.a().register(base)
     }
 
-    private fun handleTabComplete(
-        sender: CommandSender,
-        alias: String,
-        args: Array<out String>
-    ): List<String> {
-        val cmd = commands[alias] ?: return emptyList()
+    private fun getArgumentBuilder(argument: Argument): ArgumentBuilder<CommandListenerWrapper, *> = if (argument.type == null)
+        LiteralArgumentBuilder.literal(argument.name)
+    else
+        RequiredArgumentBuilder.argument(argument.name, argument.type)
 
-        return cmd.handleTabComplete(sender, alias, args)
+    private fun setupArgument(
+        argument: Argument,
+        cursor: ArgumentBuilder<CommandListenerWrapper, *>,
+        command: Command
+    ) {
+        cursor.requires {
+            val validPermission = when (argument.permission) {
+                Permission.OP -> it.bukkitSender.isOp
+                Permission.NOT_OP -> !it.bukkitSender.isOp
+                Permission.EVERYONE -> true
+            }
+
+            if (!validPermission) return@requires false
+
+            val playerOnly = argument.playerOnly
+            val validSender = !playerOnly || playerOnly && it.bukkitSender is Player
+
+            if (!validSender) return@requires false
+
+            true
+        }.executes {
+            val ctx = it as CommandContext<CommandListenerWrapper>
+            if (argument.action != null) {
+                val context = CommandContext(
+                    command,
+                    plugin,
+                    ctx.source.bukkitSender,
+                    ctx.source.bukkitSender as? Player,
+                    ctx.source.bukkitSender.server,
+                    ctx.input.replaceFirst("/", ""),
+                    ctx.input.replaceFirst("/", "").split(" ").drop(1).toTypedArray()
+                )
+                argument.action.invoke(context)
+            } else {
+                val userInput = it.input.replaceFirst("/", "").split(" ")
+                command.handleExecute(ctx.source.bukkitSender, userInput[0], userInput.drop(1).toTypedArray())
+            }
+
+            1
+        }
     }
 
     class Builder {
         private val commands = mutableListOf<Command>()
 
-        private var commandCompletion: CommandCompletion = CommandCompletion.Builder().build()
         private var commandDefault: CommandDefault = CommandDefault.Builder().build()
-
-        /**
-         * Configure settings for tab storage. See Javadoc in CommandCompletion below for details.
-         * @see CommandCompletion
-         */
-        fun completion(commandCompletion: CommandCompletion): Builder {
-            this.commandCompletion = commandCompletion
-            return this
-        }
-
-        /**
-         * Configure settings for tab storage. See Javadoc in CommandCompletion below for details.
-         * This is a method that corresponds to Kotlin's apply builder pattern.
-         * @see CommandCompletion
-         */
-        fun completion(init: CommandCompletion.Builder.() -> Unit): Builder {
-            commandCompletion = CommandCompletion.Builder().apply(init).build()
-            return this
-        }
 
         /**
          * Changes the default command settings. See CommandDefault below for details.
@@ -152,7 +202,6 @@ class CommandHandler(
 
         fun build() = CommandHandler(
             commands,
-            commandCompletion,
             commandDefault
         )
     }
