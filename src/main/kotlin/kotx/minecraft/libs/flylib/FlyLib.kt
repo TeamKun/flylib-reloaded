@@ -17,7 +17,7 @@ class FlyLib(
 ) {
     private val logger = LoggerFactory.getLogger("::FlyLib Reloaded::")!!
 
-    fun initialize() {
+    init {
         try {
             logger.info("injection start.")
             startKoin {
@@ -33,16 +33,16 @@ class FlyLib(
 
             println(
                 """
-                ______ _       _     _ _      ______     _                 _          _ 
-                |  ___| |     | |   (_) |     | ___ \   | |               | |        | |
-                | |_  | |_   _| |    _| |__   | |_/ /___| | ___   __ _  __| | ___  __| |
-                |  _| | | | | | |   | | '_ \  |    // _ \ |/ _ \ / _` |/ _` |/ _ \/ _` |
-                | |   | | |_| | |___| | |_) | | |\ \  __/ | (_) | (_| | (_| |  __/ (_| |
-                \_|   |_|\__, \_____/_|_.__/  \_| \_\___|_|\___/ \__,_|\__,_|\___|\__,_|
-                          __/ |                                                         
-                         |___/
-                ::FlyLib Reloaded | by @kotx__ | Inject successfully.::
-            """.trimIndent()
+                        ______ _       _     _ _      ______     _                 _          _ 
+                        |  ___| |     | |   (_) |     | ___ \   | |               | |        | |
+                        | |_  | |_   _| |    _| |__   | |_/ /___| | ___   __ _  __| | ___  __| |
+                        |  _| | | | | | |   | | '_ \  |    // _ \ |/ _ \ / _` |/ _` |/ _ \/ _` |
+                        | |   | | |_| | |___| | |_) | | |\ \  __/ | (_) | (_| | (_| |  __/ (_| |
+                        \_|   |_|\__, \_____/_|_.__/  \_| \_\___|_|\___/ \__,_|\__,_|\___|\__,_|
+                                  __/ |                                                         
+                                 |___/
+                        ::FlyLib Reloaded | by @kotx__ | Inject successfully.::
+                        """.trimIndent()
             )
         } catch (e: Exception) {
             logger.error("injection failed.")
