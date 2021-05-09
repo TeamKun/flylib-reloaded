@@ -4,7 +4,7 @@
  */
 
 plugins {
-    kotlin("jvm") version "1.4.32"
+    kotlin("jvm") version "1.5.0"
     `maven-publish`
     `java-library`
 }
