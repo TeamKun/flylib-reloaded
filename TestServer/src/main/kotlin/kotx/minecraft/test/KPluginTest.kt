@@ -6,57 +6,31 @@
 package kotx.minecraft.test
 
 import kotx.minecraft.libs.flylib.command.Command
-import kotx.minecraft.libs.flylib.command.CommandContext
-import kotx.minecraft.libs.flylib.command.complete.providers.BasicCompletionContributor
-import kotx.minecraft.libs.flylib.command.complete.providers.ChildrenCompletionContributor
-import kotx.minecraft.libs.flylib.command.complete.providers.OptionCompletionContributor
-import kotx.minecraft.libs.flylib.command.complete.providers.UsageCompletionContributor
+import kotx.minecraft.libs.flylib.command.internal.Argument
 import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
 import kotx.minecraft.libs.flylib.flyLib
 import org.bukkit.plugin.java.JavaPlugin
 
 class PluginTest : JavaPlugin() {
-    private val flyLib = flyLib {
-        command {
-            register(KTestCommand())
-
-            defaultConfiguration {
-                description("this is a description of the default command.")
-                permission(Permission.EVERYONE)
-                invalidMessage { "Hey! Looks like you don't have the necessary permissions to run the command!" }
-            }
-
-            completion {
-                register(
-                    ChildrenCompletionContributor(),
-                    OptionCompletionContributor(),
-                    UsageCompletionContributor(false),
-                    BasicCompletionContributor(true)
-                )
+    override fun onEnable() {
+        flyLib {
+            command {
+                register(PrintNumberCommand())
+                defaultConfiguration {
+                    description("this is a description of the default command.")
+                    permission(Permission.EVERYONE)
+                    invalidMessage { "Hey! Looks like you don't have the necessary permissions to run the command!" }
+                }
             }
         }
-    }
-
-    override fun onEnable() {
-        flyLib.initialize()
     }
 }
 
-class KTestCommand : Command("test") {
-
+class PrintNumberCommand : Command("printnumber") {
     override val usages: List<Usage> = listOf(
         Usage(
-            "test <hoge/fuga/piyo/one/two/three/four>"
+            Argument.Selection("mode", listOf("add", "remove", "clear"))
         )
     )
-
-    override fun CommandContext.execute() {
-        if (args.isEmpty()) {
-            sendHelp()
-            return
-        }
-
-        sendMessage("Hello ${args.first()}!")
-    }
 }
