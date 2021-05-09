@@ -1,0 +1,37 @@
+name: Auto Release
+on:
+  push:
+    branches:
+      - master
+jobs:
+  check_and_release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+          distribution: 'adopt'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
+      - name: Grant execute permission for gradlew
+        run: chmod +r ./build.gradle
+
+      - name: Add permission to auto_release scripts.
+        run: chmod +x ./auto_release.sh
+
+      - name: Gradle
+        run: ./auto_release.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.RELEASE_VERSION }}
