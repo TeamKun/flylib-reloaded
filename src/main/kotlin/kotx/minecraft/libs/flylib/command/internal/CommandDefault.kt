@@ -79,9 +79,9 @@ class CommandDefault(
                 append("\n")
 
                 fun Command.handleParent(current: String): String = if (parent != null)
-                    parent!!.handleParent("${parent!!.name} $current")
+                    parent!!.handleParent("$name $current")
                 else
-                    "/$current"
+                    "/$name $current"
 
                 when (command.usages.size) {
                     0 -> {
@@ -90,7 +90,9 @@ class CommandDefault(
                         val usage = command.usages.first()
 
                         append("Usage: ", Color.WHITE, decoration = TextDecoration.BOLD)
-                        append(command.handleParent(usage.context), mainColor)
+
+                        append(command.handleParent(usage.args.joinToString(" ") { "<${it.name}>" }), mainColor)
+
                         if (usage.description.isNotEmpty()) {
                             append(" - ", subColor)
                             append(usage.description, subColor)
@@ -103,7 +105,9 @@ class CommandDefault(
                         append("# ", Color.WHITE)
                         append("Usages:\n", highlightTextColor, decoration = TextDecoration.BOLD)
 
-                        command.usages.associate { command.handleParent(it.context) to it.description }.forEach { (usage, description) ->
+                        command.usages.associate {
+                            command.handleParent(it.args.joinToString(" ") { "<${it.name}>" }) to it.description
+                        }.forEach { (usage, description) ->
                             append(usage, mainColor)
                             if (description.isNotEmpty()) {
                                 append(" - ", subColor)
