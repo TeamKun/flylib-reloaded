@@ -124,6 +124,13 @@ class CommandHandler(
                 val childBase = LiteralArgumentBuilder.literal<CommandListenerWrapper?>(child.name).requires { child.validate(it.bukkitSender) }
                 child.handle(childBase)
                 base.then(childBase)
+
+                child.aliases.forEach {
+                    val childAliasBase =
+                        LiteralArgumentBuilder.literal<CommandListenerWrapper?>(child.name).requires { child.validate(it.bukkitSender) }
+                    child.handle(childAliasBase)
+                    base.then(childAliasBase)
+                }
             }
         }
 
