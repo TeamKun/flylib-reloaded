@@ -5,6 +5,7 @@
 
 package kotx.minecraft.libs.flylib
 
+import com.mojang.brigadier.context.CommandContext
 import kotx.minecraft.libs.flylib.command.Command
 import net.kyori.adventure.audience.MessageType
 import net.kyori.adventure.text.Component
@@ -12,12 +13,25 @@ import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.Style
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
+import net.minecraft.server.v1_16_R3.CommandListenerWrapper
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import java.awt.Color
 
 operator fun List<Command>.get(query: String) =
     find { it.name.equals(query, true) } ?: find { it.aliases.any { it == query } }
+
+fun CommandContext<CommandListenerWrapper>.asFlyLibContext(command: Command): kotx.minecraft.libs.flylib.command.CommandContext =
+    kotx.minecraft.libs.flylib.command.CommandContext(
+        command,
+        command.plugin,
+        source.bukkitSender,
+        source.bukkitSender as? Player,
+        source.bukkitSender.server,
+        input.replaceFirst("/", ""),
+        input.replaceFirst("/", "").split(" ").drop(1).toTypedArray()
+    )
 
 fun CommandSender.send(block: TextComponent.Builder.() -> Unit) {
     sendMessage(Component.text().apply(block).build(), MessageType.CHAT)
