@@ -103,11 +103,11 @@ class CommandHandler(
         command.usages.forEach { usage ->
             val outer = getArgumentBuilder(usage.args.first())
 
-            setupArgument(usage.args.first(), outer, command)
+            setupArgument(usage.action, usage.args.first(), outer, command)
 
             usage.args.drop(1).forEach {
                 val inner = getArgumentBuilder(it)
-                setupArgument(it, inner, command)
+                setupArgument(usage.action, it, inner, command)
                 outer.then(inner)
             }
 
@@ -123,6 +123,7 @@ class CommandHandler(
         RequiredArgumentBuilder.argument(argument.name, argument.type)
 
     private fun setupArgument(
+        action: (kotx.minecraft.libs.flylib.command.CommandContext.() -> Unit)?,
         argument: Argument,
         cursor: ArgumentBuilder<CommandListenerWrapper, *>,
         command: Command
@@ -155,8 +156,8 @@ class CommandHandler(
 
         cursor.executes {
             val ctx = it as CommandContext<CommandListenerWrapper>
-            if (argument.action != null) {
-                argument.action.invoke(ctx.asFlyLibContext(command))
+            if (action != null) {
+                action.invoke(ctx.asFlyLibContext(command))
             } else {
                 val userInput = it.input.replaceFirst("/", "").split(" ")
                 command.handleExecute(ctx.source.bukkitSender, userInput[0], userInput.drop(1).toTypedArray())

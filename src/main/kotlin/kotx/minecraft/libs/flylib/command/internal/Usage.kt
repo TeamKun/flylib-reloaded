@@ -5,8 +5,11 @@
 
 package kotx.minecraft.libs.flylib.command.internal
 
+import kotx.minecraft.libs.flylib.command.CommandContext
+
 class Usage(
     vararg val args: Argument,
     val description: String = "",
-    val options: List<Option> = emptyList()
+    val options: List<Option> = emptyList(),
+    val action: (CommandContext.() -> Unit)? = null
 )

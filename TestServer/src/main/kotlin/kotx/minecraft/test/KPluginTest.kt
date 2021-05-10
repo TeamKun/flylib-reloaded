@@ -33,25 +33,25 @@ class PrintNumberCommand : Command("printnumber") {
         Usage(
             Argument.Integer("number", tabComplete = {
                 listOf("1", "2", "3", "4", "5")
-            }) {
-                sendMessage("you selected: ${args.first()}")
-            }
-        ),
+            })
+        ) {
+            sendMessage("you selected: ${args.first()}")
+        },
         Usage(
             Argument.Entity("targets"),
             Argument.Integer("number", tabComplete = {
                 listOf("1", "2", "3", "4", "5")
-            }) {
-                sendMessage("you selected: ${args.first()}")
-            }
-        )
+            })
+        ) {
+            sendMessage("you selected: ${args.first()}")
+        }
     )
 }
 
 class SelectCommand : Command("select") {
     override val usages: List<Usage> = listOf(
-        Usage(Argument.Selection("selection", "hoge", "huga", "piyo") {
+        Usage(Argument.Selection("selection", "hoge", "huga", "piyo")) {
             sendMessage("You selected: ${args.first()}")
-        })
+        }
     )
 }
