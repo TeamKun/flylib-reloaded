@@ -91,24 +91,38 @@ class CommandHandler(
         command: Command,
         name: String
     ) {
-        fun handle(base: LiteralArgumentBuilder<CommandListenerWrapper>, command: Command, name: String) {
-            command.usages.forEach { usage ->
+
+        val depthMap = mutableMapOf<Command, Int>()
+        var depth = 0
+
+        fun List<Command>.handleDepthMap() {
+            if (!isEmpty()) {
+                depth++
+                forEach { depthMap[it] = depth }
+                flatMap { it.children }.handleDepthMap()
+            }
+        }
+
+        command.children.handleDepthMap()
+
+        fun Command.handle(base: LiteralArgumentBuilder<CommandListenerWrapper>) {
+            usages.forEach { usage ->
                 val outer = getArgumentBuilder(usage.args.first())
 
-                setupArgument(usage.action, usage.args.first(), outer, command)
+                setupArgument(usage.action, usage.args.first(), outer, this, depthMap[this]!!)
 
                 usage.args.drop(1).forEach {
                     val inner = getArgumentBuilder(it)
-                    setupArgument(usage.action, it, inner, command)
+                    setupArgument(usage.action, it, inner, this, depthMap[this]!!)
                     outer.then(inner)
                 }
 
                 base.then(outer)
             }
 
-            command.children.forEach { child ->
+            children.forEach { child ->
                 val childBase = LiteralArgumentBuilder.literal<CommandListenerWrapper?>(child.name).requires { child.validate(it.bukkitSender) }
-                handle(childBase, child, child.name)
+                child.handle(childBase)
                 base.then(childBase)
             }
         }
@@ -122,7 +136,7 @@ class CommandHandler(
                 1
             }
 
-        handle(base, command, name)
+        command.handle(base)
 
         ((Bukkit.getServer() as CraftServer).server as MinecraftServer).commandDispatcher.a().register(base)
     }
@@ -136,7 +150,8 @@ class CommandHandler(
         action: (kotx.minecraft.libs.flylib.command.CommandContext.() -> Unit)?,
         argument: Argument,
         cursor: ArgumentBuilder<CommandListenerWrapper, *>,
-        command: Command
+        command: Command,
+        depth: Int
     ) {
         cursor.requires {
             val validPermission = when (argument.permission) {
@@ -156,7 +171,7 @@ class CommandHandler(
         }
 
         if (cursor is RequiredArgumentBuilder<CommandListenerWrapper, *> && argument.tabComplete != null) cursor.suggests { ctx, builder ->
-            argument.tabComplete.invoke(ctx.asFlyLibContext(command)).forEach {
+            argument.tabComplete.invoke(ctx.asFlyLibContext(command, depth)).forEach {
                 builder.suggest(it)
             }
 
@@ -167,10 +182,10 @@ class CommandHandler(
         cursor.executes {
             val ctx = it as CommandContext<CommandListenerWrapper>
             if (action != null) {
-                action.invoke(ctx.asFlyLibContext(command))
+                action.invoke(ctx.asFlyLibContext(command, depth))
             } else {
-                val userInput = it.input.replaceFirst("/", "").split(" ")
-                command.handleExecute(ctx.source.bukkitSender, userInput[0], userInput.drop(1).toTypedArray())
+                val userInput = ctx.input.replaceFirst("/", "").split(" ")
+                command.handleExecute(ctx.source.bukkitSender, userInput[0], userInput.drop(1 + depth).toTypedArray())
             }
 
             1

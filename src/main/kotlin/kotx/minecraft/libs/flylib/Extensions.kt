@@ -22,7 +22,7 @@ import java.awt.Color
 operator fun List<Command>.get(query: String) =
     find { it.name.equals(query, true) } ?: find { it.aliases.any { it == query } }
 
-fun CommandContext<CommandListenerWrapper>.asFlyLibContext(command: Command): kotx.minecraft.libs.flylib.command.CommandContext =
+fun CommandContext<CommandListenerWrapper>.asFlyLibContext(command: Command, depth: Int = 0): kotx.minecraft.libs.flylib.command.CommandContext =
     kotx.minecraft.libs.flylib.command.CommandContext(
         command,
         command.plugin,
@@ -30,7 +30,7 @@ fun CommandContext<CommandListenerWrapper>.asFlyLibContext(command: Command): ko
         source.bukkitSender as? Player,
         source.bukkitSender.server,
         input.replaceFirst("/", ""),
-        input.replaceFirst("/", "").split(" ").drop(1).toTypedArray()
+        input.replaceFirst("/", "").split(" ").drop(1 + depth).toTypedArray()
     )
 
 fun CommandSender.send(block: TextComponent.Builder.() -> Unit) {

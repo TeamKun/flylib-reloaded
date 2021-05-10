@@ -40,25 +40,32 @@ class MainCommand : Command("main") {
 }
 
 class MainSub1Command : Command("sub1") {
+    override val children: List<Command> = listOf(SubSubCommand())
     override val usages: List<Usage> = listOf(
         Usage(
             Argument.Text("sub1_txt")
-        )
+        ) {
+            sendMessage("You executed sub1 command. ${args.joinToString(" ")}")
+        }
     )
-
-    override fun CommandContext.execute() {
-        sendMessage("You executed sub1 command.")
-    }
 }
 
 class MainSub2Command : Command("sub2") {
     override val usages: List<Usage> = listOf(
         Usage(
             Argument.Integer("sub2_int")
-        )
+        ) {
+            sendMessage("You executed sub2 command. ${args.joinToString(" ")}")
+        }
     )
+}
 
-    override fun CommandContext.execute() {
-        sendMessage("You executed sub2 command.")
-    }
+class SubSubCommand : Command("sub") {
+    override val usages: List<Usage> = listOf(
+        Usage(
+            Argument.Integer("sub2_int")
+        ) {
+            sendMessage("You executed inner sub command. ${args.joinToString(" ")}")
+        }
+    )
 }
