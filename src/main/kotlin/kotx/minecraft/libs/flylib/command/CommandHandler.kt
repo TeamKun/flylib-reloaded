@@ -9,6 +9,7 @@ import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.builder.RequiredArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
+import kotx.minecraft.libs.flylib.asFlyLibContext
 import kotx.minecraft.libs.flylib.command.internal.Argument
 import kotx.minecraft.libs.flylib.command.internal.CommandDefault
 import kotx.minecraft.libs.flylib.command.internal.Permission
@@ -73,6 +74,7 @@ class CommandHandler(
                     Permission.NOT_OP -> "flylib.notop"
                     Permission.EVERYONE -> "flylib.everyone"
                 }
+
 
                 cmd.aliases.forEach {
                     plugin.server.commandMap.getCommand(it)?.permission = when (cmd.permission) {
@@ -140,19 +142,21 @@ class CommandHandler(
             if (!validSender) return@requires false
 
             true
-        }.executes {
+        }
+
+        if (cursor is RequiredArgumentBuilder<CommandListenerWrapper, *> && argument.tabComplete != null) cursor.suggests { ctx, builder ->
+            argument.tabComplete.invoke(ctx.asFlyLibContext(command)).forEach {
+                builder.suggest(it)
+            }
+
+            builder.buildFuture()
+        }
+
+
+        cursor.executes {
             val ctx = it as CommandContext<CommandListenerWrapper>
             if (argument.action != null) {
-                val context = CommandContext(
-                    command,
-                    plugin,
-                    ctx.source.bukkitSender,
-                    ctx.source.bukkitSender as? Player,
-                    ctx.source.bukkitSender.server,
-                    ctx.input.replaceFirst("/", ""),
-                    ctx.input.replaceFirst("/", "").split(" ").drop(1).toTypedArray()
-                )
-                argument.action.invoke(context)
+                argument.action.invoke(ctx.asFlyLibContext(command))
             } else {
                 val userInput = it.input.replaceFirst("/", "").split(" ")
                 command.handleExecute(ctx.source.bukkitSender, userInput[0], userInput.drop(1).toTypedArray())
