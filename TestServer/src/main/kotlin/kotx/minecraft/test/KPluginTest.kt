@@ -6,6 +6,7 @@
 package kotx.minecraft.test
 
 import kotx.minecraft.libs.flylib.command.Command
+import kotx.minecraft.libs.flylib.command.CommandContext
 import kotx.minecraft.libs.flylib.command.internal.Argument
 import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
@@ -16,8 +17,7 @@ class PluginTest : JavaPlugin() {
     override fun onEnable() {
         flyLib {
             command {
-                register(PrintNumberCommand())
-                register(SelectCommand())
+                register(MainCommand())
                 defaultConfiguration {
                     description("this is a description of the default command.")
                     permission(Permission.EVERYONE)
@@ -28,30 +28,37 @@ class PluginTest : JavaPlugin() {
     }
 }
 
-class PrintNumberCommand : Command("printnumber") {
-    override val usages: List<Usage> = listOf(
-        Usage(
-            Argument.Integer("number", tabComplete = {
-                listOf("1", "2", "3", "4", "5")
-            })
-        ) {
-            sendMessage("you selected: ${args.first()}")
-        },
-        Usage(
-            Argument.Entity("targets"),
-            Argument.Integer("number", tabComplete = {
-                listOf("1", "2", "3", "4", "5")
-            })
-        ) {
-            sendMessage("you selected: ${args.first()}")
-        }
+class MainCommand : Command("main") {
+    override val children: List<Command> = listOf(
+        MainSub1Command(),
+        MainSub2Command()
     )
+
+    override fun CommandContext.execute() {
+        sendHelp()
+    }
 }
 
-class SelectCommand : Command("select") {
+class MainSub1Command : Command("sub1") {
     override val usages: List<Usage> = listOf(
-        Usage(Argument.Selection("selection", "hoge", "huga", "piyo")) {
-            sendMessage("You selected: ${args.first()}")
-        }
+        Usage(
+            Argument.Text("sub1_txt")
+        )
     )
+
+    override fun CommandContext.execute() {
+        sendMessage("You executed sub1 command.")
+    }
+}
+
+class MainSub2Command : Command("sub2") {
+    override val usages: List<Usage> = listOf(
+        Usage(
+            Argument.Integer("sub2_int")
+        )
+    )
+
+    override fun CommandContext.execute() {
+        sendMessage("You executed sub2 command.")
+    }
 }

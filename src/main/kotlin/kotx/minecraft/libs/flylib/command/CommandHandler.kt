@@ -91,6 +91,28 @@ class CommandHandler(
         command: Command,
         name: String
     ) {
+        fun handle(base: LiteralArgumentBuilder<CommandListenerWrapper>, command: Command, name: String) {
+            command.usages.forEach { usage ->
+                val outer = getArgumentBuilder(usage.args.first())
+
+                setupArgument(usage.action, usage.args.first(), outer, command)
+
+                usage.args.drop(1).forEach {
+                    val inner = getArgumentBuilder(it)
+                    setupArgument(usage.action, it, inner, command)
+                    outer.then(inner)
+                }
+
+                base.then(outer)
+            }
+
+            command.children.forEach { child ->
+                val childBase = LiteralArgumentBuilder.literal<CommandListenerWrapper?>(child.name).requires { child.validate(it.bukkitSender) }
+                handle(childBase, child, child.name)
+                base.then(childBase)
+            }
+        }
+
         val base = LiteralArgumentBuilder
             .literal<CommandListenerWrapper?>(name)
             .requires { command.validate(it.bukkitSender) }
@@ -100,19 +122,7 @@ class CommandHandler(
                 1
             }
 
-        command.usages.forEach { usage ->
-            val outer = getArgumentBuilder(usage.args.first())
-
-            setupArgument(usage.action, usage.args.first(), outer, command)
-
-            usage.args.drop(1).forEach {
-                val inner = getArgumentBuilder(it)
-                setupArgument(usage.action, it, inner, command)
-                outer.then(inner)
-            }
-
-            base.then(outer)
-        }
+        handle(base, command, name)
 
         ((Bukkit.getServer() as CraftServer).server as MinecraftServer).commandDispatcher.a().register(base)
     }
