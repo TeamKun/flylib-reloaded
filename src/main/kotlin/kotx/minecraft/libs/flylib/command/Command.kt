@@ -18,7 +18,7 @@ import org.koin.core.component.inject
 abstract class Command(
     val name: String
 ) : KoinComponent {
-    private val plugin by inject<JavaPlugin>()
+    internal val plugin by inject<JavaPlugin>()
     private val commandHandler by inject<CommandHandler>()
 
     /**
