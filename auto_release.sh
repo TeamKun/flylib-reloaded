@@ -25,7 +25,6 @@ semanticVersionToAbstractValue() {
 }
 
 createRelease() {
-  sh ./gradlew build
   echo "RELEASE_VERSION=$PROJECT_VERSION" >>$GITHUB_ENV
 }
 
