@@ -10,11 +10,10 @@ plugins {
 }
 
 group = "kotx.minecraft.libs"
-version = "0.1.2"
+version = "0.1.3"
 
 repositories {
     mavenCentral()
-    jcenter()
     maven("https://papermc.io/repo/repository/maven-public/")
     maven("https://oss.sonatype.org/content/groups/public/")
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
@@ -24,8 +23,8 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    api("org.koin:koin-core:2.2.2")
-    api("org.koin:koin-core-ext:2.2.2")
+    api("io.insert-koin:koin-core:2.2.2")
+    api("io.insert-koin:koin-core-ext:2.2.2")
     api("ch.qos.logback", "logback-classic", "1.2.3")
     api("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
     implementation("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
