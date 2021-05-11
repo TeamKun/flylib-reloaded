@@ -15,7 +15,6 @@ class CommandDefault(
     val description: String,
     val permission: Permission,
     val playerOnly: Boolean,
-    val invalidCommandMessage: (Command) -> String,
     val sendHelp: CommandContext.() -> Unit,
 ) {
     class Builder {
@@ -35,13 +34,6 @@ class CommandDefault(
         private var playerOnly: Boolean = false
 
         /**
-         * A message that is displayed when a command other than the player tries to execute a command that can be executed only by the player or if the authority is insufficient.
-         */
-        private var invalidCommandMessage: (Command) -> String = {
-            "You can't execute ${it.name} command!"
-        }
-
-        /**
          * The method that will be executed when you call sendHelp() when nothing is implemented.
          */
         private var sendHelp: CommandContext.() -> Unit = {
@@ -59,7 +51,7 @@ class CommandDefault(
                 val mainColor = Color.CYAN
                 val subColor = Color.LIGHT_GRAY
                 val highlightTextColor = Color.ORANGE
-                append("-----------------------------------\n", Color.DARK_GRAY)
+                append("--------------------------------------------------\n", Color.DARK_GRAY)
                 append("/$fullName", nameColor)
                 if (command.aliases.isNotEmpty()) {
                     append("(", Color.WHITE)
@@ -145,7 +137,7 @@ class CommandDefault(
                     appendln()
                 }
 
-                append("-----------------------------------", Color.DARK_GRAY)
+                append("--------------------------------------------------", Color.DARK_GRAY)
             }
         }
 
@@ -181,16 +173,8 @@ class CommandDefault(
             return this
         }
 
-        /**
-         * A message that is displayed when a command other than the player tries to execute a command that can be executed only by the player or if the authority is insufficient.
-         */
-        fun invalidMessage(invalidCommandMessage: (Command) -> String): Builder {
-            this.invalidCommandMessage = invalidCommandMessage
-            return this
-        }
-
         fun build() = CommandDefault(
-            description, permission, playerOnly, invalidCommandMessage, sendHelp
+            description, permission, playerOnly, sendHelp
         )
     }
 }
