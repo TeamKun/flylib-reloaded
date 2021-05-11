@@ -121,13 +121,24 @@ class CommandHandler(
             }
 
             children.forEach { child ->
-                val childBase = LiteralArgumentBuilder.literal<CommandListenerWrapper?>(child.name).requires { child.validate(it.bukkitSender) }
+                val childBase = LiteralArgumentBuilder
+                    .literal<CommandListenerWrapper?>(child.name)
+                    .requires { child.validate(it.bukkitSender) }
+                    .executes {
+                        child.apply { it.asFlyLibContext(child, depthMap[child]!!).execute() }
+                        1
+                    }
                 child.handle(childBase)
                 base.then(childBase)
 
                 child.aliases.forEach {
-                    val childAliasBase =
-                        LiteralArgumentBuilder.literal<CommandListenerWrapper?>(child.name).requires { child.validate(it.bukkitSender) }
+                    val childAliasBase = LiteralArgumentBuilder
+                        .literal<CommandListenerWrapper?>(it)
+                        .requires { child.validate(it.bukkitSender) }
+                        .executes {
+                            child.apply { it.asFlyLibContext(child, depthMap[child]!!).execute() }
+                            1
+                        }
                     child.handle(childAliasBase)
                     base.then(childAliasBase)
                 }
@@ -138,8 +149,7 @@ class CommandHandler(
             .literal<CommandListenerWrapper?>(name)
             .requires { command.validate(it.bukkitSender) }
             .executes {
-                val userInput = it.input.replaceFirst("/", "").split(" ")
-                command.handleExecute(it.source.bukkitSender, userInput[0], userInput.drop(1).toTypedArray())
+                command.apply { it.asFlyLibContext(command, depthMap[command]!!).execute() }
                 1
             }
 
@@ -188,11 +198,8 @@ class CommandHandler(
 
         cursor.executes {
             val ctx = it as CommandContext<CommandListenerWrapper>
-            if (action != null) {
-                action.invoke(ctx.asFlyLibContext(command, depth))
-            } else {
-                val userInput = ctx.input.replaceFirst("/", "").split(" ")
-                command.handleExecute(ctx.source.bukkitSender, userInput[0], userInput.drop(1 + depth).toTypedArray())
+            if (action != null) action.invoke(ctx.asFlyLibContext(command, depth)) else command.apply {
+                ctx.asFlyLibContext(command, depth).execute()
             }
 
             1

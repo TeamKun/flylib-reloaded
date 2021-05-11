@@ -7,7 +7,6 @@ package kotx.minecraft.libs.flylib.command
 
 import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
-import kotx.minecraft.libs.flylib.get
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
@@ -84,7 +83,7 @@ abstract class Command(
      */
     var parent: Command? = null
 
-    internal fun validate(sender: CommandSender): Boolean {
+    fun validate(sender: CommandSender): Boolean {
         val validPermission = when (permission) {
             Permission.OP -> sender.isOp
             Permission.NOT_OP -> !sender.isOp
@@ -100,31 +99,11 @@ abstract class Command(
         return true
     }
 
-    fun handleExecute(sender: CommandSender, label: String, args: Array<out String>) {
-        if (!validate(sender)) {
-            sender.sendMessage(commandHandler.commandDefault.invalidCommandMessage(this))
-            return
-        }
-
-        val context = CommandContext(
-            this,
-            plugin,
-            sender,
-            sender as? Player,
-            sender.server,
-            "$label ${args.joinToString(" ")}",
-            args.toList().toTypedArray()
-        )
-
-        children[args.firstOrNull() ?: ""]?.handleExecute(sender, label, args.drop(1).toTypedArray())
-            ?: context.execute()
-    }
-
     /**
      * Called when this command is executed. Since FlyLib has completed the authority check etc., please describe only the execution part.
      * Of course, this is not the case if you implement your own permission check.
      */
-    protected open fun CommandContext.execute() {
+    open fun CommandContext.execute() {
         sendHelp()
     }
 

@@ -31,7 +31,8 @@ class PluginTest : JavaPlugin() {
 class MainCommand : Command("main") {
     override val children: List<Command> = listOf(
         MainSub1Command(),
-        MainSub2Command()
+        MainSub2Command(),
+        MainSub3Command()
     )
 
     override fun CommandContext.execute() {
@@ -60,10 +61,16 @@ class MainSub2Command : Command("sub2") {
     )
 }
 
+class MainSub3Command : Command("sub3") {
+    override fun CommandContext.execute() {
+        sendMessage("You executed sub3 command. ${args.joinToString(" ")}")
+    }
+}
+
 class SubSubCommand : Command("sub") {
     override val usages: List<Usage> = listOf(
         Usage(
-            Argument.Integer("sub2_int")
+            Argument.Text("inner_txt")
         ) {
             sendMessage("You executed inner sub command. ${args.joinToString(" ")}")
         }
