@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "kotx.minecraft.libs"
-version = "0.1.8"
+version = "0.1.9"
 
 repositories {
     mavenCentral()
