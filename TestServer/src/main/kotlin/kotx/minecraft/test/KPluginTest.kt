@@ -21,7 +21,6 @@ class PluginTest : JavaPlugin() {
                 defaultConfiguration {
                     description("this is a description of the default command.")
                     permission(Permission.EVERYONE)
-                    invalidMessage { "Hey! Looks like you don't have the necessary permissions to run the command!" }
                 }
             }
         }
@@ -62,6 +61,14 @@ class MainSub2Command : Command("sub2") {
 }
 
 class MainSub3Command : Command("sub3") {
+    override val usages: List<Usage> = listOf(
+        Usage(Argument.Text("text") {
+            listOf("aaa", "bbb", "ccc")
+        }) {
+            sendMessage("You executed sub3 usage command. ${args.joinToString(" ")}")
+        }
+    )
+
     override fun CommandContext.execute() {
         sendMessage("You executed sub3 command. ${args.joinToString(" ")}")
     }
