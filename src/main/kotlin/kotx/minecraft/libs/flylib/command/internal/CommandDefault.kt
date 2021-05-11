@@ -26,7 +26,7 @@ class CommandDefault(
         /**
          * Privileges specified by default when nothing is specified
          */
-        private var permission: Permission = Permission.OP
+        private var permission: Permission = Permission.EVERYONE
 
         /**
          * Whether only the player specified by default can execute when nothing is specified
