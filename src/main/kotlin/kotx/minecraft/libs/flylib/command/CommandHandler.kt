@@ -149,7 +149,7 @@ class CommandHandler(
             .literal<CommandListenerWrapper?>(name)
             .requires { command.validate(it.bukkitSender) }
             .executes {
-                command.apply { it.asFlyLibContext(command, depthMap[command]!!).execute() }
+                command.apply { it.asFlyLibContext(command, 0).execute() }
                 1
             }
 
