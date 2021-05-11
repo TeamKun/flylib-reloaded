@@ -68,7 +68,7 @@ class CommandDefault(
                     append(command.description, subColor)
                 }
 
-                append("\n")
+                appendln()
 
                 fun Command.handleParent(current: String): String = if (parent != null)
                     parent!!.handleParent("$name $current")
@@ -90,7 +90,7 @@ class CommandDefault(
                             append(usage.description, subColor)
                         }
 
-                        append("\n")
+                        appendln()
                     }
                     else -> {
                         appendln()
@@ -105,7 +105,7 @@ class CommandDefault(
                                 append(" - ", subColor)
                                 append(description, subColor)
                             }
-                            append("\n")
+                            appendln()
                         }
                     }
                 }
@@ -118,6 +118,7 @@ class CommandDefault(
                     1 -> {
                         append("Example: ", Color.WHITE, decoration = TextDecoration.BOLD)
                         append("/${command.examples.first()}\n", mainColor)
+                        appendln()
                     }
 
                     else -> {
@@ -127,6 +128,7 @@ class CommandDefault(
                         command.examples.map { "/$it".asTextComponent(mainColor) }.joint("\n".asTextComponent()) {
                             append(it)
                         }
+                        appendln()
                     }
                 }
 
