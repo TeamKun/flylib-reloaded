@@ -13,6 +13,7 @@ import kotx.minecraft.libs.flylib.asFlyLibContext
 import kotx.minecraft.libs.flylib.command.internal.Argument
 import kotx.minecraft.libs.flylib.command.internal.CommandDefault
 import kotx.minecraft.libs.flylib.command.internal.Permission
+import kotx.minecraft.libs.flylib.command.internal.Usage
 import net.minecraft.server.v1_16_R3.CommandListenerWrapper
 import net.minecraft.server.v1_16_R3.MinecraftServer
 import org.bukkit.Bukkit
@@ -109,11 +110,11 @@ class CommandHandler(
             usages.forEach { usage ->
                 val outer = getArgumentBuilder(usage.args.first())
 
-                setupArgument(usage.action, usage.args.first(), outer, this, depthMap[this]!!)
+                setupArgument(usage, usage.args.first(), outer, this, depthMap[this]!!)
 
                 usage.args.drop(1).forEach {
                     val inner = getArgumentBuilder(it)
-                    setupArgument(usage.action, it, inner, this, depthMap[this]!!)
+                    setupArgument(usage, it, inner, this, depthMap[this]!!)
                     outer.then(inner)
                 }
 
@@ -164,14 +165,14 @@ class CommandHandler(
         RequiredArgumentBuilder.argument(argument.name, argument.type)
 
     private fun setupArgument(
-        action: (kotx.minecraft.libs.flylib.command.CommandContext.() -> Unit)?,
+        usage: Usage,
         argument: Argument,
         cursor: ArgumentBuilder<CommandListenerWrapper, *>,
         command: Command,
         depth: Int
     ) {
         cursor.requires {
-            val validPermission = when (argument.permission) {
+            val validPermission = when (usage.permission ?: command.permission) {
                 Permission.OP -> it.bukkitSender.isOp
                 Permission.NOT_OP -> !it.bukkitSender.isOp
                 Permission.EVERYONE -> true
@@ -179,7 +180,7 @@ class CommandHandler(
 
             if (!validPermission) return@requires false
 
-            val playerOnly = argument.playerOnly
+            val playerOnly = usage.playerOnly ?: command.playerOnly
             val validSender = !playerOnly || playerOnly && it.bukkitSender is Player
 
             if (!validSender) return@requires false
@@ -198,7 +199,7 @@ class CommandHandler(
 
         cursor.executes {
             val ctx = it as CommandContext<CommandListenerWrapper>
-            if (action != null) action.invoke(ctx.asFlyLibContext(command, depth)) else command.apply {
+            if (usage.action != null) usage.action.invoke(ctx.asFlyLibContext(command, depth)) else command.apply {
                 ctx.asFlyLibContext(command, depth).execute()
             }
 
