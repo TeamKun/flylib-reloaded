@@ -108,17 +108,17 @@ class CommandHandler(
 
         fun Command.handle(base: LiteralArgumentBuilder<CommandListenerWrapper>) {
             usages.forEach { usage ->
-                val outer = getArgumentBuilder(usage.args.first())
+                var usageBase: ArgumentBuilder<CommandListenerWrapper, *>? = null
 
-                setupArgument(usage, usage.args.first(), outer, this, depthMap[this]!!)
-
-                usage.args.drop(1).forEach {
-                    val inner = getArgumentBuilder(it)
-                    setupArgument(usage, it, inner, this, depthMap[this]!!)
-                    outer.then(inner)
+                usage.args.reversed().forEach {
+                    val ch = usageBase
+                    usageBase = getArgumentBuilder(it)
+                    if (ch != null)
+                        usageBase?.then(ch)
+                    usageBase?.setupArgument(usage, it, this, depthMap[this] ?: 0)
                 }
 
-                base.then(outer)
+                base.then(usageBase)
             }
 
             children.forEach { child ->
@@ -126,7 +126,7 @@ class CommandHandler(
                     .literal<CommandListenerWrapper?>(child.name)
                     .requires { child.validate(it.bukkitSender) }
                     .executes {
-                        child.apply { it.asFlyLibContext(child, depthMap[child]!!).execute() }
+                        child.apply { it.asFlyLibContext(child, depthMap[child] ?: 0).execute() }
                         1
                     }
                 child.handle(childBase)
@@ -137,7 +137,7 @@ class CommandHandler(
                         .literal<CommandListenerWrapper?>(it)
                         .requires { child.validate(it.bukkitSender) }
                         .executes {
-                            child.apply { it.asFlyLibContext(child, depthMap[child]!!).execute() }
+                            child.apply { it.asFlyLibContext(child, depthMap[child] ?: 0).execute() }
                             1
                         }
                     child.handle(childAliasBase)
@@ -164,14 +164,13 @@ class CommandHandler(
     else
         RequiredArgumentBuilder.argument(argument.name, argument.type)
 
-    private fun setupArgument(
+    private fun ArgumentBuilder<CommandListenerWrapper, *>?.setupArgument(
         usage: Usage,
         argument: Argument,
-        cursor: ArgumentBuilder<CommandListenerWrapper, *>,
         command: Command,
         depth: Int
     ) {
-        cursor.requires {
+        this?.requires {
             val validPermission = when (usage.permission ?: command.permission) {
                 Permission.OP -> it.bukkitSender.isOp
                 Permission.NOT_OP -> !it.bukkitSender.isOp
@@ -188,7 +187,7 @@ class CommandHandler(
             true
         }
 
-        if (cursor is RequiredArgumentBuilder<CommandListenerWrapper, *> && argument.tabComplete != null) cursor.suggests { ctx, builder ->
+        if (this is RequiredArgumentBuilder<CommandListenerWrapper, *> && argument.tabComplete != null) this.suggests { ctx, builder ->
             argument.tabComplete.invoke(ctx.asFlyLibContext(command, depth)).forEach {
                 builder.suggest(it)
             }
@@ -197,7 +196,7 @@ class CommandHandler(
         }
 
 
-        cursor.executes {
+        this?.executes {
             val ctx = it as CommandContext<CommandListenerWrapper>
             if (usage.action != null) usage.action.invoke(ctx.asFlyLibContext(command, depth)) else command.apply {
                 ctx.asFlyLibContext(command, depth).execute()

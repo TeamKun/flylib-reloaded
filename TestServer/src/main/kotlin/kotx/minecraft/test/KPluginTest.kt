@@ -28,58 +28,16 @@ class PluginTest : JavaPlugin() {
 }
 
 class MainCommand : Command("main") {
-    override val children: List<Command> = listOf(
-        MainSub1Command(),
-        MainSub2Command(),
-        MainSub3Command()
+    override val usages: List<Usage> = listOf(
+        Usage(
+            Argument.Text("text"),
+            Argument.Entity("user"),
+            Argument.Text("input"),
+            Argument.Selection("mode", "hoge", "fuga"),
+        )
     )
 
     override fun CommandContext.execute() {
         sendHelp()
     }
-}
-
-class MainSub1Command : Command("sub1") {
-    override val children: List<Command> = listOf(SubSubCommand())
-    override val usages: List<Usage> = listOf(
-        Usage(
-            Argument.Text("sub1_txt")
-        ) {
-            sendMessage("You executed sub1 command. ${args.joinToString(" ")}")
-        }
-    )
-}
-
-class MainSub2Command : Command("sub2") {
-    override val usages: List<Usage> = listOf(
-        Usage(
-            Argument.Integer("sub2_int")
-        ) {
-            sendMessage("You executed sub2 command. ${args.joinToString(" ")}")
-        }
-    )
-}
-
-class MainSub3Command : Command("sub3") {
-    override val usages: List<Usage> = listOf(
-        Usage(Argument.Text("text") {
-            listOf("aaa", "bbb", "ccc")
-        }) {
-            sendMessage("You executed sub3 usage command. ${args.joinToString(" ")}")
-        }
-    )
-
-    override fun CommandContext.execute() {
-        sendMessage("You executed sub3 command. ${args.joinToString(" ")}")
-    }
-}
-
-class SubSubCommand : Command("sub") {
-    override val usages: List<Usage> = listOf(
-        Usage(
-            Argument.Text("inner_txt")
-        ) {
-            sendMessage("You executed inner sub command. ${args.joinToString(" ")}")
-        }
-    )
 }
