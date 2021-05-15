@@ -6,6 +6,9 @@
 package kotx.minecraft.libs.flylib
 
 import kotx.minecraft.libs.flylib.command.CommandHandler
+import org.bukkit.event.Event
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
@@ -13,7 +16,7 @@ import org.slf4j.LoggerFactory
 
 class FlyLib(
     private val plugin: JavaPlugin,
-    private val commandHandler: CommandHandler
+    private val commandHandler: CommandHandler,
 ) {
     private val logger = LoggerFactory.getLogger("::FlyLib Reloaded::")!!
 
@@ -54,6 +57,7 @@ class FlyLib(
         private val plugin: JavaPlugin
     ) {
         private var commandHandler: CommandHandler = CommandHandler.Builder().build()
+        private val listeningEvents: MutableList<Function<Unit>> = mutableListOf()
 
         fun command(init: CommandHandler.Builder.() -> Unit): Builder {
             commandHandler = CommandHandler.Builder().apply(init).build()
@@ -65,9 +69,18 @@ class FlyLib(
             return this
         }
 
+        fun <T : Event> listen(action: T.() -> Unit) {
+            plugin.server.pluginManager.registerEvents(object : Listener {
+                @EventHandler
+                fun onEvent(event: T) {
+                    action.invoke(event)
+                }
+            }, plugin)
+        }
+
         fun build(): FlyLib = FlyLib(
             plugin,
-            commandHandler
+            commandHandler,
         )
     }
 }
