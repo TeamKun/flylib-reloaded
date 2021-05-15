@@ -1,41 +1,68 @@
 # FlyLib Reloaded
 
-__**FlyLib Reloaded is currently under development and is buggy and will undergo specification changes soon. That is, it is not stable.**__
+A utility library for Minecraft developed in Kotlin. This is a companion version for the `Paper 1.16.5`   
+This library is developed by [Kotx\_\_](https://twitter.com/kotx__)
 
-![Java CI with Gradle](https://github.com/TeamKun/flylib-reloaded/workflows/Java%20CI%20with%20Gradle/badge.svg)  
-[![](https://jitpack.io/v/TeamKun/flylib-reloaded.svg)](https://jitpack.io/#TeamKun/flylib-reloaded)  
-A utility librarry for Minecraft developed in Kotlin. We are developing it with the aim of making it as easy to write as possible and easy to
-maintain.  
-This mod is developed by [Kotx\_\_](https://twitter.com/kotx__)
+[![](https://jitpack.io/v/TeamKun/flylib-reloaded.svg)](https://jitpack.io/#TeamKun/flylib-reloaded)
+[![GitHub license](https://img.shields.io/badge/license-Mit%20License%202.0-blue.svg?style=flat)](https://opensource.org/licenses/mit-license.php)
 
-**[Preview](https://imgur.com/Wy5yUvI)**  
-**[Examples](https://github.com/TeamKun/flylib-reloaded/tree/master/TestServer)**
-
-Check the **[Wiki](https://kotlin-chan.gitbook.io/flylib-reloaded/)** for more information.
-
-Just write as follows, tab completion according to usages, execution of subcommands, and generation of help commands will all be done. There is no
-need for the user to register the command in plugin.yml. Fly Lib will automatically register everything in bukkit.
-
-### Examples
-
-**Kotlin**
+**FlyLib Reloaded is currently under development and is buggy and will undergo specification changes soon. That is, it is not stable.**
 
 ```kotlin
-wait!
+class PluginTest : JavaPlugin() {
+    override fun onEnable() {
+        flyLib {
+            command {
+                defaultConfiguration {
+                    playerOnly(true)
+                }
+
+                register(PrintNumberCommand())
+                register(ExplodeCommand())
+                register(OuterCommand())
+            }
+        }
+    }
+}
+
+class PrintNumberCommand : Command("printnumber") {
+    override val usages: List<Usage> = listOf(
+        Usage(Argument.Integer("number", max = 10)) {
+            sendMessage("Your Number -> ${args.first().toInt()}")
+        }
+    )
+}
+
+class ExplodeCommand : Command("explode") {
+    override val usages: List<Usage> = listOf(
+        Usage(
+            Argument.Selection("type", "here", "there")
+        ),
+        Usage(
+            Argument.Position("location")
+        ),
+        Usage(
+            Argument.Player("player")
+        ),
+    )
+}
+
+class OuterCommand : Command("outer") {
+    override val children: List<Command> = listOf(
+        InnerCommand()
+    )
+
+    class InnerCommand : Command("inner") {
+        override val usages: List<Usage> = listOf(
+            Usage(
+                Argument.Selection("hoge/fuga", "hoge", "fuga")
+            )
+        )
+    }
+}
 ```
 
-**Java**
-
-```java
-wait!
-```
-
-## Requirements
-
-Minecraft: 1.16.5  
-Paper: 1.16.5-R0.1-SNAPSHOT
-
-## Installation
+## Using in your projects
 
 [![](https://jitpack.io/v/TeamKun/flylib-reloaded.svg)](https://jitpack.io/#TeamKun/flylib-reloaded)
 
@@ -43,17 +70,16 @@ Paper: 1.16.5-R0.1-SNAPSHOT
 <summary>Gradle Kotlin DSL</summary>
 <div>
 
-```gradle
+```kotlin
 repositories {
     maven("https://jitpack.io")
 }
 ```
 
-```gradle
+```kotlin
 dependencies {
     implementation("com.github.TeamKun:flylib-reloaded:<VERSION>")
 }
-
 ```
 
 </div>
@@ -63,17 +89,16 @@ dependencies {
 <summary>Gradle</summary>
 <div>
 
-```gradle
+```groovy
 repositories {
     maven { url "https://jitpack.io" }
 }
 ```
 
-```gradle
+```groovy
 dependencies {
     implementation "com.github.TeamKun:flylib-reloaded:<VERSION>"
 }
-
 ```
 
 </div>
@@ -83,7 +108,7 @@ dependencies {
 <summary>Maven</summary>
 <div>
 
-```maven
+```xml
 <repositories>
     <repository>
         <id>jitpack.io</id>
@@ -92,18 +117,13 @@ dependencies {
 </repositories>
 ```
 
-```maven
+```xml
 <dependency>
     <groupId>com.github.TeamKun</groupId>
     <artifactId>flylib-reloaded</artifactId>
     <version>VERSION</version>
 </dependency>
-
 ```
 
 </div>
 </details>
-
-## License
-
-[MIT](https://github.com/TeamKun/flylib-reloaded/blob/master/LICENSE)
