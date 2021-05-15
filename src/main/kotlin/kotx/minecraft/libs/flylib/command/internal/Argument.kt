@@ -135,7 +135,9 @@ open class Argument(
         min: Int = Int.MIN_VALUE,
         max: Int = Int.MAX_VALUE,
         tabComplete: (CommandContext.() -> List<String>)? = null,
-    ) : Argument(name, IntegerArgumentType.integer(min, max), tabComplete)
+    ) : Argument(
+        name, IntegerArgumentType.integer(min, max), tabComplete
+    )
 
     class Float(
         name: String,
