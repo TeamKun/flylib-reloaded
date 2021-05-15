@@ -6,9 +6,6 @@
 package kotx.minecraft.libs.flylib
 
 import kotx.minecraft.libs.flylib.command.CommandHandler
-import org.bukkit.event.Event
-import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
@@ -67,15 +64,6 @@ class FlyLib(
         fun command(commandHandler: CommandHandler): Builder {
             this.commandHandler = commandHandler
             return this
-        }
-
-        fun <T : Event> listen(action: T.() -> Unit) {
-            plugin.server.pluginManager.registerEvents(object : Listener {
-                @EventHandler
-                fun onEvent(event: T) {
-                    action.invoke(event)
-                }
-            }, plugin)
         }
 
         fun build(): FlyLib = FlyLib(
