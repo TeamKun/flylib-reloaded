@@ -7,6 +7,7 @@ package kotx.minecraft.test
 
 import kotx.minecraft.libs.flylib.command.Command
 import kotx.minecraft.libs.flylib.command.internal.Argument
+import kotx.minecraft.libs.flylib.command.internal.Suggestion
 import kotx.minecraft.libs.flylib.command.internal.Usage
 import kotx.minecraft.libs.flylib.flyLib
 import org.bukkit.plugin.java.JavaPlugin
@@ -57,7 +58,9 @@ class OuterCommand : Command("outer") {
     class InnerCommand : Command("inner") {
         override val usages: List<Usage> = listOf(
             Usage(
-                Argument.Selection("hoge/fuga", "hoge", "fuga")
+                Argument.Text("text") {
+                    listOf(Suggestion("hoge", "hoge tooltip"), Suggestion("fuga", "fuga tooltip!"))
+                }
             )
         )
     }

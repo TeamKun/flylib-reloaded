@@ -5,6 +5,7 @@
 
 package kotx.minecraft.libs.flylib.command
 
+import com.mojang.brigadier.LiteralMessage
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.builder.RequiredArgumentBuilder
@@ -164,13 +165,13 @@ class CommandHandler(
     else
         RequiredArgumentBuilder.argument(argument.name, argument.type)
 
-    private fun ArgumentBuilder<CommandListenerWrapper, *>?.setupArgument(
+    private fun ArgumentBuilder<CommandListenerWrapper, *>.setupArgument(
         usage: Usage,
         argument: Argument,
         command: Command,
         depth: Int
     ) {
-        this?.requires {
+        requires {
             val validPermission = when (usage.permission ?: command.permission) {
                 Permission.OP -> it.bukkitSender.isOp
                 Permission.NOT_OP -> !it.bukkitSender.isOp
@@ -187,19 +188,17 @@ class CommandHandler(
             true
         }
 
-        if (this is RequiredArgumentBuilder<CommandListenerWrapper, *> && argument.tabComplete != null) this.suggests { ctx, builder ->
-            argument.tabComplete.invoke(ctx.asFlyLibContext(command, depth)).forEach {
-                if (it.tooltip != null)
-                    builder.suggest(it.content) { it.tooltip }
-                else
-                    builder.suggest(it.content)
+        if (this is RequiredArgumentBuilder<CommandListenerWrapper, *> && argument.tabComplete != null) suggests { ctx, builder ->
+            argument.tabComplete.invoke(ctx.asFlyLibContext(command, depth)).filter { it.content.startsWith(builder.remaining, true) }.forEach {
+                val toolTipMessage = it.tooltip?.let { LiteralMessage(it) }
+                builder.suggest(it.content, toolTipMessage)
             }
 
             builder.buildFuture()
         }
 
 
-        this?.executes {
+        executes {
             val ctx = it as CommandContext<CommandListenerWrapper>
             if (usage.action != null) usage.action.invoke(ctx.asFlyLibContext(command, depth)) else command.apply {
                 ctx.asFlyLibContext(command, depth).execute()

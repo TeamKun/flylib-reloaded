@@ -127,7 +127,7 @@ open class Argument(
         name: String,
         vararg selections: String,
     ) : Argument(name, StringArgumentType.string(), tabComplete = {
-        selections.filter { it.startsWith(args.lastOrNull() ?: "", true) }.map { Suggestion(it) }
+        selections.map { Suggestion(it) }
     })
 
     class Integer(
