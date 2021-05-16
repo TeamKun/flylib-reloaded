@@ -189,7 +189,10 @@ class CommandHandler(
 
         if (this is RequiredArgumentBuilder<CommandListenerWrapper, *> && argument.tabComplete != null) this.suggests { ctx, builder ->
             argument.tabComplete.invoke(ctx.asFlyLibContext(command, depth)).forEach {
-                builder.suggest(it)
+                if (it.tooltip != null)
+                    builder.suggest(it.content) { it.tooltip }
+                else
+                    builder.suggest(it.content)
             }
 
             builder.buildFuture()
