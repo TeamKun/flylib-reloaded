@@ -1,13 +1,23 @@
-# FlyLib Reloaded
+<h1 align="center">FlyLib Reloaded</h1>
 
-A utility library for Minecraft developed in Kotlin. This is a companion version for the `Paper 1.16.5`   
-This library is developed by [Kotx\_\_](https://twitter.com/kotx__)
+<p align="center"><b>FlyLib Reloaded</b> is a utility library for <a href="https://papermc.io">Minecraft Paper</a> that provides commands, menus, Kotlin extensions, and more.</p>
 
-[![](https://jitpack.io/v/TeamKun/flylib-reloaded.svg)](https://jitpack.io/#TeamKun/flylib-reloaded)
-[![GitHub license](https://img.shields.io/badge/license-Mit%20License-blue.svg?style=flat)](https://opensource.org/licenses/mit-license.php)
+<div align="center">
+    <a href="https://jitpack.io/#TeamKun/flylib-reloaded"><img src="https://img.shields.io/jitpack/v/github/TeamKun/flylib-reloaded?label=Version&logo=Github&style=for-the-badge&color=blueviolet" alt="jitpack release version"></a>
+    <a href="https://opensource.org/licenses/mit-license.php"><img src="https://img.shields.io/static/v1?label=License&message=Mit&style=for-the-badge&color=blue" alt="License"></a>
+    <a href="https://twitter.com/kotx__"><img src="https://img.shields.io/static/v1?label=Developer&message=Kotx__&style=for-the-badge&color=orange" alt="developer"></a>
+</div>
 
-Completion, subcommands, help messages, etc. can be easily implemented.  
-![better commands](https://i.imgur.com/jNh77XS.gif)
+---
+**This library is currently under development (beta version is `0.*.*`), and the API will be changed or removed without notice.**
+
+## ⚡ Quickstart
+
+You can implement tab completion, type checking, help message generation, and subcommands with the following simple code.  
+`There is no need to add any commands or permissions to plugin.yml. They will be automatically incorporated by FlyLib. All permissions and aliases can be defined as variables in the command.`
+
+![](https://i.imgur.com/jNh77XS.gif)
+
 ```kotlin
 class PluginTest : JavaPlugin() {
     override fun onEnable() {
@@ -26,6 +36,7 @@ class PluginTest : JavaPlugin() {
 }
 
 class PrintNumberCommand : Command("printnumber") {
+    override val description = "Prints your number. (10 or less)"
     override val usages: List<Usage> = listOf(
         Usage(Argument.Integer("number", max = 10)) {
             sendMessage("Your Number -> ${args.first().toInt()}")
@@ -34,6 +45,7 @@ class PrintNumberCommand : Command("printnumber") {
 }
 
 class ExplodeCommand : Command("explode") {
+    override val permission = Permission.OP
     override val usages: List<Usage> = listOf(
         Usage(
             Argument.Selection("type", "here", "there")
@@ -51,6 +63,9 @@ class OuterCommand : Command("outer") {
     override val children: List<Command> = listOf(
         InnerCommand()
     )
+    override val examples = listOf(
+        "outer inner hoge"
+    )
 
     class InnerCommand : Command("inner") {
         override val usages: List<Usage> = listOf(
@@ -62,9 +77,11 @@ class OuterCommand : Command("outer") {
 }
 ```
 
-## Using in your projects
+## ⚙️ Installation
 
-[![](https://jitpack.io/v/TeamKun/flylib-reloaded.svg)](https://jitpack.io/#TeamKun/flylib-reloaded)
+[![](https://img.shields.io/jitpack/v/github/TeamKun/flylib-reloaded?label=Version&logo=Github&style=for-the-badge&color=blueviolet)](https://jitpack.io/#TeamKun/flylib-reloaded)
+
+Replace `<version>` with the version you want to use of jitpack.
 
 <details>
 <summary>Gradle Kotlin DSL</summary>
@@ -78,7 +95,7 @@ repositories {
 
 ```kotlin
 dependencies {
-    implementation("com.github.TeamKun:flylib-reloaded:<VERSION>")
+    implementation("com.github.TeamKun:flylib-reloaded:<version>")
 }
 ```
 
@@ -97,7 +114,7 @@ repositories {
 
 ```groovy
 dependencies {
-    implementation "com.github.TeamKun:flylib-reloaded:<VERSION>"
+    implementation "com.github.TeamKun:flylib-reloaded:<version>"
 }
 ```
 
@@ -121,9 +138,17 @@ dependencies {
 <dependency>
     <groupId>com.github.TeamKun</groupId>
     <artifactId>flylib-reloaded</artifactId>
-    <version>VERSION</version>
+    <version>version</version>
 </dependency>
 ```
 
 </div>
 </details>
+
+## 📝 Dependencies
+
+- [kotlin](https://github.com/JetBrains/kotlin)
+- [spigot-api](https://github.com/SpigotMC/Spigot-API)
+- [paper-api](https://github.com/PaperMC/Paper)
+- [logback-classic](http://logback.qos.ch)
+- [koin](https://github.com/InsertKoinIO/koin)
