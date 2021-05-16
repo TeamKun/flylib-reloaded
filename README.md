@@ -3,9 +3,10 @@
 <p align="center"><b>FlyLib Reloaded</b> is a utility library for <a href="https://papermc.io">Minecraft Paper</a> that provides commands, menus, Kotlin extensions, and more.</p>
 
 <div align="center">
-    <a href="https://jitpack.io/#TeamKun/flylib-reloaded"><img src="https://img.shields.io/jitpack/v/github/TeamKun/flylib-reloaded?label=Version&logo=Github&style=for-the-badge&color=blueviolet" alt="jitpack release version"></a>
-    <a href="https://opensource.org/licenses/mit-license.php"><img src="https://img.shields.io/static/v1?label=License&message=Mit&style=for-the-badge&color=blue" alt="License"></a>
-    <a href="https://twitter.com/kotx__"><img src="https://img.shields.io/static/v1?label=Developer&message=Kotx__&style=for-the-badge&color=orange" alt="developer"></a>
+    <a href="https://github.com/TeamKun/flylib-reloaded"><img src="https://img.shields.io/github/workflow/status/TeamKun/flylib-reloaded/Build?style=flat-square" alt="Build Result"></a>
+    <a href="https://jitpack.io/#TeamKun/flylib-reloaded"><img src="https://img.shields.io/jitpack/v/github/TeamKun/flylib-reloaded?label=Version&logo=Github&style=flat-square&color=blueviolet" alt="jitpack release version"></a>
+    <a href="https://opensource.org/licenses/mit-license.php"><img src="https://img.shields.io/static/v1?label=License&message=Mit&style=flat-square&color=blue" alt="License"></a>
+    <a href="https://twitter.com/kotx__"><img src="https://img.shields.io/static/v1?label=Developer&message=Kotx__&style=flat-square&color=orange" alt="developer"></a>
 </div>
 
 ---
@@ -79,7 +80,7 @@ class OuterCommand : Command("outer") {
 
 ## ⚙️ Installation
 
-[![](https://img.shields.io/jitpack/v/github/TeamKun/flylib-reloaded?label=Version&logo=Github&style=for-the-badge&color=blueviolet)](https://jitpack.io/#TeamKun/flylib-reloaded)
+[![](https://img.shields.io/jitpack/v/github/TeamKun/flylib-reloaded?label=Version&logo=Github&style=flat-square&color=blueviolet)](https://jitpack.io/#TeamKun/flylib-reloaded)
 
 Replace `<version>` with the version you want to use of jitpack.
 
