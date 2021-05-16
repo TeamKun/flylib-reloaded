@@ -4,10 +4,10 @@ A utility library for Minecraft developed in Kotlin. This is a companion version
 This library is developed by [Kotx\_\_](https://twitter.com/kotx__)
 
 [![](https://jitpack.io/v/TeamKun/flylib-reloaded.svg)](https://jitpack.io/#TeamKun/flylib-reloaded)
-[![GitHub license](https://img.shields.io/badge/license-Mit%20License%202.0-blue.svg?style=flat)](https://opensource.org/licenses/mit-license.php)
+[![GitHub license](https://img.shields.io/badge/license-Mit%20License-blue.svg?style=flat)](https://opensource.org/licenses/mit-license.php)
 
-**FlyLib Reloaded is currently under development and is buggy and will undergo specification changes soon. That is, it is not stable.**
-
+Completion, subcommands, help messages, etc. can be easily implemented.  
+![better commands](https://i.imgur.com/jNh77XS.gif)
 ```kotlin
 class PluginTest : JavaPlugin() {
     override fun onEnable() {
