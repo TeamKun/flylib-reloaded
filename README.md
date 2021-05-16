@@ -8,9 +8,8 @@
     <a href="https://opensource.org/licenses/mit-license.php"><img src="https://img.shields.io/static/v1?label=License&message=Mit&style=flat-square&color=blue" alt="License"></a>
     <a href="https://twitter.com/kotx__"><img src="https://img.shields.io/static/v1?label=Developer&message=Kotx__&style=flat-square&color=orange" alt="developer"></a>
 </div>
-
----
-**This library is currently under development (beta version is `0.*.*`), and the API will be changed or removed without notice.**
+  
+⚠️**This library is currently under development (beta version is `0.*.*`), and the API will be changed or removed without notice.**
 
 ## ⚡ Quickstart
 
