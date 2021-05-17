@@ -11,6 +11,10 @@ import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import org.slf4j.LoggerFactory
 
+/**
+This class is used to load the modules required for FlyLib.
+FlyLib.Builder, or call the flylib method in a class that inherits from JavaPlugin.
+ */
 class FlyLib(
     private val plugin: JavaPlugin,
     private val commandHandler: CommandHandler,
@@ -33,16 +37,16 @@ class FlyLib(
 
             println(
                 """
-                        ______ _       _     _ _      ______     _                 _          _ 
-                        |  ___| |     | |   (_) |     | ___ \   | |               | |        | |
-                        | |_  | |_   _| |    _| |__   | |_/ /___| | ___   __ _  __| | ___  __| |
-                        |  _| | | | | | |   | | '_ \  |    // _ \ |/ _ \ / _` |/ _` |/ _ \/ _` |
-                        | |   | | |_| | |___| | |_) | | |\ \  __/ | (_) | (_| | (_| |  __/ (_| |
-                        \_|   |_|\__, \_____/_|_.__/  \_| \_\___|_|\___/ \__,_|\__,_|\___|\__,_|
-                                  __/ |                                                         
-                                 |___/
-                        ::FlyLib Reloaded | by @kotx__ | Inject successfully.::
-                        """.trimIndent()
+                ______ _       _     _ _      ______     _                 _          _ 
+                |  ___| |     | |   (_) |     | ___ \   | |               | |        | |
+                | |_  | |_   _| |    _| |__   | |_/ /___| | ___   __ _  __| | ___  __| |
+                |  _| | | | | | |   | | '_ \  |    // _ \ |/ _ \ / _` |/ _` |/ _ \/ _` |
+                | |   | | |_| | |___| | |_) | | |\ \  __/ | (_) | (_| | (_| |  __/ (_| |
+                \_|   |_|\__, \_____/_|_.__/  \_| \_\___|_|\___/ \__,_|\__,_|\___|\__,_|
+                          __/ |                                                         
+                         |___/
+                ::FlyLib Reloaded | by @kotx__ | Inject successfully.::
+                """.trimIndent()
             )
         } catch (e: Exception) {
             logger.error("injection failed.")
@@ -56,16 +60,33 @@ class FlyLib(
         private var commandHandler: CommandHandler = CommandHandler.Builder().build()
         private val listeningEvents: MutableList<Function<Unit>> = mutableListOf()
 
+        /**
+         * Configure the command module.
+         * This is a method that corresponds to Kotlin's apply builder pattern.
+         *
+         * @param init CommandHandler.Builder's Configurations
+         * @return FlyLib.Builder
+         */
         fun command(init: CommandHandler.Builder.() -> Unit): Builder {
             commandHandler = CommandHandler.Builder().apply(init).build()
             return this
         }
 
+        /**
+         * Configure the command module.
+         *
+         * @param commandHandler CommandHandler's Instance
+         * @return FlyLib.Builder
+         */
         fun command(commandHandler: CommandHandler): Builder {
             this.commandHandler = commandHandler
             return this
         }
 
+        /**
+         * Build and initialize FlyLib.
+         * It is recommended to call it with the onEnable clause of the JavaPlugin, since commands are registered at this time.
+         */
         fun build(): FlyLib = FlyLib(
             plugin,
             commandHandler,
@@ -73,4 +94,10 @@ class FlyLib(
     }
 }
 
-fun JavaPlugin.flyLib(block: FlyLib.Builder.() -> Unit = {}) = FlyLib.Builder(this).apply(block).build()
+/**
+ * An extended formula for builders to build FlyLib.
+ *
+ * @param init FlyLib.Builder's Configurations
+ * @return FlyLib Instance
+ */
+fun JavaPlugin.flyLib(init: FlyLib.Builder.() -> Unit = {}) = FlyLib.Builder(this).apply(init).build()

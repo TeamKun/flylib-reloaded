@@ -246,6 +246,11 @@ class CommandHandler(
             return this
         }
 
+        /**
+         * Build CommandHandler
+         *
+         * @return CommandHandler Instance
+         */
         fun build() = CommandHandler(
             commands,
             commandDefault
