@@ -7,7 +7,7 @@ package kotx.minecraft.libs.flylib
 
 import kotx.minecraft.libs.flylib.command.CommandHandler
 import org.bukkit.plugin.java.JavaPlugin
-import org.koin.core.context.startKoin
+import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 import org.slf4j.LoggerFactory
 
@@ -24,19 +24,22 @@ class FlyLib(
     init {
         try {
             logger.info("injection start.")
-            startKoin {
+            koinApplication {
                 modules(module {
                     single { this@FlyLib }
                     single { this@FlyLib.plugin }
                     single { this@FlyLib.commandHandler }
                     single { this@FlyLib.logger }
                 })
+            }.also {
+                FlyLibContext.startKoin(FlyLibContext, it)
             }
 
             commandHandler.initialize()
 
             println(
                 """
+                    
                 ______ _       _     _ _      ______     _                 _          _ 
                 |  ___| |     | |   (_) |     | ___ \   | |               | |        | |
                 | |_  | |_   _| |    _| |__   | |_/ /___| | ___   __ _  __| | ___  __| |
@@ -46,10 +49,16 @@ class FlyLib(
                           __/ |                                                         
                          |___/
                 ::FlyLib Reloaded | by @kotx__ | Inject successfully.::
+                
+                If you find any bugs, please contact us at https://github.com/TeamKun/flylib-reloaded/issues.
+                
                 """.trimIndent()
             )
         } catch (e: Exception) {
-            logger.error("injection failed.")
+            logger.error("Injection failed.")
+            logger.error("Please contact https://github.com/TeamKun/flylib-reloaded/issues.")
+            logger.error("with the following log and a description of how to reproduce the problem.")
+            println()
             e.printStackTrace()
         }
     }
@@ -58,7 +67,6 @@ class FlyLib(
         private val plugin: JavaPlugin
     ) {
         private var commandHandler: CommandHandler = CommandHandler.Builder().build()
-        private val listeningEvents: MutableList<Function<Unit>> = mutableListOf()
 
         /**
          * Configure the command module.
