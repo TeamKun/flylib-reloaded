@@ -8,6 +8,8 @@ package kotx.minecraft.libs.flylib.command.internal
 import kotx.minecraft.libs.flylib.*
 import kotx.minecraft.libs.flylib.command.Command
 import kotx.minecraft.libs.flylib.command.CommandContext
+import net.kyori.adventure.text.event.ClickEvent
+import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.format.TextDecoration
 import java.awt.Color
 
@@ -63,9 +65,15 @@ class CommandDefault(
                     append(")", Color.WHITE)
                 }
 
-                if (command.description.isNotEmpty()) {
-                    append(" - ", subColor)
-                    append(command.description, subColor)
+                when {
+                    command.description.lines().size == 1 -> {
+                        append(" - ", subColor)
+                        append(command.description, subColor)
+                    }
+                    command.description.lines().size > 1 -> {
+                        appendln()
+                        append(command.description, subColor)
+                    }
                 }
 
                 appendln()
@@ -125,7 +133,11 @@ class CommandDefault(
                         appendln()
                         append("# ", Color.WHITE)
                         append("Examples:\n", highlightTextColor, decoration = TextDecoration.BOLD)
-                        command.examples.map { "/$it".asTextComponent(mainColor) }.joint("\n".asTextComponent()) {
+                        command.examples.map {
+                            "/$it".asTextComponent(mainColor)
+                                .clickEvent(ClickEvent.runCommand(it))
+                                .hoverEvent(HoverEvent.showText("Click to run!".asTextComponent(Color.LIGHT_GRAY)))
+                        }.joint("\n".asTextComponent()) {
                             append(it)
                         }
                         appendln()
