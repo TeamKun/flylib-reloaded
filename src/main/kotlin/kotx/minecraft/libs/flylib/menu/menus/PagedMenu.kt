@@ -5,15 +5,15 @@
 
 package kotx.minecraft.libs.flylib.menu.menus
 
+import kotx.minecraft.libs.flylib.FlyLibComponent
 import kotx.minecraft.libs.flylib.menu.Menu
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
-import org.koin.core.component.KoinComponent
 
 class PagedMenu(
     player: Player,
     items: MutableList<MenuItem>
-) : Menu(player, 45, items), KoinComponent {
+) : Menu(player, 45, items), FlyLibComponent {
     init {
         items.size / 9 > 4
     }

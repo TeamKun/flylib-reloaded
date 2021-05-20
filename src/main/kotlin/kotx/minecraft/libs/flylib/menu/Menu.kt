@@ -5,6 +5,7 @@
 
 package kotx.minecraft.libs.flylib.menu
 
+import kotx.minecraft.libs.flylib.FlyLibComponent
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -12,14 +13,13 @@ import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
-import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 abstract class Menu(
     val player: Player,
     size: Int,
     val items: MutableList<MenuItem>
-) : Listener, KoinComponent {
+) : Listener, FlyLibComponent {
     private val plugin by inject<JavaPlugin>()
     protected val inventory = Bukkit.createInventory(player, size)
 
