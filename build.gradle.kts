@@ -33,6 +33,7 @@ dependencies {
 
 tasks {
     compileJava {
+        options.isFork = true
         sourceCompatibility = "1.8"
         targetCompatibility = "1.8"
         options.encoding = "UTF-8"
@@ -45,11 +46,21 @@ tasks {
     }
 
     compileKotlin {
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions {
+            jvmTarget = "1.8"
+            verbose = true
+            suppressWarnings = true
+        }
     }
 
     compileTestKotlin {
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions {
+            jvmTarget = "1.8"
+            verbose = true
+            suppressWarnings = true
+        }
+
+        parallelStream()
     }
 
     javadoc {
