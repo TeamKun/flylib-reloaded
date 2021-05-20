@@ -10,6 +10,7 @@ import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.builder.RequiredArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
+import kotx.minecraft.libs.flylib.FlyLibComponent
 import kotx.minecraft.libs.flylib.asFlyLibContext
 import kotx.minecraft.libs.flylib.command.internal.Argument
 import kotx.minecraft.libs.flylib.command.internal.CommandDefault
@@ -22,7 +23,6 @@ import org.bukkit.craftbukkit.v1_16_R3.CraftServer
 import org.bukkit.entity.Player
 import org.bukkit.permissions.PermissionDefault
 import org.bukkit.plugin.java.JavaPlugin
-import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.slf4j.Logger
 
@@ -30,7 +30,7 @@ import org.slf4j.Logger
 class CommandHandler(
     private val commands: List<Command>,
     val commandDefault: CommandDefault
-) : KoinComponent {
+) : FlyLibComponent {
     private val plugin: JavaPlugin by inject()
     private val logger: Logger by inject()
 
@@ -196,7 +196,6 @@ class CommandHandler(
 
             builder.buildFuture()
         }
-
 
         executes {
             val ctx = it as CommandContext<CommandListenerWrapper>
