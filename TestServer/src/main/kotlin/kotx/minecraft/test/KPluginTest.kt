@@ -29,6 +29,7 @@ class PluginTest : JavaPlugin() {
 }
 
 class PrintNumberCommand : Command("printnumber") {
+    override val description: String = "An example command prints number you specified with range check (max 10)"
     override val usages: List<Usage> = listOf(
         Usage(Argument.Integer("number", max = 10)) {
             sendMessage("Your Number -> ${args.first().toInt()}")
@@ -37,6 +38,7 @@ class PrintNumberCommand : Command("printnumber") {
 }
 
 class ExplodeCommand : Command("explode") {
+    override val description: String = "An example command shows command completion."
     override val usages: List<Usage> = listOf(
         Usage(
             Argument.Selection("type", "here", "there")
@@ -51,6 +53,7 @@ class ExplodeCommand : Command("explode") {
 }
 
 class OuterCommand : Command("outer") {
+    override val description: String = "An example command shows children command execution."
     override val children: List<Command> = listOf(
         InnerCommand()
     )
@@ -61,7 +64,9 @@ class OuterCommand : Command("outer") {
                 Argument.Text("text") {
                     listOf(Suggestion("hoge", "hoge tooltip"), Suggestion("fuga", "fuga tooltip!"))
                 }
-            )
+            ) {
+                sendMessage("You executed inner command!")
+            }
         )
     }
 }
