@@ -5,16 +5,16 @@
 
 package kotx.minecraft.libs.flylib.menu.menus
 
+import kotx.minecraft.libs.flylib.FlyLibComponent
 import kotx.minecraft.libs.flylib.menu.Menu
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
-import org.koin.core.component.KoinComponent
 
 class ChestMenu(
     player: Player,
     size: Int,
     items: MutableList<MenuItem>
-) : Menu(player, size, items), KoinComponent {
+) : Menu(player, size, items), FlyLibComponent {
     override fun display() {
         items.forEach {
             inventory.setItem(it.index, it.stack)
