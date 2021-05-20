@@ -5,18 +5,18 @@
 
 package kotx.minecraft.libs.flylib.command
 
+import kotx.minecraft.libs.flylib.FlyLibComponent
 import kotx.minecraft.libs.flylib.command.internal.Permission
 import kotx.minecraft.libs.flylib.command.internal.Usage
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.Koin
-import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 abstract class Command(
     val name: String
-) : KoinComponent {
+) : FlyLibComponent {
     internal val plugin by inject<JavaPlugin>()
     private val commandHandler by inject<CommandHandler>()
 
@@ -33,7 +33,10 @@ abstract class Command(
     open val aliases: List<String> = listOf()
 
     /**
-     * How to use the command. It is automatically formatted and displayed when you use sendHelp() in CommandContext.
+     * How to use the command in its entirety.
+     * Command completion, type checking, etc. will be performed according to the Usage added here.
+     * If a command matching the Usage is entered and an action is specified in the Usage, it will be executed.
+     * However, if no matching command is entered in Usage, or if a match is found but no action is specified, CommandContext.execute() of this command will be executed.
      */
     open val usages: List<Usage> = listOf()
 
@@ -56,23 +59,6 @@ abstract class Command(
     /**
      * A subcommand of this command. If the string entered as an argument matches the name or alias of these commands, the matching command will be executed.
      * This command will only be executed if there is no match.
-     *
-     * ### Example
-     * Consider the case where "blacklist" is specified in the name of this command (eg. BlackListCommand) and a command named "add" (eg. AddCommand) has been added to children like below.
-     * ```
-     * children = listOf(AddCommand())
-     * ```
-     * If the user executes
-     * ```
-     * /blacklist add bbb ccc <..
-     * ```
-     * the AddCommand execute() will be executed. Placed in args from "bbb".
-     *
-     * If the user executes
-     * ```
-     * /blacklist aaa bbb ccc <..
-     * ```
-     * BlackListCommand will be executed. Placed in args from "aaa".
      */
     open val children = listOf<Command>()
 
