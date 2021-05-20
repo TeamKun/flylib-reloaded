@@ -5,6 +5,9 @@
 
 package kotx.minecraft.libs.flylib.command.internal
 
+/**
+ *
+ */
 class Suggestion(
     val content: String,
     val tooltip: String? = null
