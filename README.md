@@ -4,11 +4,11 @@
 
 <div align="center">
     <a href="https://github.com/TeamKun/flylib-reloaded"><img src="https://img.shields.io/github/workflow/status/TeamKun/flylib-reloaded/Build?style=flat-square" alt="Build Result"></a>
-    <a href="https://jitpack.io/#TeamKun/flylib-reloaded"><img src="https://img.shields.io/jitpack/v/github/TeamKun/flylib-reloaded?label=Version&logo=Github&style=flat-square&color=blueviolet" alt="jitpack release version"></a>
+    <a href="https://jitpack.io/#TeamKun/flylib-reloaded"><img src="https://img.shields.io/jitpack/v/github/TeamKun/flylib-reloaded?label=Version&style=flat-square&color=blueviolet" alt="jitpack release version"></a>
     <a href="https://opensource.org/licenses/mit-license.php"><img src="https://img.shields.io/static/v1?label=License&message=Mit&style=flat-square&color=blue" alt="License"></a>
     <a href="https://twitter.com/kotx__"><img src="https://img.shields.io/static/v1?label=Developer&message=Kotx__&style=flat-square&color=orange" alt="developer"></a>
 </div>
-  
+
 ⚠️**This library is currently under development (beta version is `0.*.*`), and the API will be changed or removed without notice.**
 
 ## ⚡ Quickstart
@@ -16,7 +16,16 @@
 <details>
 <summary>Command</summary>
 <div>
-    
+
+### 🗒️ TODO:
+
+> **Add typed arguments**: Arguments with types can be used directly by casting.
+> ```kotlin
+> val location = typedArgs[0] as Location
+> ```
+
+---
+
 You can implement tab completion, type checking, help message generation, and subcommands with the following simple code.  
 `There is no need to add any commands or permissions to plugin.yml. They will be automatically incorporated by FlyLib. All permissions and aliases can be defined as variables in the command.`
 
@@ -40,7 +49,7 @@ class PluginTest : JavaPlugin() {
 }
 
 class PrintNumberCommand : Command("printnumber") {
-    override val description = "Prints your number. (10 or less)"
+    override val description: String = "An example command prints number you specified with range check (max 10)"
     override val usages: List<Usage> = listOf(
         Usage(Argument.Integer("number", max = 10)) {
             sendMessage("Your Number -> ${args.first().toInt()}")
@@ -49,7 +58,7 @@ class PrintNumberCommand : Command("printnumber") {
 }
 
 class ExplodeCommand : Command("explode") {
-    override val permission = Permission.OP
+    override val description: String = "An example command shows command completion."
     override val usages: List<Usage> = listOf(
         Usage(
             Argument.Selection("type", "here", "there")
@@ -64,28 +73,45 @@ class ExplodeCommand : Command("explode") {
 }
 
 class OuterCommand : Command("outer") {
+    override val description: String = "An example command shows children command execution."
     override val children: List<Command> = listOf(
         InnerCommand()
-    )
-    override val examples = listOf(
-        "outer inner hoge"
     )
 
     class InnerCommand : Command("inner") {
         override val usages: List<Usage> = listOf(
             Usage(
-                Argument.Selection("hoge/fuga", "hoge", "fuga")
-            )
+                Argument.Text("text") {
+                    listOf(Suggestion("hoge", "hoge tooltip"), Suggestion("fuga", "fuga tooltip!"))
+                }
+            ) {
+                sendMessage("You executed inner command!")
+            }
         )
     }
 }
 ```
+
+</div>
+</details>
+
+<details>
+<summary>Menu</summary>
+<div>
+Coming soon...!
+</div>
+</details>
+
+<details>
+<summary>Extensions</summary>
+<div>
+Coming soon...!
 </div>
 </details>
 
 ## ⚙️ Installation
 
-[![](https://img.shields.io/jitpack/v/github/TeamKun/flylib-reloaded?label=Version&logo=Github&style=flat-square&color=blueviolet)](https://jitpack.io/#TeamKun/flylib-reloaded)
+[![](https://img.shields.io/jitpack/v/github/TeamKun/flylib-reloaded?label=Version&style=flat-square&color=blueviolet)](https://jitpack.io/#TeamKun/flylib-reloaded)
 
 Replace `<version>` with the version you want to use of jitpack.
 
