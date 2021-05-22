@@ -27,7 +27,8 @@ class CommandContext(
     val player: Player?,
     val server: Server,
     val message: String,
-    val args: Array<String>
+    val args: Array<String>,
+    val typedArgs: Array<Any?>
 ) {
     val options = getOptions()
     val argsWithoutOptions = withoutOptionList()
