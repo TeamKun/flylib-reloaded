@@ -7,6 +7,7 @@ package kotx.minecraft.libs.flylib
 
 import com.mojang.brigadier.context.CommandContext
 import kotx.minecraft.libs.flylib.command.Command
+import kotx.minecraft.libs.flylib.command.internal.Argument
 import net.kyori.adventure.audience.MessageType
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
@@ -22,16 +23,24 @@ import java.awt.Color
 operator fun List<Command>.get(query: String) =
     find { it.name.equals(query, true) } ?: find { it.aliases.any { it == query } }
 
-fun CommandContext<CommandListenerWrapper>.asFlyLibContext(command: Command, depth: Int = 0): kotx.minecraft.libs.flylib.command.CommandContext =
-    kotx.minecraft.libs.flylib.command.CommandContext(
+fun CommandContext<CommandListenerWrapper>.asFlyLibContext(command: Command, args: List<Argument<*>>, depth: Int = 0): kotx.minecraft.libs.flylib.command.CommandContext {
+    val replaced = input.replaceFirst("/", "")
+    return kotx.minecraft.libs.flylib.command.CommandContext(
         command,
         command.plugin,
         source.bukkitSender,
         source.bukkitSender as? Player,
         source.bukkitSender.server,
-        input.replaceFirst("/", ""),
-        input.replaceFirst("/", "").split(" ").drop(1 + depth).toTypedArray()
+        replaced,
+        replaced.split(" ").drop(1 + depth).toTypedArray(),
+        try {
+            args.map { it.parser(this, it.name) }.toTypedArray()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emptyArray()
+        }
     )
+}
 
 fun CommandSender.send(block: TextComponent.Builder.() -> Unit) {
     sendMessage(Component.text().apply(block).build(), MessageType.CHAT)
