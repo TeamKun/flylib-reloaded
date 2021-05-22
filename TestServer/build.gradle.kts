@@ -8,8 +8,8 @@ plugins {
     id("com.github.johnrengelman.shadow") version "5.2.0"
 }
 
-group = "kotx.minecraft.libs.flylibreloaded"
-version = "0.1"
+group = "kotx.minecraft.libs"
+version = "0.0.1"
 
 repositories {
     mavenCentral()
