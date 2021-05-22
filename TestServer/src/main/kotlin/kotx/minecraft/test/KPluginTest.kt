@@ -10,63 +10,33 @@ import kotx.minecraft.libs.flylib.command.internal.Argument
 import kotx.minecraft.libs.flylib.command.internal.Suggestion
 import kotx.minecraft.libs.flylib.command.internal.Usage
 import kotx.minecraft.libs.flylib.flyLib
+import org.bukkit.Location
 import org.bukkit.plugin.java.JavaPlugin
 
-class PluginTest : JavaPlugin() {
+class TestPlugin : JavaPlugin() {
     override fun onEnable() {
         flyLib {
             command {
-                defaultConfiguration {
-                    playerOnly(true)
-                }
-
-                register(PrintNumberCommand())
-                register(ExplodeCommand())
-                register(OuterCommand())
+                register(TestCommand())
             }
         }
     }
 }
 
-class PrintNumberCommand : Command("printnumber") {
-    override val description: String = "An example command prints number you specified with range check (max 10)"
+class TestCommand : Command("test") {
+    override val description: String = "Test command."
     override val usages: List<Usage> = listOf(
-        Usage(Argument.Integer("number", max = 10)) {
-            sendMessage("Your Number -> ${args.first().toInt()}")
+        Usage(
+            Argument.Integer("number", 0, 20) {
+                listOf(Suggestion("1"), Suggestion("10", "Example tooltip"))
+            },
+            Argument.Position("position")
+        ) {
+            sendMessage(args.joinToString(" "))
+            val number = typedArgs[0] as Int
+            val location = typedArgs[1] as Location
+            sendMessage("num: $number")
+            sendMessage("loc: $location")
         }
     )
-}
-
-class ExplodeCommand : Command("explode") {
-    override val description: String = "An example command shows command completion."
-    override val usages: List<Usage> = listOf(
-        Usage(
-            Argument.Selection("type", "here", "there")
-        ),
-        Usage(
-            Argument.Position("location")
-        ),
-        Usage(
-            Argument.Player("player")
-        ),
-    )
-}
-
-class OuterCommand : Command("outer") {
-    override val description: String = "An example command shows children command execution."
-    override val children: List<Command> = listOf(
-        InnerCommand()
-    )
-
-    class InnerCommand : Command("inner") {
-        override val usages: List<Usage> = listOf(
-            Usage(
-                Argument.Text("text") {
-                    listOf(Suggestion("hoge", "hoge tooltip"), Suggestion("fuga", "fuga tooltip!"))
-                }
-            ) {
-                sendMessage("You executed inner command!")
-            }
-        )
-    }
 }
