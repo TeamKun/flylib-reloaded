@@ -127,7 +127,7 @@ class CommandHandler(
                     .literal<CommandListenerWrapper?>(child.name)
                     .requires { child.validate(it.bukkitSender) }
                     .executes {
-                        child.apply { it.asFlyLibContext(child, depthMap[child] ?: 0).execute() }
+                        child.apply { it.asFlyLibContext(child, emptyList(), depthMap[child] ?: 0).execute() }
                         1
                     }
                 child.handle(childBase)
@@ -138,7 +138,7 @@ class CommandHandler(
                         .literal<CommandListenerWrapper?>(it)
                         .requires { child.validate(it.bukkitSender) }
                         .executes {
-                            child.apply { it.asFlyLibContext(child, depthMap[child] ?: 0).execute() }
+                            child.apply { it.asFlyLibContext(child, emptyList(), depthMap[child] ?: 0).execute() }
                             1
                         }
                     child.handle(childAliasBase)
@@ -151,7 +151,7 @@ class CommandHandler(
             .literal<CommandListenerWrapper?>(name)
             .requires { command.validate(it.bukkitSender) }
             .executes {
-                command.apply { it.asFlyLibContext(command, 0).execute() }
+                command.apply { it.asFlyLibContext(command, emptyList(), 0).execute() }
                 1
             }
 
@@ -160,14 +160,14 @@ class CommandHandler(
         ((Bukkit.getServer() as CraftServer).server as MinecraftServer).commandDispatcher.a().register(base)
     }
 
-    private fun getArgumentBuilder(argument: Argument): ArgumentBuilder<CommandListenerWrapper, *> = if (argument.type == null)
+    private fun getArgumentBuilder(argument: Argument<*>): ArgumentBuilder<CommandListenerWrapper, *> = if (argument.type == null)
         LiteralArgumentBuilder.literal(argument.name)
     else
         RequiredArgumentBuilder.argument(argument.name, argument.type)
 
     private fun ArgumentBuilder<CommandListenerWrapper, *>.setupArgument(
         usage: Usage,
-        argument: Argument,
+        argument: Argument<*>,
         command: Command,
         depth: Int
     ) {
@@ -188,8 +188,9 @@ class CommandHandler(
             true
         }
 
+
         if (this is RequiredArgumentBuilder<CommandListenerWrapper, *> && argument.tabComplete != null) suggests { ctx, builder ->
-            argument.tabComplete.invoke(ctx.asFlyLibContext(command, depth)).filter { it.content.startsWith(builder.remaining, true) }.forEach {
+            argument.tabComplete.invoke(ctx.asFlyLibContext(command, usage.args.toList(), depth)).filter { it.content.startsWith(builder.remaining, true) }.forEach {
                 val toolTipMessage = it.tooltip?.let { LiteralMessage(it) }
                 builder.suggest(it.content, toolTipMessage)
             }
@@ -199,8 +200,8 @@ class CommandHandler(
 
         executes {
             val ctx = it as CommandContext<CommandListenerWrapper>
-            if (usage.action != null) usage.action.invoke(ctx.asFlyLibContext(command, depth)) else command.apply {
-                ctx.asFlyLibContext(command, depth).execute()
+            if (usage.action != null) usage.action.invoke(ctx.asFlyLibContext(command, usage.args.toList(), depth)) else command.apply {
+                ctx.asFlyLibContext(command, usage.args.toList(), depth).execute()
             }
 
             1
