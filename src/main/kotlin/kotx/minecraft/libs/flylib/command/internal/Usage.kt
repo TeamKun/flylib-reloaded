@@ -23,7 +23,7 @@ import kotx.minecraft.libs.flylib.command.CommandContext
  * )
  */
 class Usage(
-    vararg val args: Argument,
+    vararg val args: Argument<*>,
     val description: String = "",
     val permission: Permission? = null,
     val playerOnly: Boolean? = null,
