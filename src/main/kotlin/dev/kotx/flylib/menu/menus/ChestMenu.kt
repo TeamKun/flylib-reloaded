@@ -3,10 +3,10 @@
  * Twitter: https://twitter.com/kotx__
  */
 
-package kotx.minecraft.libs.flylib.menu.menus
+package dev.kotx.flylib.menu.menus
 
-import kotx.minecraft.libs.flylib.FlyLibComponent
-import kotx.minecraft.libs.flylib.menu.Menu
+import dev.kotx.flylib.FlyLibComponent
+import dev.kotx.flylib.menu.Menu
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 

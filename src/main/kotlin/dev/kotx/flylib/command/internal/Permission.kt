@@ -3,7 +3,7 @@
  * Twitter: https://twitter.com/kotx__
  */
 
-package kotx.minecraft.libs.flylib.command.internal
+package dev.kotx.flylib.command.internal
 
 /**
  * Permission to use the command. Permission.OP can be used only by OP, Permission.NOT_OP can be used by everyone except OP, and Permission.EVERYONE can be used by everyone.

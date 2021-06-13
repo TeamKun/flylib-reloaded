@@ -3,9 +3,9 @@
  * Twitter: https://twitter.com/kotx__
  */
 
-package kotx.minecraft.libs.flylib.menu
+package dev.kotx.flylib.menu
 
-import kotx.minecraft.libs.flylib.FlyLibComponent
+import dev.kotx.flylib.FlyLibComponent
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler

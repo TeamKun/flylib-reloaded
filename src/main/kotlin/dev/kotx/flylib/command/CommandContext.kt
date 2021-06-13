@@ -3,12 +3,12 @@
  * Twitter: https://twitter.com/kotx__
  */
 
-package kotx.minecraft.libs.flylib.command
+package dev.kotx.flylib.command
 
-import kotx.minecraft.libs.flylib.sendErrorMessage
-import kotx.minecraft.libs.flylib.sendPluginMessage
-import kotx.minecraft.libs.flylib.sendSuccessMessage
-import kotx.minecraft.libs.flylib.sendWarnMessage
+import dev.kotx.flylib.sendErrorMessage
+import dev.kotx.flylib.sendPluginMessage
+import dev.kotx.flylib.sendSuccessMessage
+import dev.kotx.flylib.sendWarnMessage
 import net.kyori.adventure.text.TextComponent
 import org.bukkit.Server
 import org.bukkit.command.CommandSender

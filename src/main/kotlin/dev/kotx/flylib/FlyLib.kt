@@ -3,9 +3,9 @@
  * Twitter: https://twitter.com/kotx__
  */
 
-package kotx.minecraft.libs.flylib
+package dev.kotx.flylib
 
-import kotx.minecraft.libs.flylib.command.CommandHandler
+import dev.kotx.flylib.command.CommandHandler
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module

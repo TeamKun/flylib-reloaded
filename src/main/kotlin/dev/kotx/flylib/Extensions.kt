@@ -3,11 +3,11 @@
  * Twitter: https://twitter.com/kotx__
  */
 
-package kotx.minecraft.libs.flylib
+package dev.kotx.flylib
 
 import com.mojang.brigadier.context.CommandContext
-import kotx.minecraft.libs.flylib.command.Command
-import kotx.minecraft.libs.flylib.command.internal.Argument
+import dev.kotx.flylib.command.Command
+import dev.kotx.flylib.command.internal.Argument
 import net.kyori.adventure.audience.MessageType
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
@@ -23,9 +23,9 @@ import java.awt.Color
 operator fun List<Command>.get(query: String) =
     find { it.name.equals(query, true) } ?: find { it.aliases.any { it == query } }
 
-fun CommandContext<CommandListenerWrapper>.asFlyLibContext(command: Command, args: List<Argument<*>>, depth: Int = 0): kotx.minecraft.libs.flylib.command.CommandContext {
+fun CommandContext<CommandListenerWrapper>.asFlyLibContext(command: Command, args: List<Argument<*>>, depth: Int = 0): dev.kotx.flylib.command.CommandContext {
     val replaced = input.replaceFirst("/", "")
-    return kotx.minecraft.libs.flylib.command.CommandContext(
+    return dev.kotx.flylib.command.CommandContext(
         command,
         command.plugin,
         source.bukkitSender,

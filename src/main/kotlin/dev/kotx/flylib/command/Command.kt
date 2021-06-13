@@ -3,11 +3,11 @@
  * Twitter: https://twitter.com/kotx__
  */
 
-package kotx.minecraft.libs.flylib.command
+package dev.kotx.flylib.command
 
-import kotx.minecraft.libs.flylib.FlyLibComponent
-import kotx.minecraft.libs.flylib.command.internal.Permission
-import kotx.minecraft.libs.flylib.command.internal.Usage
+import dev.kotx.flylib.FlyLibComponent
+import dev.kotx.flylib.command.internal.Permission
+import dev.kotx.flylib.command.internal.Usage
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin

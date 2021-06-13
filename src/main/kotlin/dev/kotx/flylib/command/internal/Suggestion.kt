@@ -3,7 +3,7 @@
  * Twitter: https://twitter.com/kotx__
  */
 
-package kotx.minecraft.libs.flylib.command.internal
+package dev.kotx.flylib.command.internal
 
 /**
  *

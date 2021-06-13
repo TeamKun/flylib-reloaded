@@ -3,9 +3,9 @@
  * Twitter: https://twitter.com/kotx__
  */
 
-package kotx.minecraft.libs.flylib.command.internal
+package dev.kotx.flylib.command.internal
 
-import kotx.minecraft.libs.flylib.command.CommandContext
+import dev.kotx.flylib.command.CommandContext
 
 /**
  * A class that takes arguments.

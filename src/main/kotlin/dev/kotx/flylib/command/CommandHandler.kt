@@ -3,19 +3,19 @@
  * Twitter: https://twitter.com/kotx__
  */
 
-package kotx.minecraft.libs.flylib.command
+package dev.kotx.flylib.command
 
 import com.mojang.brigadier.LiteralMessage
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.builder.RequiredArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
-import kotx.minecraft.libs.flylib.FlyLibComponent
-import kotx.minecraft.libs.flylib.asFlyLibContext
-import kotx.minecraft.libs.flylib.command.internal.Argument
-import kotx.minecraft.libs.flylib.command.internal.CommandDefault
-import kotx.minecraft.libs.flylib.command.internal.Permission
-import kotx.minecraft.libs.flylib.command.internal.Usage
+import dev.kotx.flylib.FlyLibComponent
+import dev.kotx.flylib.asFlyLibContext
+import dev.kotx.flylib.command.internal.Argument
+import dev.kotx.flylib.command.internal.CommandDefault
+import dev.kotx.flylib.command.internal.Permission
+import dev.kotx.flylib.command.internal.Usage
 import net.minecraft.server.v1_16_R3.CommandListenerWrapper
 import net.minecraft.server.v1_16_R3.MinecraftServer
 import org.bukkit.Bukkit

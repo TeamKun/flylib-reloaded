@@ -54,6 +54,10 @@ tasks {
     shadowJar {
         archiveBaseName.set(projectName)
         archiveVersion.set(projectVersion)
+
+        relocate("kotlin", "dev.kotx.kotlin")
+        relocate("ch.qos.logback", "dev.kotx.logback")
+        relocate("org.koin", "dev.kotx.koin")
     }
 }
 

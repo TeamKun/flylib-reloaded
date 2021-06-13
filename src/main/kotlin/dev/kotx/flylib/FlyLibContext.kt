@@ -3,7 +3,7 @@
  * Twitter: https://twitter.com/kotx__
  */
 
-package kotx.minecraft.libs.flylib
+package dev.kotx.flylib
 
 import org.koin.core.Koin
 import org.koin.core.KoinApplication

@@ -5,7 +5,7 @@
 
 package kotx.minecraft.test
 
-import kotx.minecraft.libs.flylib.flyLib
+import dev.kotx.flylib.flyLib
 import org.bukkit.plugin.java.JavaPlugin
 
 class TestPlugin : JavaPlugin() {
