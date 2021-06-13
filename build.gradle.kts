@@ -12,7 +12,7 @@ plugins {
 
 val projectName = "flylib-reloaded"
 val projectGroup = "dev.kotx"
-val projectVersion = "0.1.15"
+val projectVersion = "0.1.16"
 
 group = projectGroup
 version = projectVersion
@@ -35,6 +35,8 @@ dependencies {
 }
 
 val sources by tasks.registering(Jar::class) {
+    archiveBaseName.set(projectName)
+    archiveClassifier.set("sources")
     from(sourceSets.main.get().allSource)
 }
 
@@ -48,6 +50,11 @@ tasks {
     javadoc {
         options.encoding = "UTF-8"
     }
+
+    shadowJar {
+        archiveBaseName.set(projectName)
+        archiveVersion.set(projectVersion)
+    }
 }
 
 afterEvaluate {
@@ -58,7 +65,7 @@ afterEvaluate {
                 groupId = projectGroup
                 version = projectVersion
                 from(components["kotlin"])
-                artifact(sources)
+                artifact(sources.get())
             }
         }
     }
