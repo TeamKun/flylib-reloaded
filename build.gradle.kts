@@ -12,7 +12,7 @@ plugins {
 
 val projectName = "flylib-reloaded"
 val projectGroup = "dev.kotx"
-val projectVersion = "0.1.18"
+val projectVersion = "0.1.19"
 
 group = projectGroup
 version = projectVersion
@@ -26,18 +26,12 @@ repositories {
 }
 
 dependencies {
-    api(kotlin("stdlib-jdk8"))
-    api("io.insert-koin:koin-core:2.2.2")
-    api("io.insert-koin:koin-core-ext:2.2.2")
-    api("ch.qos.logback", "logback-classic", "1.2.3")
+    implementation(kotlin("stdlib-jdk8"))
+    implementation("io.insert-koin:koin-core:2.2.2")
+    implementation("io.insert-koin:koin-core-ext:2.2.2")
+    implementation("ch.qos.logback", "logback-classic", "1.2.3")
     implementation("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
     implementation(fileTree("./libs"))
-}
-
-val sources by tasks.registering(Jar::class) {
-    archiveBaseName.set(projectName)
-    archiveClassifier.set("sources")
-    from(sourceSets.main.get().allSource)
 }
 
 tasks {
@@ -69,7 +63,7 @@ afterEvaluate {
                 groupId = projectGroup
                 version = projectVersion
                 from(components["kotlin"])
-                artifact(sources.get())
+                artifact(tasks.shadowJar)
             }
         }
     }
