@@ -7,12 +7,11 @@ plugins {
     kotlin("jvm") version "1.5.10"
     java
     `maven-publish`
-    id("com.github.johnrengelman.shadow") version "5.2.0"
 }
 
 val projectName = "flylib-reloaded"
 val projectGroup = "dev.kotx"
-val projectVersion = "0.1.19"
+val projectVersion = "0.1.20"
 
 group = projectGroup
 version = projectVersion
@@ -26,10 +25,10 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-    implementation("io.insert-koin:koin-core:2.2.2")
-    implementation("io.insert-koin:koin-core-ext:2.2.2")
-    implementation("ch.qos.logback", "logback-classic", "1.2.3")
+    api(kotlin("stdlib-jdk8"))
+    api("io.insert-koin:koin-core:2.2.2")
+    api("io.insert-koin:koin-core-ext:2.2.2")
+    api("ch.qos.logback", "logback-classic", "1.2.3")
     implementation("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
     implementation(fileTree("./libs"))
 }
@@ -44,15 +43,6 @@ tasks {
     javadoc {
         options.encoding = "UTF-8"
     }
-
-    shadowJar {
-        archiveBaseName.set(projectName)
-        archiveVersion.set(projectVersion)
-
-        relocate("kotlin", "dev.kotx.kotlin")
-        relocate("ch.qos.logback", "dev.kotx.logback")
-        relocate("org.koin", "dev.kotx.koin")
-    }
 }
 
 afterEvaluate {
@@ -63,7 +53,6 @@ afterEvaluate {
                 groupId = projectGroup
                 version = projectVersion
                 from(components["kotlin"])
-                artifact(tasks.shadowJar)
             }
         }
     }
