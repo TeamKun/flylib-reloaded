@@ -5,12 +5,17 @@
 
 plugins {
     kotlin("jvm") version "1.5.10"
+    java
     `maven-publish`
-    `java-library`
+    id("com.github.johnrengelman.shadow") version "5.2.0"
 }
 
-group = "kotx.minecraft.libs"
-version = "0.1.14"
+val projectName = "flylib-reloaded"
+val projectGroup = "dev.kotx"
+val projectVersion = "0.1.15"
+
+group = projectGroup
+version = projectVersion
 
 repositories {
     mavenCentral()
@@ -29,7 +34,17 @@ dependencies {
     implementation(fileTree("./libs"))
 }
 
+val sources by tasks.registering(Jar::class) {
+    from(sourceSets.main.get().allSource)
+}
+
 tasks {
+    compileKotlin {
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
+    }
+
     javadoc {
         options.encoding = "UTF-8"
     }
@@ -39,10 +54,11 @@ afterEvaluate {
     publishing {
         publications {
             create<MavenPublication>("release") {
-                groupId = "kotx.minecraft.libs"
-                artifactId = "flylib-reloaded"
-                version = project.version.toString()
+                artifactId = projectName
+                groupId = projectGroup
+                version = projectVersion
                 from(components["kotlin"])
+                artifact(sources)
             }
         }
     }
