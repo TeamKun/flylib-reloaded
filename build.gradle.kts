@@ -3,12 +3,8 @@
  * Twitter: https://twitter.com/kotx__
  */
 
-import com.github.jengelman.gradle.plugins.shadow.*
-import com.github.jengelman.gradle.plugins.shadow.tasks.*
-
 plugins {
     kotlin("jvm") version "1.5.10"
-    id("com.github.johnrengelman.shadow") version "5.2.0"
     java
     `maven-publish`
     signing
@@ -38,6 +34,11 @@ dependencies {
     implementation(fileTree("./libs"))
 }
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
 tasks {
     compileKotlin {
         kotlinOptions {
@@ -48,26 +49,26 @@ tasks {
     javadoc {
         options.encoding = "UTF-8"
     }
+}
 
-    val relocateShadow by registering(ConfigureShadowRelocation::class) {
-        target = shadowJar.get()
-        prefix = "dev.kotx"
-    }
+val packageJavadoc by tasks.registering(Jar::class) {
+    from(tasks.javadoc.get())
+    archiveClassifier.set("javadoc")
+}
 
-    shadowJar {
-        archiveBaseName.set(projectName)
-        archiveClassifier.set("")
-
-        dependsOn(relocateShadow)
-    }
+val packageSources by tasks.registering(Jar::class) {
+    from(sourceSets.main.get().allSource)
+    archiveClassifier.set("sources")
 }
 
 publishing {
     publications {
         create<MavenPublication>("release") {
-            configure<ShadowExtension> {
-                component(this@create)
-            }
+            from(components["kotlin"])
+
+            artifact(packageJavadoc)
+            artifact(packageSources)
+
             artifactId = projectName
             groupId = projectGroup
             version = projectVersion
@@ -92,8 +93,8 @@ publishing {
                 }
 
                 scm {
-                    connection.set("https://github.com/TeamKun/flylib-reloaded.git")
-                    developerConnection.set("https://github.com/Kotlin-chan")
+                    connection.set("git@github.com:TeamKun/flylib-reloaded.git")
+                    developerConnection.set("git@github.com:TeamKun/flylib-reloaded.git")
                     url.set("https://github.com/TeamKun/flylib-reloaded")
                 }
             }
@@ -102,12 +103,14 @@ publishing {
 
     repositories {
         maven {
-            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2")
-            val credentialFile = file("./.credential")
-            val credential = credentialFile.readText().split("\n")
+            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2")
+
+            val mavenUserName = if (hasProperty("maven_username")) findProperty("maven_username") as String else ""
+            val mavenPassword = if (hasProperty("maven_password")) findProperty("maven_password") as String else ""
+
             credentials {
-                username = credential[0]
-                password = credential[1]
+                username = mavenUserName
+                password = mavenPassword
             }
         }
     }

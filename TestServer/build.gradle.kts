@@ -5,7 +5,7 @@
 
 plugins {
     kotlin("jvm")
-    id("com.github.johnrengelman.shadow")
+    id("com.github.johnrengelman.shadow") version "5.2.0"
 }
 
 group = "kotx.minecraft.libs"
