@@ -3,15 +3,18 @@
  * Twitter: https://twitter.com/kotx__
  */
 
+import com.github.jengelman.gradle.plugins.shadow.ShadowExtension
+
 plugins {
     kotlin("jvm") version "1.5.10"
+    id("com.github.johnrengelman.shadow") version "5.2.0"
     java
     `maven-publish`
 }
 
 val projectName = "flylib-reloaded"
 val projectGroup = "dev.kotx"
-val projectVersion = "0.1.20"
+val projectVersion = "0.1.21"
 
 group = projectGroup
 version = projectVersion
@@ -43,16 +46,26 @@ tasks {
     javadoc {
         options.encoding = "UTF-8"
     }
+
+    shadowJar {
+        archiveBaseName.set(projectName)
+        archiveClassifier.set("")
+        relocate("kotlin", "dev.kotx.kotlin")
+        relocate("org.koin", "dev.kotx.koin")
+        relocate("ch.qos.logback", "dev.kotx.logback")
+    }
 }
 
 afterEvaluate {
     publishing {
         publications {
             create<MavenPublication>("release") {
+                configure<ShadowExtension> {
+                    component(this@create)
+                }
                 artifactId = projectName
                 groupId = projectGroup
                 version = projectVersion
-                from(components["kotlin"])
             }
         }
     }
