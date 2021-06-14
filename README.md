@@ -136,7 +136,7 @@ plugins {
 ```
 ```groovy
 dependencies {
-    implementation "dev.kotx:flylib-reloaded:0.1.22"
+    implementation "dev.kotx:flylib-reloaded:<version>"
 }
 ```
 
