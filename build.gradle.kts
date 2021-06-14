@@ -12,7 +12,7 @@ plugins {
 
 val projectName = "flylib-reloaded"
 val projectGroup = "dev.kotx"
-val projectVersion = "0.1.22"
+val projectVersion = "0.1.23"
 
 group = projectGroup
 version = projectVersion

@@ -27,7 +27,55 @@ You can implement tab completion, type checking, help message generation, and su
 ❗ **There is no need to add any commands or permissions to plugin.yml. They will be automatically incorporated by FlyLib. All permissions and aliases can be defined as variables in
 the command.**
 
-wait...!
+[![](https://cdn.kotx.dev/2021-06-14%2023-07-02.gif)]()
+
+```kotlin
+class TestPlugin : JavaPlugin() {
+    override fun onEnable() {
+        flyLib {
+            command {
+                defaultConfiguration {
+                    permission(Permission.OP)
+                }
+
+                register(PrintNumberCommand)
+                register(TabCompleteCommand)
+                register(ParentCommand)
+            }
+        }
+    }
+}
+
+object PrintNumberCommand : Command("printnumber") {
+    override val usages: List<Usage> = listOf(
+        Usage(
+            Argument.Integer("number", min = 0, max = 10)
+        ) {
+            sendMessage("You sent ${args.first()}!")
+        }
+    )
+}
+
+object TabCompleteCommand : Command("tabcomplete") {
+    override val usages: List<Usage> = listOf(
+        Usage(
+            Argument.Selection("mode", "active", "inactive"),
+            Argument.Player("target"),
+            Argument.Position("position")
+        )
+    )
+}
+
+object ParentCommand : Command("parent") {
+    override val children: List<Command> = listOf(ChildrenCommand)
+
+    object ChildrenCommand: Command("children") {
+        override fun CommandContext.execute() {
+            sendMessage("You executed children command!")
+        }
+    }
+}
+```
 
 ## ⚙️ Installation
 
