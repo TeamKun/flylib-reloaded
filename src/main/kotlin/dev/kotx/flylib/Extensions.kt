@@ -36,7 +36,6 @@ fun CommandContext<CommandListenerWrapper>.asFlyLibContext(command: Command, arg
         try {
             args.map { it.parser(this, it.name) }.toTypedArray()
         } catch (e: Exception) {
-            e.printStackTrace()
             emptyArray()
         }
     )

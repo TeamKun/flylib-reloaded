@@ -14,7 +14,7 @@ import java.util.function.Predicate
 
 typealias Context = com.mojang.brigadier.context.CommandContext<CommandListenerWrapper>
 
-open class Argument<T>(
+sealed class Argument<T>(
     val name: String,
     val type: ArgumentType<*>? = null,
     val parser: (Context, String) -> T,
