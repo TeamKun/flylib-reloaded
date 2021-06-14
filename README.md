@@ -170,11 +170,3 @@ wait...!
 
 </div>
 </details>
-
-## 📝 Dependencies
-
-- [kotlin](https://github.com/JetBrains/kotlin)
-- [spigot-api](https://github.com/SpigotMC/Spigot-API)
-- [paper-api](https://github.com/PaperMC/Paper)
-- [logback-classic](http://logback.qos.ch)
-- [koin](https://github.com/InsertKoinIO/koin)
