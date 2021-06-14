@@ -1,5 +1,0 @@
-kotlin.code.style=official
-org.gradle.parallel=true
-org.gradle.jvmargs=-Xmx2G -XX:+UseParallelGC
-org.gradle.daemon=true
-org.gradle.configureondemand=true
