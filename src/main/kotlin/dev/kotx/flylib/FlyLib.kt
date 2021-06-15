@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 import org.slf4j.LoggerFactory
+import java.util.function.*
 
 class FlyLib(
     private val plugin: JavaPlugin,
@@ -82,8 +83,8 @@ class FlyLib(
          * @param commandHandler CommandHandler's Instance
          * @return FlyLib.Builder
          */
-        fun command(commandHandler: CommandHandler): Builder {
-            this.commandHandler = commandHandler
+        fun command(builder: Consumer<CommandHandler.Builder>): Builder {
+            this.commandHandler = CommandHandler.Builder().also { builder.accept(it) }.build()
             return this
         }
 
@@ -95,6 +96,11 @@ class FlyLib(
             plugin,
             commandHandler,
         )
+    }
+
+    companion object {
+        @JvmStatic
+        fun inject(plugin: JavaPlugin, builder: Consumer<Builder>): FlyLib = Builder(plugin).also { builder.accept(it) }.build()
     }
 }
 
