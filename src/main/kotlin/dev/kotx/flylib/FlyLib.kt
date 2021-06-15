@@ -52,11 +52,13 @@ class FlyLib(
                 """.trimIndent()
             )
         } catch (e: Exception) {
+            println()
             logger.error("Injection failed.")
             logger.error("Please contact https://github.com/TeamKun/flylib-reloaded/issues.")
-            logger.error("with the following log and a description of how to reproduce the problem.")
+            logger.error("with the following stacktrace and a description of how to reproduce the problem.")
             println()
             e.printStackTrace()
+            println()
         }
     }
 
