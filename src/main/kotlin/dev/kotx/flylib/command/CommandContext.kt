@@ -5,15 +5,12 @@
 
 package dev.kotx.flylib.command
 
-import dev.kotx.flylib.sendErrorMessage
-import dev.kotx.flylib.sendPluginMessage
-import dev.kotx.flylib.sendSuccessMessage
-import dev.kotx.flylib.sendWarnMessage
-import net.kyori.adventure.text.TextComponent
-import org.bukkit.Server
-import org.bukkit.command.CommandSender
-import org.bukkit.entity.Player
-import org.bukkit.plugin.java.JavaPlugin
+import dev.kotx.flylib.*
+import net.kyori.adventure.text.*
+import org.bukkit.*
+import org.bukkit.command.*
+import org.bukkit.entity.*
+import org.bukkit.plugin.java.*
 
 /**
  * By implementing Command execute and tabComplete as extended functions of CommandContext rather than as arguments,
@@ -24,12 +21,15 @@ class CommandContext(
     val command: Command,
     val plugin: JavaPlugin,
     val sender: CommandSender,
-    val player: Player?,
-    val server: Server,
     val message: String,
     val args: Array<String>,
     val typedArgs: Array<Any?>
 ) {
+
+    val player: Player? = sender as? Player
+    val server: Server? = player?.server
+    val world: World? = player?.world
+
     val options = getOptions()
     val argsWithoutOptions = withoutOptionList()
 

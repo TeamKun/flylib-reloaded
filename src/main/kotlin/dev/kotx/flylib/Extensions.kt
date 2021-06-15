@@ -29,8 +29,6 @@ fun CommandContext<CommandListenerWrapper>.asFlyLibContext(command: Command, arg
         command,
         command.plugin,
         source.bukkitSender,
-        source.bukkitSender as? Player,
-        source.bukkitSender.server,
         replaced,
         replaced.split(" ").drop(1 + depth).toTypedArray(),
         try {
