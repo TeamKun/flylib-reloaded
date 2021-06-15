@@ -47,7 +47,7 @@ class FlyLib(
                          |___/
                 ::FlyLib Reloaded | by @kotx__ | Inject successfully.::
                 
-                If you have any bugs, feature suggestions and questions, please contact us at https://github.com/TeamKun/flylib-reloaded/issues.
+                If you have any bugs, feature suggestions and questions, please contact us at https://github.com/TeamKun/flylib-reloaded.
                 
                 """.trimIndent()
             )
