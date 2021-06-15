@@ -5,27 +5,21 @@
 
 package dev.kotx.flylib.command
 
-import com.mojang.brigadier.LiteralMessage
-import com.mojang.brigadier.builder.ArgumentBuilder
-import com.mojang.brigadier.builder.LiteralArgumentBuilder
-import com.mojang.brigadier.builder.RequiredArgumentBuilder
+import com.mojang.brigadier.*
+import com.mojang.brigadier.builder.*
 import com.mojang.brigadier.context.CommandContext
-import dev.kotx.flylib.FlyLibComponent
-import dev.kotx.flylib.asFlyLibContext
-import dev.kotx.flylib.command.internal.Argument
-import dev.kotx.flylib.command.internal.CommandDefault
+import dev.kotx.flylib.*
+import dev.kotx.flylib.command.internal.*
 import dev.kotx.flylib.command.internal.Permission
-import dev.kotx.flylib.command.internal.Usage
-import net.minecraft.server.v1_16_R3.CommandListenerWrapper
-import net.minecraft.server.v1_16_R3.MinecraftServer
-import org.bukkit.Bukkit
-import org.bukkit.craftbukkit.v1_16_R3.CraftServer
-import org.bukkit.entity.Player
-import org.bukkit.permissions.PermissionDefault
-import org.bukkit.plugin.java.JavaPlugin
-import org.koin.core.component.inject
-import org.slf4j.Logger
-import java.util.function.*
+import net.minecraft.server.v1_16_R3.*
+import org.bukkit.*
+import org.bukkit.craftbukkit.v1_16_R3.*
+import org.bukkit.entity.*
+import org.bukkit.permissions.*
+import org.bukkit.plugin.java.*
+import org.koin.core.component.*
+import org.slf4j.*
+import kotlin.collections.set
 
 
 class CommandHandler(
@@ -191,7 +185,20 @@ class CommandHandler(
 
 
         if (this is RequiredArgumentBuilder<CommandListenerWrapper, *> && argument.tabComplete != null) suggests { ctx, builder ->
-            argument.tabComplete.invoke(ctx.asFlyLibContext(command, usage.args.toList(), depth)).filter { it.content.startsWith(builder.remaining, true) }.forEach {
+            argument.tabComplete.run {
+                val context = ctx.asFlyLibContext(command, usage.args.toList(), depth)
+                SuggestionBuilder(
+                    context.command,
+                    context.plugin,
+                    context.sender,
+                    context.message,
+                    context.args,
+                    context.typedArgs
+                ).run {
+                    complete()
+                    build()
+                }
+            }.forEach {
                 val toolTipMessage = it.tooltip?.let { LiteralMessage(it) }
                 builder.suggest(it.content, toolTipMessage)
             }
@@ -217,18 +224,8 @@ class CommandHandler(
          * Changes the default command settings. See CommandDefault below for details.
          * @see CommandDefault
          */
-        fun defaultConfiguration(builder: Consumer<CommandDefault.Builder>): Builder {
-            this.commandDefault = CommandDefault.Builder().also { builder.accept(it) }.build()
-            return this
-        }
-
-        /**
-         * Changes the default command settings. See CommandDefault below for details.
-         * This is a method that corresponds to Kotlin's apply builder pattern.
-         * @see CommandDefault
-         */
-        fun defaultConfiguration(init: CommandDefault.Builder.() -> Unit): Builder {
-            commandDefault = CommandDefault.Builder().apply(init).build()
+        fun defaultConfiguration(action: CommandDefaultAction): Builder {
+            this.commandDefault = CommandDefault.Builder().apply { action.apply { initialize() } }.build()
             return this
         }
 
@@ -256,4 +253,8 @@ class CommandHandler(
             commandDefault
         )
     }
+}
+
+fun interface CommandHandlerAction {
+    fun CommandHandler.Builder.initialize()
 }
