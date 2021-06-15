@@ -5,7 +5,7 @@
 
 package dev.kotx.flylib
 
-import dev.kotx.flylib.command.CommandHandler
+import dev.kotx.flylib.command.*
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
@@ -72,19 +72,12 @@ class FlyLib(
          * @param init CommandHandler.Builder's Configurations
          * @return FlyLib.Builder
          */
-        fun command(init: CommandHandler.Builder.() -> Unit): Builder {
-            commandHandler = CommandHandler.Builder().apply(init).build()
-            return this
-        }
-
-        /**
-         * Configure the command module.
-         *
-         * @param commandHandler CommandHandler's Instance
-         * @return FlyLib.Builder
-         */
-        fun command(builder: Consumer<CommandHandler.Builder>): Builder {
-            this.commandHandler = CommandHandler.Builder().also { builder.accept(it) }.build()
+        fun command(action: CommandHandlerAction): Builder {
+            commandHandler = CommandHandler.Builder().apply {
+                action.apply {
+                    initialize()
+                }
+            }.build()
             return this
         }
 
@@ -100,8 +93,12 @@ class FlyLib(
 
     companion object {
         @JvmStatic
-        fun inject(plugin: JavaPlugin, builder: Consumer<Builder>): FlyLib = Builder(plugin).also { builder.accept(it) }.build()
+        fun inject(plugin: JavaPlugin, action: FlyLibAction): FlyLib = Builder(plugin).apply { action.apply { initialize() } }.build()
     }
+}
+
+fun interface FlyLibAction {
+    fun FlyLib.Builder.initialize()
 }
 
 /**
@@ -110,4 +107,4 @@ class FlyLib(
  * @param init FlyLib.Builder's Configurations
  * @return FlyLib Instance
  */
-fun JavaPlugin.flyLib(init: FlyLib.Builder.() -> Unit = {}) = FlyLib.Builder(this).apply(init).build()
+fun JavaPlugin.flyLib(init: FlyLib.Builder.() -> Unit = {}) = FlyLib.inject(this, init)
