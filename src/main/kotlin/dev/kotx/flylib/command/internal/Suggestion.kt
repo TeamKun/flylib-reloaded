@@ -8,7 +8,7 @@ package dev.kotx.flylib.command.internal
 /**
  *
  */
-class Suggestion(
+class Suggestion @JvmOverloads constructor(
     val content: String,
     val tooltip: String? = null
 )

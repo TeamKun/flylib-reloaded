@@ -8,7 +8,7 @@ package dev.kotx.flylib.command.internal
 /**
  * This is an option for the command. (A command option that starts with -- or - in linux)
  */
-data class Option(
+data class Option @JvmOverloads constructor(
     val name: String,
     val description: String = "",
     val aliases: List<String> = emptyList(),

@@ -19,7 +19,7 @@ sealed class Argument<T>(
     val parser: (Context, String) -> T,
     val tabComplete: (CommandContext.() -> List<Suggestion>)? = null,
 ) {
-    class Anchor(
+    class Anchor @JvmOverloads constructor(
         name: String,
         tabComplete: (CommandContext.() -> List<Suggestion>)? = null,
     ) : Argument<ArgumentAnchor.Anchor>(
@@ -29,7 +29,7 @@ sealed class Argument<T>(
         tabComplete
     )
 
-    class Angle(
+    class Angle @JvmOverloads constructor(
         name: String, tabComplete: (CommandContext.() -> List<Suggestion>)? = null,
     ) : Argument<kotlin.Float>(
         name,
@@ -37,7 +37,7 @@ sealed class Argument<T>(
         tabComplete
     )
 
-    class Block(
+    class Block @JvmOverloads constructor(
         name: String, tabComplete: (CommandContext.() -> List<Suggestion>)? = null,
     ) : Argument<Predicate<ShapeDetectorBlock>>(
         name,
@@ -45,7 +45,7 @@ sealed class Argument<T>(
         tabComplete
     )
 
-    class Chat(
+    class Chat @JvmOverloads constructor(
         name: String,
         tabComplete: (CommandContext.() -> List<Suggestion>)? = null,
     ) : Argument<IChatBaseComponent>(
@@ -55,7 +55,7 @@ sealed class Argument<T>(
         tabComplete
     )
 
-    class ChatComponent(
+    class ChatComponent @JvmOverloads constructor(
         name: String,
         tabComplete: (CommandContext.() -> List<Suggestion>)? = null,
     ) : Argument<IChatBaseComponent>(
@@ -65,7 +65,7 @@ sealed class Argument<T>(
         tabComplete
     )
 
-    class Entity(
+    class Entity @JvmOverloads constructor(
         name: String,
         tabComplete: (CommandContext.() -> List<Suggestion>)? = null,
     ) : Argument<net.minecraft.server.v1_16_R3.Entity>(
@@ -75,91 +75,91 @@ sealed class Argument<T>(
         tabComplete
     )
 
-    class EntityName(
+    class EntityName @JvmOverloads constructor(
         name: String,
         tabComplete: (CommandContext.() -> List<Suggestion>)? = null,
     ) : Argument<MinecraftKey>(name, ArgumentEntitySummon.a(), { ctx: Context, key: String ->
         ArgumentEntitySummon.a(ctx, key)
     }, tabComplete)
 
-    class Item(
+    class Item @JvmOverloads constructor(
         name: String,
         tabComplete: (CommandContext.() -> List<Suggestion>)? = null,
     ) : Argument<ArgumentPredicateItemStack>(name, ArgumentItemStack.a(), { ctx: Context, key: String ->
         ArgumentItemStack.a(ctx, key)
     }, tabComplete)
 
-    class Math(
+    class Math @JvmOverloads constructor(
         name: String,
         tabComplete: (CommandContext.() -> List<Suggestion>)? = null,
     ) : Argument<ArgumentMathOperation.a>(name, ArgumentMathOperation.a(), { ctx: Context, key: String ->
         ArgumentMathOperation.a(ctx, key)
     }, tabComplete)
 
-    class MobEffect(
+    class MobEffect @JvmOverloads constructor(
         name: String,
         tabComplete: (CommandContext.() -> List<Suggestion>)? = null,
     ) : Argument<MobEffectList>(name, ArgumentMobEffect.a(), { ctx: Context, key: String ->
         ArgumentMobEffect.a(ctx, key)
     }, tabComplete)
 
-    class Particle(
+    class Particle @JvmOverloads constructor(
         name: String,
         tabComplete: (CommandContext.() -> List<Suggestion>)? = null,
     ) : Argument<ParticleParam>(name, ArgumentParticle.a(), { ctx: Context, key: String ->
         ArgumentParticle.a(ctx, key)
     }, tabComplete)
 
-    class Position(
+    class Position @JvmOverloads constructor(
         name: String,
         tabComplete: (CommandContext.() -> List<Suggestion>)? = null,
     ) : Argument<BlockPosition>(name, ArgumentPosition.a(), { ctx: Context, key: String ->
         ArgumentPosition.a(ctx, key)
     }, tabComplete)
 
-    class Player(
+    class Player @JvmOverloads constructor(
         name: String,
         tabComplete: (CommandContext.() -> List<Suggestion>)? = null,
     ) : Argument<Collection<GameProfile>>(name, ArgumentProfile.a(), { ctx: Context, key: String ->
         ArgumentProfile.a(ctx, key)
     }, tabComplete)
 
-    class Rotation(
+    class Rotation @JvmOverloads constructor(
         name: String,
         tabComplete: (CommandContext.() -> List<Suggestion>)? = null,
     ) : Argument<IVectorPosition>(name, ArgumentRotation.a(), { ctx: Context, key: String ->
         ArgumentRotation.a(ctx, key)
     }, tabComplete)
 
-    class Vec2(
+    class Vec2 @JvmOverloads constructor(
         name: String,
         tabComplete: (CommandContext.() -> List<Suggestion>)? = null,
     ) : Argument<Vec2F>(name, ArgumentVec2.a(), { ctx: Context, key: String ->
         ArgumentVec2.a(ctx, key)
     }, tabComplete)
 
-    class Vec3(
+    class Vec3 @JvmOverloads constructor(
         name: String,
         tabComplete: (CommandContext.() -> List<Suggestion>)? = null,
     ) : Argument<Vec3D>(name, ArgumentVec3.a(), { ctx: Context, key: String ->
         ArgumentVec3.a(ctx, key)
     }, tabComplete)
 
-    class UUID(
+    class UUID @JvmOverloads constructor(
         name: String,
         tabComplete: (CommandContext.() -> List<Suggestion>)? = null,
     ) : Argument<java.util.UUID>(name, ArgumentUUID.a(), { ctx: Context, key: String ->
         ArgumentUUID.a(ctx, key)
     }, tabComplete)
 
-    class Dimension(
+    class Dimension @JvmOverloads constructor(
         name: String,
         tabComplete: (CommandContext.() -> List<Suggestion>)? = null,
     ) : Argument<WorldServer>(name, ArgumentDimension.a(), { ctx: Context, key: String ->
         ArgumentDimension.a(ctx, key)
     }, tabComplete)
 
-    class Enchantment(
+    class Enchantment @JvmOverloads constructor(
         name: String,
         tabComplete: (CommandContext.() -> List<Suggestion>)? = null,
     ) : Argument<net.minecraft.server.v1_16_R3.Enchantment>(
@@ -236,7 +236,7 @@ sealed class Argument<T>(
         LongArgumentType.getLong(ctx, key)
     }, tabComplete)
 
-    class Boolean(
+    class Boolean @JvmOverloads constructor(
         name: String,
         tabComplete: (CommandContext.() -> List<Suggestion>)? = null,
     ) : Argument<kotlin.Boolean>(name, BoolArgumentType.bool(), { ctx: Context, key: String ->
