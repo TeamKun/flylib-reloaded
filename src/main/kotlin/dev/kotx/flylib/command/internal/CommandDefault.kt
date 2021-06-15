@@ -6,18 +6,16 @@
 package dev.kotx.flylib.command.internal
 
 import dev.kotx.flylib.*
-import dev.kotx.flylib.command.Command
-import dev.kotx.flylib.command.CommandContext
-import net.kyori.adventure.text.event.ClickEvent
-import net.kyori.adventure.text.event.HoverEvent
-import net.kyori.adventure.text.format.TextDecoration
-import java.awt.Color
+import dev.kotx.flylib.command.*
+import net.kyori.adventure.text.event.*
+import net.kyori.adventure.text.format.*
+import java.awt.*
 
 class CommandDefault(
     val description: String,
     val permission: Permission,
     val playerOnly: Boolean,
-    val sendHelp: CommandContext.() -> Unit,
+    val sendHelp: CommandAction
 ) {
     class Builder {
         /**
@@ -38,7 +36,7 @@ class CommandDefault(
         /**
          * The method that will be executed when you call sendHelp() when nothing is implemented.
          */
-        private var sendHelp: CommandContext.() -> Unit = {
+        private var sendHelp: CommandAction = CommandAction {
             var fullName = command.name
             fun Command.getFullName() {
                 if (parent != null) {
@@ -182,7 +180,7 @@ class CommandDefault(
         /**
          * The method that will be executed when you call sendHelp() when nothing is implemented.
          */
-        fun help(defaultSendHelp: CommandContext.() -> Unit): Builder {
+        fun help(defaultSendHelp: CommandAction): Builder {
             sendHelp = defaultSendHelp
             return this
         }

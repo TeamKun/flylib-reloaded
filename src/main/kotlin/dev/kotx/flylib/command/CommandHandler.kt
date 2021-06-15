@@ -25,6 +25,7 @@ import org.bukkit.permissions.PermissionDefault
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.component.inject
 import org.slf4j.Logger
+import java.util.function.*
 
 
 class CommandHandler(
@@ -199,10 +200,9 @@ class CommandHandler(
         }
 
         executes {
-            val ctx = it as CommandContext<CommandListenerWrapper>
-            if (usage.action != null) usage.action.invoke(ctx.asFlyLibContext(command, usage.args.toList(), depth)) else command.apply {
-                ctx.asFlyLibContext(command, usage.args.toList(), depth).execute()
-            }
+            val ctx = (it as CommandContext<CommandListenerWrapper>).asFlyLibContext(command, usage.args.toList(), depth)
+
+            usage.action?.apply { ctx.execute() } ?: command.apply { ctx.execute() }
 
             1
         }
@@ -217,8 +217,8 @@ class CommandHandler(
          * Changes the default command settings. See CommandDefault below for details.
          * @see CommandDefault
          */
-        fun defaultConfiguration(commandDefault: CommandDefault): Builder {
-            this.commandDefault = commandDefault
+        fun defaultConfiguration(builder: Consumer<CommandDefault.Builder>): Builder {
+            this.commandDefault = CommandDefault.Builder().also { builder.accept(it) }.build()
             return this
         }
 
