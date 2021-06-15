@@ -30,7 +30,7 @@ abstract class Command(
     /**
      * Command alias. A list of strings that can be used as abbreviations instead of using the official name of the command.
      */
-    open val aliases: List<String> = listOf()
+    open val aliases = mutableListOf<String>()
 
     /**
      * How to use the command in its entirety.
@@ -38,12 +38,12 @@ abstract class Command(
      * If a command matching the Usage is entered and an action is specified in the Usage, it will be executed.
      * However, if no matching command is entered in Usage, or if a match is found but no action is specified, CommandContext.execute() of this command will be executed.
      */
-    open val usages: List<Usage> = listOf()
+    open val usages = mutableListOf<Usage>()
 
     /**
      * Command usage example. It is displayed in a list when you use sendHelp() in CommandContext.
      */
-    open val examples: List<String> = listOf()
+    open val examples = mutableListOf<String>()
 
     /**
      * Permission to use the command. Permission.OP can be used only by OP, Permission.NOT_OP can be used by everyone except OP, and Permission.EVERYONE can be used by everyone.
@@ -60,7 +60,7 @@ abstract class Command(
      * A subcommand of this command. If the string entered as an argument matches the name or alias of these commands, the matching command will be executed.
      * This command will only be executed if there is no match.
      */
-    open val children = listOf<Command>()
+    open val children = mutableListOf<Command>()
 
     /**
      * This is the parent command for this command.
@@ -98,10 +98,6 @@ abstract class Command(
      * It is supposed to be executed within execute.
      */
     fun CommandContext.sendHelp() {
-        commandHandler.commandDefault.sendHelp(this)
-    }
-
-    override fun getKoin(): Koin {
-        return super.getKoin()
+        commandHandler.commandDefault.sendHelp.apply { execute() }
     }
 }
