@@ -26,7 +26,7 @@ class SuggestionBuilder (
     private val suggestions = mutableListOf<Suggestion>()
 
     @JvmOverloads
-    fun addSuggestion(
+    fun suggest(
         content: String,
         tooltip: String? = null
     ): SuggestionBuilder {

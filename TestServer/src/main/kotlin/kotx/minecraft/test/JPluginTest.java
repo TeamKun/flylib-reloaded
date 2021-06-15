@@ -24,7 +24,7 @@ class ExplodeCommand extends Command {
         super("explode");
         addUsage(builder -> {
             builder.floatArgument("power", 10, 20, ctx -> {
-                ctx.addSuggestion("15");
+                ctx.suggest("15");
             });
             builder.playerArgument("targets");
 

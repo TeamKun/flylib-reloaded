@@ -23,7 +23,7 @@ class ExplodeeCommand : Command("explode") {
     init {
         addUsage {
             floatArgument("power", 10f, 20f) {
-                addSuggestion("15")
+                suggest("15")
             }
             playerArgument("targets")
 
