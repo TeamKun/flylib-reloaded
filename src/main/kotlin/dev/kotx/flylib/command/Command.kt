@@ -5,14 +5,12 @@
 
 package dev.kotx.flylib.command
 
-import dev.kotx.flylib.FlyLibComponent
-import dev.kotx.flylib.command.internal.Permission
-import dev.kotx.flylib.command.internal.Usage
-import org.bukkit.command.CommandSender
-import org.bukkit.entity.Player
-import org.bukkit.plugin.java.JavaPlugin
-import org.koin.core.Koin
-import org.koin.core.component.inject
+import dev.kotx.flylib.*
+import dev.kotx.flylib.command.internal.*
+import org.bukkit.command.*
+import org.bukkit.entity.*
+import org.bukkit.plugin.java.*
+import org.koin.core.component.*
 
 abstract class Command(
     val name: String
@@ -100,4 +98,24 @@ abstract class Command(
     fun CommandContext.sendHelp() {
         commandHandler.commandDefault.sendHelp.apply { execute() }
     }
+
+    fun addUsage(action: UsageAction) {
+        usages.add(Usage.Builder().apply { action.apply { initialize() } }.build())
+    }
+
+    fun addExample(example: String) {
+        examples.add(example)
+    }
+
+    fun addAlias(alias: String) {
+        aliases.add(alias)
+    }
+
+    fun addChild(child: Command) {
+        children.add(child)
+    }
+}
+
+fun interface CommandAction {
+    fun CommandContext.execute()
 }
