@@ -20,6 +20,10 @@ the command.**
 
 [![](https://cdn.kotx.dev/2021-06-14%2023-07-02.gif)]()
 
+<details>
+<summary>Kotlin</summary>
+<div>
+
 ```kotlin
 class TestPlugin : JavaPlugin() {
     override fun onEnable() {
@@ -38,9 +42,9 @@ class TestPlugin : JavaPlugin() {
 }
 
 object PrintNumberCommand : Command("printnumber") {
-    override val usages: List<Usage> = listOf(
+    override val usages: MutableList<Usage> = mutableListOf(
         Usage(
-            Argument.Integer("number", min = 0, max = 10)
+            arrayOf(Argument.Integer("number", min = 0, max = 10))
         ) {
             sendMessage("You sent ${args.first()}!")
         }
@@ -48,25 +52,88 @@ object PrintNumberCommand : Command("printnumber") {
 }
 
 object TabCompleteCommand : Command("tabcomplete") {
-    override val usages: List<Usage> = listOf(
+    override val usages: MutableList<Usage> = mutableListOf(
         Usage(
-            Argument.Selection("mode", "active", "inactive"),
-            Argument.Player("target"),
-            Argument.Position("position")
+            arrayOf(
+                Argument.Selection("mode", "active", "inactive"),
+                Argument.Player("target"),
+                Argument.Position("position")
+            )
         )
     )
 }
 
 object ParentCommand : Command("parent") {
-    override val children: List<Command> = listOf(ChildrenCommand)
+    override val children: MutableList<Command> = mutableListOf(ChildrenCommand)
 
-    object ChildrenCommand: Command("children") {
+    object ChildrenCommand : Command("children") {
         override fun CommandContext.execute() {
             sendMessage("You executed children command!")
         }
     }
 }
 ```
+</div>
+</details>
+
+<details>
+<summary>Java</summary>
+<div>
+
+```java
+class TestPlugin extends JavaPlugin {
+    @Override
+    public void onEnable() {
+        FlyLib.inject(this, flyLib -> flyLib.command(command -> {
+            command.defaultConfiguration(defaultConfiguration -> {
+                defaultConfiguration.permission(Permission.OP);
+            });
+
+            command.register(new PrintNumberCommand());
+            command.register(new TabCompleteCommand());
+            command.register(new ParentCommand());
+        }));
+    }
+}
+
+class PrintNumberCommand extends Command {
+    public PrintNumberCommand() {
+        super("printnumber");
+        addUsage(usage -> {
+            usage.intArgument("number", 0, 10);
+            usage.executes(context -> {
+                context.sendMessage("You sent " + context.getArgs()[0] + "!");
+            });
+        });
+    }
+}
+
+class TabCompleteCommand extends Command {
+    public TabCompleteCommand() {
+        super("tabcomplete");
+        addUsage(usage -> {
+            usage.selectionArgument("mode", "active", "inactive");
+            usage.playerArgument("target");
+            usage.positionArgument("position");
+        });
+    }
+}
+
+class ParentCommand extends Command {
+    public ParentCommand() {
+        super("parent");
+        addChild(new ChildrenCommand());
+    }
+
+    class ChildrenCommand extends Command {
+        public ChildrenCommand() {
+            super("children");
+        }
+    }
+}
+```
+</div>
+</details>
 
 ## ⚙️ Installation
 

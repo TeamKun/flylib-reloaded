@@ -65,6 +65,11 @@ class Usage @JvmOverloads constructor(
             return this
         }
 
+        fun selectionArgument(name: String, vararg selections: String): Builder {
+            args.add(Argument.Selection(name, *selections))
+            return this
+        }
+
         @JvmOverloads
         fun intArgument(name: String, min: Int = Int.MIN_VALUE, max: Int = Int.MAX_VALUE, tabComplete: CompletionAction? = null): Builder {
             args.add(Argument.Integer(name, min, max, tabComplete))

@@ -7,33 +7,53 @@ package kotx.minecraft.test
 
 import dev.kotx.flylib.*
 import dev.kotx.flylib.command.*
-import org.bukkit.entity.*
+import dev.kotx.flylib.command.internal.*
 import org.bukkit.plugin.java.*
 
-class TestPlugin : JavaPlugin() {
+class KTestPlugin : JavaPlugin() {
     override fun onEnable() {
         flyLib {
             command {
+                defaultConfiguration {
+                    permission(Permission.OP)
+                }
+
+                register(KPrintNumberCommand)
+                register(KTabCompleteCommand)
+                register(KParentCommand)
             }
         }
     }
 }
 
-class ExplodeeCommand : Command("explode") {
-    init {
-        addUsage {
-            floatArgument("power", 10f, 20f) {
-                suggest("15")
-            }
-            playerArgument("targets")
-
-            executes {
-                val power = typedArgs[0] as Float
-                val targets = typedArgs[1] as List<Player>
-                targets.forEach { world!!.createExplosion(it, power) }
-            }
+object KPrintNumberCommand : Command("printnumber") {
+    override val usages: MutableList<Usage> = mutableListOf(
+        Usage(
+            arrayOf(Argument.Integer("number", min = 0, max = 10))
+        ) {
+            sendMessage("You sent ${args.first()}!")
         }
+    )
+}
 
-        addExample("explode 15 @a")
+object KTabCompleteCommand : Command("tabcomplete") {
+    override val usages: MutableList<Usage> = mutableListOf(
+        Usage(
+            arrayOf(
+                Argument.Selection("mode", "active", "inactive"),
+                Argument.Player("target"),
+                Argument.Position("position")
+            )
+        )
+    )
+}
+
+object KParentCommand : Command("parent") {
+    override val children: MutableList<Command> = mutableListOf(ChildrenCommand)
+
+    object ChildrenCommand : Command("children") {
+        override fun CommandContext.execute() {
+            sendMessage("You executed children command!")
+        }
     }
 }

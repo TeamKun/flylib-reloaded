@@ -7,40 +7,54 @@ package kotx.minecraft.test;
 
 import dev.kotx.flylib.FlyLib;
 import dev.kotx.flylib.command.Command;
-import org.bukkit.entity.Player;
+import dev.kotx.flylib.command.internal.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.List;
-
-public class JPluginTest extends JavaPlugin {
+class JTestPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
-        FlyLib.inject(this, flylib -> flylib.command(command -> command.register(new ExplodeCommand())));
+        FlyLib.inject(this, flyLib -> flyLib.command(command -> {
+            command.defaultConfiguration(defaultConfiguration -> {
+                defaultConfiguration.permission(Permission.OP);
+            });
+
+            command.register(new JPrintNumberCommand());
+        }));
     }
 }
 
-class ExplodeCommand extends Command {
-    public ExplodeCommand() {
-        super("explode");
-        addUsage(builder -> {
-            builder.floatArgument("power", 10, 20, ctx -> {
-                ctx.suggest("15");
-            });
-            builder.playerArgument("targets");
-
-            builder.executes(context -> {
-                float power = (float) context.getTypedArgs()[0];
-                List<Player> targets = (List<Player>) context.getTypedArgs()[1];
-                targets.forEach(player -> {
-                    context.getWorld().createExplosion(player, power);
-                });
+class JPrintNumberCommand extends Command {
+    public JPrintNumberCommand() {
+        super("printnumber");
+        addUsage(usage -> {
+            usage.intArgument("number", 0, 10);
+            usage.executes(context -> {
+                context.sendMessage("You sent " + context.getArgs()[0] + "!");
             });
         });
-        addExample("explode 15 @a");
+    }
+}
+
+class JTabCompleteCommand extends Command {
+    public JTabCompleteCommand() {
+        super("tabcomplete");
+        addUsage(usage -> {
+            usage.selectionArgument("mode", "active", "inactive");
+            usage.playerArgument("target");
+            usage.positionArgument("position");
+        });
+    }
+}
+
+class JParentCommand extends Command {
+    public JParentCommand() {
+        super("parent");
+        addChild(new JChildrenCommand());
     }
 
-    @Override
-    public String getDescription() {
-        return "Explode someone.";
+    class JChildrenCommand extends Command {
+        public JChildrenCommand() {
+            super("children");
+        }
     }
 }
