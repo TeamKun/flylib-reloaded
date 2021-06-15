@@ -5,24 +5,9 @@
 
 package dev.kotx.flylib.command.internal
 
-import dev.kotx.flylib.command.CommandContext
+import dev.kotx.flylib.command.*
 
-/**
- * A class that takes arguments.
- * The default send Help refers to this Usage Argument to compose the message.
- *
- * Example:
- * override val usages: List<Usage> = listOf(
- *      Usage(
- *          Argument.Text("input")
- *          "Print user input",
- *          Permission.OP
- *      ) {
- *          sendMessage("You typed: ${args.first()}")
- *      }
- * )
- */
-class Usage(
+class Usage @JvmOverloads constructor(
     vararg val args: Argument<*>,
     val description: String = "",
     val permission: Permission? = null,
