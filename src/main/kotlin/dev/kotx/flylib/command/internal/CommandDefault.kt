@@ -190,3 +190,7 @@ class CommandDefault(
         )
     }
 }
+
+fun interface CommandDefaultAction {
+    fun CommandDefault.Builder.initialize()
+}
