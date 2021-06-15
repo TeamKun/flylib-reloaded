@@ -15,8 +15,7 @@
 
 You can implement tab completion, type checking, help message generation, and subcommands with the following simple code.
 
-❗ **There is no need to add any commands or permissions to plugin.yml. They will be automatically incorporated by FlyLib. All permissions and aliases can be defined as variables in
-the command.**
+❗ **There is no need to add any commands or permissions to plugin.yml. They will be automatically incorporated by FlyLib. permissions, aliases and other command informations are defined as variables in the command.**
 
 [![](https://cdn.kotx.dev/2021-06-14%2023-07-02.gif)]()
 
