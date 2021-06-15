@@ -13,15 +13,6 @@
 
 ## ⚡ Quickstart
 
-### 🗒️ TODO:
-
-> **Add typed arguments**: Arguments with types can be used directly by casting.
-> ```kotlin
-> val location = typedArgs[0] as Location
-> ```
-
----
-
 You can implement tab completion, type checking, help message generation, and subcommands with the following simple code.
 
 ❗ **There is no need to add any commands or permissions to plugin.yml. They will be automatically incorporated by FlyLib. All permissions and aliases can be defined as variables in
@@ -170,11 +161,3 @@ wait...!
 
 </div>
 </details>
-
-## 📝 Dependencies
-
-- [kotlin](https://github.com/JetBrains/kotlin)
-- [spigot-api](https://github.com/SpigotMC/Spigot-API)
-- [paper-api](https://github.com/PaperMC/Paper)
-- [logback-classic](http://logback.qos.ch)
-- [koin](https://github.com/InsertKoinIO/koin)
