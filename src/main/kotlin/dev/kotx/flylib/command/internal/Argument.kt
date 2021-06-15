@@ -5,12 +5,11 @@
 
 package dev.kotx.flylib.command.internal
 
-import com.mojang.authlib.GameProfile
+import com.mojang.authlib.*
 import com.mojang.brigadier.arguments.*
-import dev.kotx.flylib.command.CommandContext
+import dev.kotx.flylib.command.*
 import net.minecraft.server.v1_16_R3.*
-import java.util.*
-import java.util.function.Predicate
+import java.util.function.*
 
 typealias Context = com.mojang.brigadier.context.CommandContext<CommandListenerWrapper>
 
@@ -172,7 +171,7 @@ sealed class Argument<T>(
         tabComplete
     )
 
-    class Text(
+    class Text @JvmOverloads constructor(
         name: String,
         type: StringType = StringType.WORD,
         tabComplete: (CommandContext.() -> List<Suggestion>)? = null,
@@ -199,7 +198,7 @@ sealed class Argument<T>(
         selections.map { Suggestion(it) }
     })
 
-    class Integer(
+    class Integer @JvmOverloads constructor(
         name: String,
         min: Int = Int.MIN_VALUE,
         max: Int = Int.MAX_VALUE,
@@ -210,7 +209,7 @@ sealed class Argument<T>(
         }, tabComplete
     )
 
-    class Float(
+    class Float @JvmOverloads constructor(
         name: String,
         min: kotlin.Float = kotlin.Float.MIN_VALUE,
         max: kotlin.Float = kotlin.Float.MAX_VALUE,
@@ -219,7 +218,7 @@ sealed class Argument<T>(
         FloatArgumentType.getFloat(ctx, key)
     }, tabComplete)
 
-    class Double(
+    class Double @JvmOverloads constructor(
         name: String,
         min: kotlin.Double = kotlin.Double.MIN_VALUE,
         max: kotlin.Double = kotlin.Double.MAX_VALUE,
@@ -228,7 +227,7 @@ sealed class Argument<T>(
         DoubleArgumentType.getDouble(ctx, key)
     }, tabComplete)
 
-    class Long(
+    class Long @JvmOverloads constructor(
         name: String,
         min: kotlin.Long = kotlin.Long.MIN_VALUE,
         max: kotlin.Long = kotlin.Long.MAX_VALUE,

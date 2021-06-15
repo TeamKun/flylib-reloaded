@@ -11,10 +11,6 @@ import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 import org.slf4j.LoggerFactory
 
-/**
- * This class is used to load the modules required for FlyLib.
- * FlyLib.Builder, or call the flylib method in a class that inherits from JavaPlugin.
- */
 class FlyLib(
     private val plugin: JavaPlugin,
     private val commandHandler: CommandHandler,
