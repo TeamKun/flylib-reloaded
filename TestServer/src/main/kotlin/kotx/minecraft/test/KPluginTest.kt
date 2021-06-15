@@ -7,51 +7,33 @@ package kotx.minecraft.test
 
 import dev.kotx.flylib.*
 import dev.kotx.flylib.command.*
-import dev.kotx.flylib.command.internal.*
+import org.bukkit.entity.*
 import org.bukkit.plugin.java.*
 
 class TestPlugin : JavaPlugin() {
     override fun onEnable() {
         flyLib {
             command {
-                defaultConfiguration {
-                    permission(Permission.OP)
-                }
-
-                register(PrintNumberCommand)
-                register(TabCompleteCommand)
-                register(ParentCommand)
             }
         }
     }
 }
 
-object PrintNumberCommand : Command("printnumber") {
-    override val usages: List<Usage> = listOf(
-        Usage(
-            Argument.Integer("number", min = 0, max = 10)
-        ) {
-            sendMessage("You sent ${args.first()}!")
+class ExplodeeCommand : Command("explode") {
+    init {
+        addUsage {
+            floatArgument("power", 10f, 20f) {
+                addSuggestion("15")
+            }
+            playerArgument("targets")
+
+            executes {
+                val power = typedArgs[0] as Float
+                val targets = typedArgs[1] as List<Player>
+                targets.forEach { world!!.createExplosion(it, power) }
+            }
         }
-    )
-}
 
-object TabCompleteCommand : Command("tabcomplete") {
-    override val usages: List<Usage> = listOf(
-        Usage(
-            Argument.Selection("mode", "active", "inactive"),
-            Argument.Player("target"),
-            Argument.Position("position")
-        )
-    )
-}
-
-object ParentCommand : Command("parent") {
-    override val children: List<Command> = listOf(ChildrenCommand)
-
-    object ChildrenCommand: Command("children") {
-        override fun CommandContext.execute() {
-            sendMessage("You executed children command!")
-        }
+        addExample("explode 15 @a")
     }
 }
