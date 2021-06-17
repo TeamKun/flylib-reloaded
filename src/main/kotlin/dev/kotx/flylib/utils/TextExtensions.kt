@@ -3,41 +3,15 @@
  * Twitter: https://twitter.com/kotx__
  */
 
-package dev.kotx.flylib
+package dev.kotx.flylib.utils
 
-import com.mojang.brigadier.context.CommandContext
-import dev.kotx.flylib.command.Command
-import dev.kotx.flylib.command.internal.Argument
-import net.kyori.adventure.audience.MessageType
+import net.kyori.adventure.audience.*
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
-import net.kyori.adventure.text.format.Style
-import net.kyori.adventure.text.format.TextColor
-import net.kyori.adventure.text.format.TextDecoration
-import net.minecraft.server.v1_16_R3.CommandListenerWrapper
-import org.bukkit.command.CommandSender
-import org.bukkit.entity.Player
-import org.bukkit.plugin.java.JavaPlugin
-import java.awt.Color
-
-operator fun List<Command>.get(query: String) =
-    find { it.name.equals(query, true) } ?: find { it.aliases.any { it == query } }
-
-fun CommandContext<CommandListenerWrapper>.asFlyLibContext(command: Command, args: List<Argument<*>>, depth: Int = 0): dev.kotx.flylib.command.CommandContext {
-    val replaced = input.replaceFirst("/", "")
-    return dev.kotx.flylib.command.CommandContext(
-        command,
-        command.plugin,
-        source.bukkitSender,
-        replaced,
-        replaced.split(" ").drop(1 + depth).toTypedArray(),
-        try {
-            args.map { it.parser(this, it.name) }.toTypedArray()
-        } catch (e: Exception) {
-            emptyArray()
-        }
-    )
-}
+import net.kyori.adventure.text.format.*
+import org.bukkit.command.*
+import org.bukkit.plugin.java.*
+import java.awt.*
 
 fun CommandSender.send(block: TextComponent.Builder.() -> Unit) {
     sendMessage(Component.text().apply(block).build(), MessageType.CHAT)
@@ -84,13 +58,16 @@ fun TextComponent.appendln(text: String, style: Style): TextComponent = append("
 fun TextComponent.appendln(text: String, decoration: TextDecoration): TextComponent = append("$text\n", decoration)
 fun TextComponent.appendln(): TextComponent = this@appendln.append("\n")
 
+fun interface TextComponentAction {
+    fun TextComponent.Builder.initialize()
+}
 
-fun CommandSender.sendPluginMessage(plugin: JavaPlugin, block: TextComponent.Builder.() -> Unit) {
+fun CommandSender.sendPluginMessage(plugin: JavaPlugin, block: TextComponentAction) {
     send {
         append("[", Color.GRAY)
         append(plugin.name, Color.RED)
         append("] ", Color.GRAY)
-        apply(block)
+        block.apply { initialize() }
     }
 }
 
@@ -100,20 +77,38 @@ fun CommandSender.sendPluginMessage(plugin: JavaPlugin, text: String) {
     }
 }
 
-fun CommandSender.sendErrorMessage(plugin: JavaPlugin, text: String) {
+fun CommandSender.fail(plugin: JavaPlugin, text: String) {
     sendPluginMessage(plugin) {
         append(text, Color.RED)
     }
 }
 
-fun CommandSender.sendWarnMessage(plugin: JavaPlugin, text: String) {
+fun CommandSender.warn(plugin: JavaPlugin, text: String) {
     sendPluginMessage(plugin) {
         append(text, Color.YELLOW)
     }
 }
 
-fun CommandSender.sendSuccessMessage(plugin: JavaPlugin, text: String) {
+fun CommandSender.success(plugin: JavaPlugin, text: String) {
     sendPluginMessage(plugin) {
+        append(text, Color.GREEN)
+    }
+}
+
+fun CommandSender.fail(text: String) {
+    send {
+        append(text, Color.RED)
+    }
+}
+
+fun CommandSender.warn(text: String) {
+    send {
+        append(text, Color.YELLOW)
+    }
+}
+
+fun CommandSender.success(text: String) {
+    send {
         append(text, Color.GREEN)
     }
 }
@@ -121,34 +116,3 @@ fun CommandSender.sendSuccessMessage(plugin: JavaPlugin, text: String) {
 fun String.asTextComponent(color: Color = Color.WHITE) = Component.text(this, TextColor.color(color.red, color.green, color.blue))
 fun String.asTextComponent(style: Style) = Component.text(this, style)
 fun String.asTextComponent(decoration: TextDecoration) = Component.text(this, Style.style(decoration))
-
-fun <T> List<T>.joint(other: T): List<T> {
-    val res = mutableListOf<T>()
-    forEachIndexed { i, it ->
-        res.add(it)
-        if (i < size - 1)
-            res.add(other)
-    }
-
-    return res.toList()
-}
-
-fun <T, E> List<T>.joint(joiner: E, target: (T) -> E) {
-    map(target).joint(joiner)
-}
-
-@JvmName("jointT")
-fun <T> List<T>.joint(joiner: T, action: (T) -> Unit) {
-    joint(joiner).forEach(action)
-}
-
-fun <T> List<T>.joint(other: (T) -> T): List<T> {
-    val res = mutableListOf<T>()
-    forEachIndexed { i, it ->
-        res.add(it)
-        if (i < size - 1)
-            res.add(other(it))
-    }
-
-    return res.toList()
-}
