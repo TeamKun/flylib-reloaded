@@ -11,6 +11,7 @@ import com.mojang.brigadier.context.CommandContext
 import dev.kotx.flylib.*
 import dev.kotx.flylib.command.internal.*
 import dev.kotx.flylib.command.internal.Permission
+import dev.kotx.flylib.utils.*
 import net.minecraft.server.v1_16_R3.*
 import org.bukkit.*
 import org.bukkit.craftbukkit.v1_16_R3.*
@@ -128,7 +129,7 @@ class CommandHandler(
                 child.handle(childBase)
                 base.then(childBase)
 
-                child.aliases.forEach {
+                child.aliases.forEach { it ->
                     val childAliasBase = LiteralArgumentBuilder
                         .literal<CommandListenerWrapper?>(it)
                         .requires { child.validate(it.bukkitSender) }
@@ -183,11 +184,10 @@ class CommandHandler(
             true
         }
 
-
         if (this is RequiredArgumentBuilder<CommandListenerWrapper, *> && argument.tabComplete != null) suggests { ctx, builder ->
             argument.tabComplete.run {
                 val context = ctx.asFlyLibContext(command, usage.args.toList(), depth)
-                SuggestionBuilder(
+                Suggestion.Builder(
                     context.command,
                     context.plugin,
                     context.sender,
@@ -198,7 +198,7 @@ class CommandHandler(
                     complete()
                     build()
                 }
-            }.forEach {
+            }.forEach { it ->
                 val toolTipMessage = it.tooltip?.let { LiteralMessage(it) }
                 builder.suggest(it.content, toolTipMessage)
             }
@@ -224,7 +224,7 @@ class CommandHandler(
          * Changes the default command settings. See CommandDefault below for details.
          * @see CommandDefault
          */
-        fun defaultConfiguration(action: CommandDefaultAction): Builder {
+        fun defaultConfiguration(action: CommandDefault.Builder.Action): Builder {
             this.commandDefault = CommandDefault.Builder().apply { action.apply { initialize() } }.build()
             return this
         }
@@ -252,9 +252,9 @@ class CommandHandler(
             commands,
             commandDefault
         )
-    }
-}
 
-fun interface CommandHandlerAction {
-    fun CommandHandler.Builder.initialize()
+        fun interface Action {
+            fun Builder.initialize()
+        }
+    }
 }
