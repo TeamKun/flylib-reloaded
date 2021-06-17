@@ -8,6 +8,10 @@ package kotx.minecraft.test
 import dev.kotx.flylib.*
 import dev.kotx.flylib.command.*
 import dev.kotx.flylib.command.internal.*
+import dev.kotx.flylib.menu.menus.*
+import dev.kotx.flylib.utils.*
+import org.bukkit.*
+import org.bukkit.inventory.*
 import org.bukkit.plugin.java.*
 
 class KTestPlugin : JavaPlugin() {
@@ -31,7 +35,7 @@ object KPrintNumberCommand : Command("printnumber") {
         Usage(
             arrayOf(Argument.Integer("number", min = 0, max = 10))
         ) {
-            sendMessage("You sent ${args.first()}!")
+            send("You sent ${args.first()}!")
         }
     )
 }
@@ -53,7 +57,17 @@ object KParentCommand : Command("parent") {
 
     object ChildrenCommand : Command("children") {
         override fun CommandContext.execute() {
-            sendMessage("You executed children command!")
+            send("You executed children command!")
+        }
+    }
+}
+
+object KMenuCommand : Command("menu") {
+    override fun CommandContext.execute() {
+        ChestMenu.create(player!!) {
+            item(0, ItemStack(Material.DIAMOND)) {
+                it.whoClicked.success("you clicked diamond!")
+            }
         }
     }
 }
