@@ -5,8 +5,7 @@
 
 package dev.kotx.flylib.command
 
-import dev.kotx.flylib.*
-import net.kyori.adventure.text.*
+import dev.kotx.flylib.utils.*
 import org.bukkit.*
 import org.bukkit.command.*
 import org.bukkit.entity.*
@@ -40,7 +39,7 @@ class CommandContext(
 
         val groups = mutableMapOf<String, List<String>>()
         val groupCache = mutableListOf<String>()
-        args.reversed().forEach {
+        args.reversed().forEach { it ->
 
             when {
                 it.matches(singleHyphenRegex) -> {
@@ -75,23 +74,27 @@ class CommandContext(
         return messages
     }
 
-    fun send(block: TextComponent.Builder.() -> Unit) {
+    fun send(block: TextComponentAction) {
         sender.sendPluginMessage(plugin, block)
     }
 
-    fun sendMessage(text: String) {
+    fun send(text: String) {
         sender.sendPluginMessage(plugin, text)
     }
 
-    fun sendErrorMessage(text: String) {
-        sender.sendErrorMessage(plugin, text)
+    fun fail(text: String) {
+        sender.fail(plugin, text)
     }
 
-    fun sendWarnMessage(text: String) {
-        sender.sendWarnMessage(plugin, text)
+    fun warn(text: String) {
+        sender.warn(plugin, text)
     }
 
-    fun sendSuccessMessage(text: String) {
-        sender.sendSuccessMessage(plugin, text)
+    fun success(text: String) {
+        sender.success(plugin, text)
+    }
+
+    fun interface Action {
+        fun CommandContext.execute()
     }
 }
