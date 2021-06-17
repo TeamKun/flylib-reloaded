@@ -11,22 +11,22 @@ import org.koin.core.context.KoinContext
 import org.koin.core.error.KoinAppAlreadyStartedException
 
 object FlyLibContext : KoinContext {
-    private var _koin: Koin? = null
+    private var koin: Koin? = null
 
-    override fun get(): Koin = _koin ?: error("KoinApplication has not been started")
+    override fun get(): Koin = koin ?: error("KoinApplication has not been started")
 
-    override fun getOrNull(): Koin? = _koin
+    override fun getOrNull(): Koin? = koin
 
     override fun register(koinApplication: KoinApplication) {
-        if (_koin != null) {
+        if (koin != null) {
             throw KoinAppAlreadyStartedException("A Koin Application has already been started")
         }
-        _koin = koinApplication.koin
+        koin = koinApplication.koin
     }
 
     override fun stop() = synchronized(this) {
-        _koin?.close()
-        _koin = null
+        koin?.close()
+        koin = null
     }
 
     /**
