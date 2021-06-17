@@ -24,21 +24,10 @@ import kotlin.collections.set
 
 
 class CommandHandler(
-    val commandDefault: CommandDefault
+    val commands: List<Command>
 ) : FlyLibComponent {
     private val plugin: JavaPlugin by inject()
     private val logger: Logger by inject()
-    private val commands = mutableListOf<Command>()
-
-    fun register(command: Command) {
-        fun List<Command>.setParent(parent: Command): Unit = forEach {
-            it.parent = parent
-            it.children.setParent(it)
-        }
-
-        command.children.setParent(command)
-        commands.add(command)
-    }
 
     fun initialize() {
         plugin.server.pluginManager.addPermission(
@@ -228,14 +217,12 @@ class CommandHandler(
     class Builder {
         private val commands = mutableListOf<Command>()
 
-        private var commandDefault: CommandDefault = CommandDefault.Builder().build()
-
         /**
          * Changes the default command settings. See CommandDefault below for details.
          * @see CommandDefault
          */
-        fun defaultConfiguration(action: CommandDefault.Builder.Action): Builder {
-            this.commandDefault = CommandDefault.Builder().apply { action.apply { initialize() } }.build()
+        fun defaultConfiguration(action: CommandDefault.Action): Builder {
+            CommandDefault.apply { action.apply { initialize() } }
             return this
         }
 
@@ -243,6 +230,12 @@ class CommandHandler(
          * Registers the specified command. It is not necessary to register commands or permissions in plugin.yml.
          */
         fun register(command: Command): Builder {
+            fun List<Command>.setParent(parent: Command): Unit = forEach {
+                it.parent = parent
+                it.children.setParent(it)
+            }
+
+            command.children.setParent(command)
             commands.add(command)
             return this
         }
@@ -260,11 +253,7 @@ class CommandHandler(
          *
          * @return CommandHandler Instance
          */
-        fun build() = CommandHandler(commandDefault).apply {
-            commands.forEach {
-                register(it)
-            }
-        }
+        fun build() = CommandHandler(commands)
 
         fun interface Action {
             fun Builder.initialize()

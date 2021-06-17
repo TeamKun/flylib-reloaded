@@ -38,29 +38,31 @@ class KTestPlugin : JavaPlugin() {
 }
 
 object KPrintNumberCommand : Command("printnumber") {
-    override val usages: MutableList<Usage> = mutableListOf(
-        Usage(
-            arrayOf(Argument.Integer("number", min = 0, max = 10))
-        ) {
-            send("You sent ${args.first()}!")
+    init {
+        usage {
+            intArgument("number", 0, 10)
+
+            executes {
+                send("You sent ${args.first()}!")
+            }
         }
-    )
+    }
 }
 
 object KTabCompleteCommand : Command("tabcomplete") {
-    override val usages: MutableList<Usage> = mutableListOf(
-        Usage(
-            arrayOf(
-                Argument.Selection("mode", "active", "inactive"),
-                Argument.Player("target"),
-                Argument.Position("position")
-            )
-        )
-    )
+    init {
+        usage {
+            selectionArgument("mode", "active", "inactive")
+            playerArgument("target")
+            positionArgument("position")
+        }
+    }
 }
 
 object KParentCommand : Command("parent") {
-    override val children: MutableList<Command> = mutableListOf(ChildrenCommand)
+    init {
+        child(ChildrenCommand)
+    }
 
     object ChildrenCommand : Command("children") {
         override fun CommandContext.execute() {

@@ -23,7 +23,7 @@ abstract class Command(
      * By default, it is set to blank
      * You can also write the description over multiple lines. In that case, it will be automatically formatted by sendHelp().
      */
-    open var description: String = commandHandler.commandDefault.description
+    open var description: String = CommandDefault.getDescription()
 
     /**
      * Command alias. A list of strings that can be used as abbreviations instead of using the official name of the command.
@@ -47,12 +47,12 @@ abstract class Command(
      * Permission to use the command. Permission.OP can be used only by OP, Permission.NOT_OP can be used by everyone except OP, and Permission.EVERYONE can be used by everyone.
      * By default, Permission.OP is specified.
      */
-    open var permission: Permission = commandHandler.commandDefault.permission
+    open var permission: Permission = CommandDefault.getPermission()
 
     /**
      * Can only the player execute this command? By default it can also be run from the server console. (default: false)
      */
-    open var playerOnly: Boolean = commandHandler.commandDefault.playerOnly
+    open var playerOnly: Boolean = CommandDefault.isPlayerOnly()
 
     /**
      * A subcommand of this command. If the string entered as an argument matches the name or alias of these commands, the matching command will be executed.
@@ -96,7 +96,7 @@ abstract class Command(
      * It is supposed to be executed within execute.
      */
     private fun CommandContext.sendHelp() {
-        commandHandler.commandDefault.sendHelp.apply { execute() }
+        CommandDefault.getHelp().apply { execute() }
     }
 
     fun usage(action: Usage.Builder.Action) {
