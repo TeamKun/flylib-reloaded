@@ -10,8 +10,9 @@ import dev.kotx.flylib.command.*
 import dev.kotx.flylib.command.internal.*
 import dev.kotx.flylib.menu.menus.*
 import dev.kotx.flylib.utils.*
+import net.kyori.adventure.text.format.*
 import org.bukkit.*
-import org.bukkit.inventory.*
+import org.bukkit.enchantments.Enchantment.*
 import org.bukkit.plugin.java.*
 
 class KTestPlugin : JavaPlugin() {
@@ -64,9 +65,15 @@ object KParentCommand : Command("parent") {
 
 object KMenuCommand : Command("menu") {
     override fun CommandContext.execute() {
-        ChestMenu.create(player!!) {
-            item(0, ItemStack(Material.DIAMOND)) {
-                it.whoClicked.success("you clicked diamond!")
+        ChestMenu.display(player!!) {
+            item(5, 1, item(Material.DIAMOND) {
+                displayName("Super Diamond")
+                lore("Very Expensive!")
+                enchant(LUCK, true)
+            }) {
+                send {
+                    append("You clicked me!?", TextDecoration.BOLD)
+                }
             }
         }
     }
