@@ -7,9 +7,17 @@ package kotx.minecraft.test;
 
 import dev.kotx.flylib.FlyLib;
 import dev.kotx.flylib.command.Command;
+import dev.kotx.flylib.command.CommandContext;
 import dev.kotx.flylib.command.internal.Permission;
+import dev.kotx.flylib.menu.menus.ChestMenu;
+import dev.kotx.flylib.utils.ExtensionsKt;
+import dev.kotx.flylib.utils.TextExtensionsKt;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 class JTestPlugin extends JavaPlugin {
     @Override
@@ -20,6 +28,15 @@ class JTestPlugin extends JavaPlugin {
             });
 
             command.register(new JPrintNumberCommand());
+            command.register(new JTabCompleteCommand());
+            command.register(new JParentCommand());
+            command.register(new JMenuCommand());
+            command.register("direct", builder -> {
+                builder.description("Directly registered command");
+                builder.executes(context -> {
+                    context.send("Hello direct command!");
+                });
+            });
         }));
     }
 }
@@ -60,5 +77,26 @@ class JParentCommand extends Command {
         public JChildrenCommand() {
             super("children");
         }
+    }
+}
+
+class JMenuCommand extends Command {
+    public JMenuCommand() {
+        super("menu");
+    }
+
+    @Override
+    public void execute(@NotNull CommandContext context) {
+        ChestMenu.display(context.getPlayer(), builder -> {
+            builder.item(5, 1, ExtensionsKt.item(Material.DIAMOND, itemBuilder -> {
+                itemBuilder.displayName("Super Diamond");
+                itemBuilder.lore("Very Expensive!");
+                itemBuilder.enchant(Enchantment.LUCK, true);
+            }), event -> {
+                context.send(componentBuilder -> {
+                    TextExtensionsKt.append(componentBuilder, "You clicked me!?", TextDecoration.BOLD);
+                });
+            });
+        });
     }
 }
