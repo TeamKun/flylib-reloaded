@@ -38,10 +38,12 @@ class ChestMenu(
     }
 
     companion object {
-        fun create(player: Player, block: Builder.Action) {
+        @JvmStatic
+        fun display(player: Player, block: Builder.Action) {
             Builder().apply { block.apply { initialize() } }.build().display(player)
         }
+
+        @JvmStatic
+        fun menu(block: ChestMenu.Builder.Action) = ChestMenu.Builder().apply { block.apply { initialize() } }.build()
     }
 }
-
-fun menu(block: ChestMenu.Builder.Action) = ChestMenu.Builder().apply { block.apply { initialize() } }.build()
