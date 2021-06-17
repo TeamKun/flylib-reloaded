@@ -6,46 +6,46 @@
 package dev.kotx.flylib.utils
 
 import net.kyori.adventure.audience.*
+import net.kyori.adventure.text.*
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.*
-import org.bukkit.command.*
 import org.bukkit.plugin.java.*
 import java.awt.*
 
-fun CommandSender.send(block: TextComponent.Builder.() -> Unit) {
-    sendMessage(Component.text().apply(block).build(), MessageType.CHAT)
+fun Audience.send(block: TextComponentAction) {
+    sendMessage(Component.text().run { block.apply { initialize() }; this }.build(), MessageType.CHAT)
 }
 
-fun TextComponent.Builder.append(text: String): TextComponent.Builder = append(Component.text(text))
-fun TextComponent.Builder.append(
+fun ComponentBuilder<*, *>.append(text: String): ComponentBuilder<*, *> = append(Component.text(text))
+fun ComponentBuilder<*, *>.append(
     text: String,
     color: Color = Color.WHITE,
     style: Style = Style.empty(),
     decoration: TextDecoration? = null
-): TextComponent.Builder = append(Component.text(text).color(color).style(style).run {
+): ComponentBuilder<*, *> = append(Component.text(text).color(color).style(style).run {
     if (decoration != null)
         decorate(decoration)
     else
         this
 })
 
-fun TextComponent.Builder.append(text: String, color: Color): TextComponent.Builder = append(Component.text(text).color(color))
-fun TextComponent.Builder.append(text: String, style: Style): TextComponent.Builder = append(Component.text(text).style(style))
-fun TextComponent.Builder.append(text: String, decoration: TextDecoration): TextComponent.Builder = append(Component.text(text).decorate(decoration))
+fun ComponentBuilder<*, *>.append(text: String, color: Color): ComponentBuilder<*, *> = append(Component.text(text).color(color))
+fun ComponentBuilder<*, *>.append(text: String, style: Style): ComponentBuilder<*, *> = append(Component.text(text).style(style))
+fun ComponentBuilder<*, *>.append(text: String, decoration: TextDecoration): ComponentBuilder<*, *> = append(Component.text(text).decorate(decoration))
 
-fun TextComponent.Builder.appendln(text: String): TextComponent.Builder = append("$text\n")
-fun TextComponent.Builder.appendln(text: String, color: Color): TextComponent.Builder = append("$text\n", color)
-fun TextComponent.Builder.appendln(text: String, style: Style): TextComponent.Builder = append("$text\n", style)
-fun TextComponent.Builder.appendln(text: String, decoration: TextDecoration): TextComponent.Builder = append("$text\n", decoration)
-fun TextComponent.Builder.appendln(
+fun ComponentBuilder<*, *>.appendln(text: String): ComponentBuilder<*, *> = append("$text\n")
+fun ComponentBuilder<*, *>.appendln(text: String, color: Color): ComponentBuilder<*, *> = append("$text\n", color)
+fun ComponentBuilder<*, *>.appendln(text: String, style: Style): ComponentBuilder<*, *> = append("$text\n", style)
+fun ComponentBuilder<*, *>.appendln(text: String, decoration: TextDecoration): ComponentBuilder<*, *> = append("$text\n", decoration)
+fun ComponentBuilder<*, *>.appendln(
     text: String,
     color: Color = Color.WHITE,
     style: Style = Style.empty(),
     decoration: TextDecoration? = null
-): TextComponent.Builder = append("$text\n", color, style, decoration)
+): ComponentBuilder<*, *> = append("$text\n", color, style, decoration)
 
-fun TextComponent.Builder.appendln(): TextComponent.Builder = this@appendln.append("\n")
+fun ComponentBuilder<*, *>.appendln(): ComponentBuilder<*, *> = this@appendln.append("\n")
 
 fun TextComponent.color(color: Color) = color(TextColor.color(color.red, color.green, color.blue))
 fun TextComponent.append(text: String): TextComponent = append(Component.text(text))
@@ -59,10 +59,10 @@ fun TextComponent.appendln(text: String, decoration: TextDecoration): TextCompon
 fun TextComponent.appendln(): TextComponent = this@appendln.append("\n")
 
 fun interface TextComponentAction {
-    fun TextComponent.Builder.initialize()
+    fun ComponentBuilder<*, *>.initialize()
 }
 
-fun CommandSender.sendPluginMessage(plugin: JavaPlugin, block: TextComponentAction) {
+fun Audience.sendPluginMessage(plugin: JavaPlugin, block: TextComponentAction) {
     send {
         append("[", Color.GRAY)
         append(plugin.name, Color.RED)
@@ -71,43 +71,43 @@ fun CommandSender.sendPluginMessage(plugin: JavaPlugin, block: TextComponentActi
     }
 }
 
-fun CommandSender.sendPluginMessage(plugin: JavaPlugin, text: String) {
+fun Audience.sendPluginMessage(plugin: JavaPlugin, text: String) {
     sendPluginMessage(plugin) {
         append(text, Color.WHITE)
     }
 }
 
-fun CommandSender.fail(plugin: JavaPlugin, text: String) {
+fun Audience.fail(plugin: JavaPlugin, text: String) {
     sendPluginMessage(plugin) {
         append(text, Color.RED)
     }
 }
 
-fun CommandSender.warn(plugin: JavaPlugin, text: String) {
+fun Audience.warn(plugin: JavaPlugin, text: String) {
     sendPluginMessage(plugin) {
         append(text, Color.YELLOW)
     }
 }
 
-fun CommandSender.success(plugin: JavaPlugin, text: String) {
+fun Audience.success(plugin: JavaPlugin, text: String) {
     sendPluginMessage(plugin) {
         append(text, Color.GREEN)
     }
 }
 
-fun CommandSender.fail(text: String) {
+fun Audience.fail(text: String) {
     send {
         append(text, Color.RED)
     }
 }
 
-fun CommandSender.warn(text: String) {
+fun Audience.warn(text: String) {
     send {
         append(text, Color.YELLOW)
     }
 }
 
-fun CommandSender.success(text: String) {
+fun Audience.success(text: String) {
     send {
         append(text, Color.GREEN)
     }
