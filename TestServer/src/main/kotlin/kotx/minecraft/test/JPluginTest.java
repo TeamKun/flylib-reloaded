@@ -8,6 +8,7 @@ package kotx.minecraft.test;
 import dev.kotx.flylib.FlyLib;
 import dev.kotx.flylib.command.Command;
 import dev.kotx.flylib.command.internal.Permission;
+import net.kyori.adventure.text.Component;
 import org.bukkit.plugin.java.JavaPlugin;
 
 class JTestPlugin extends JavaPlugin {
@@ -26,10 +27,13 @@ class JTestPlugin extends JavaPlugin {
 class JPrintNumberCommand extends Command {
     public JPrintNumberCommand() {
         super("printnumber");
-        addUsage(usage -> {
+        usage(usage -> {
             usage.intArgument("number", 0, 10);
             usage.executes(context -> {
-                context.sendMessage("You sent " + context.getArgs()[0] + "!");
+                context.send("You sent " + context.getArgs()[0] + "!");
+                context.send(builder -> {
+                    builder.append(Component.text(""));
+                });
             });
         });
     }
@@ -38,7 +42,7 @@ class JPrintNumberCommand extends Command {
 class JTabCompleteCommand extends Command {
     public JTabCompleteCommand() {
         super("tabcomplete");
-        addUsage(usage -> {
+        usage(usage -> {
             usage.selectionArgument("mode", "active", "inactive");
             usage.playerArgument("target");
             usage.positionArgument("position");
@@ -49,10 +53,10 @@ class JTabCompleteCommand extends Command {
 class JParentCommand extends Command {
     public JParentCommand() {
         super("parent");
-        addChild(new JChildrenCommand());
+        child(new JChildrenCommand());
     }
 
-    class JChildrenCommand extends Command {
+    static class JChildrenCommand extends Command {
         public JChildrenCommand() {
             super("children");
         }
