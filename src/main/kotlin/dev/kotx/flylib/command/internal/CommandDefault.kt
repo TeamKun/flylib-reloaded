@@ -5,8 +5,8 @@
 
 package dev.kotx.flylib.command.internal
 
-import dev.kotx.flylib.*
 import dev.kotx.flylib.command.*
+import dev.kotx.flylib.utils.*
 import net.kyori.adventure.text.event.*
 import net.kyori.adventure.text.format.*
 import java.awt.*
@@ -15,7 +15,7 @@ class CommandDefault(
     val description: String,
     val permission: Permission,
     val playerOnly: Boolean,
-    val sendHelp: CommandAction
+    val sendHelp: CommandContext.Action
 ) {
     class Builder {
         /**
@@ -36,7 +36,7 @@ class CommandDefault(
         /**
          * The method that will be executed when you call sendHelp() when nothing is implemented.
          */
-        private var sendHelp: CommandAction = CommandAction {
+        private var sendHelp: CommandContext.Action = CommandContext.Action {
             var fullName = command.name
             fun Command.getFullName() {
                 if (parent != null) {
@@ -103,7 +103,7 @@ class CommandDefault(
                         append("# ", Color.WHITE)
                         append("Usages:\n", highlightTextColor, decoration = TextDecoration.BOLD)
 
-                        command.usages.associate {
+                        command.usages.associate { it ->
                             command.handleParent(it.args.joinToString(" ") { "<${it.name}>" }) to it.description
                         }.forEach { (usage, description) ->
                             append(usage, mainColor)
@@ -180,7 +180,7 @@ class CommandDefault(
         /**
          * The method that will be executed when you call sendHelp() when nothing is implemented.
          */
-        fun help(defaultSendHelp: CommandAction): Builder {
+        fun help(defaultSendHelp: CommandContext.Action): Builder {
             sendHelp = defaultSendHelp
             return this
         }
@@ -188,9 +188,9 @@ class CommandDefault(
         fun build() = CommandDefault(
             description, permission, playerOnly, sendHelp
         )
-    }
-}
 
-fun interface CommandDefaultAction {
-    fun CommandDefault.Builder.initialize()
+        fun interface Action {
+            fun Builder.initialize()
+        }
+    }
 }
