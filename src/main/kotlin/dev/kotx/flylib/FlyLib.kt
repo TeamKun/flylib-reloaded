@@ -6,11 +6,9 @@
 package dev.kotx.flylib
 
 import dev.kotx.flylib.command.*
-import org.bukkit.plugin.java.JavaPlugin
-import org.koin.dsl.koinApplication
-import org.koin.dsl.module
-import org.slf4j.LoggerFactory
-import java.util.function.*
+import org.bukkit.plugin.java.*
+import org.koin.dsl.*
+import org.slf4j.*
 
 class FlyLib(
     private val plugin: JavaPlugin,
@@ -71,10 +69,10 @@ class FlyLib(
          * Configure the command module.
          * This is a method that corresponds to Kotlin's apply builder pattern.
          *
-         * @param init CommandHandler.Builder's Configurations
+         * @param action CommandHandler.Builder's Configurations
          * @return FlyLib.Builder
          */
-        fun command(action: CommandHandlerAction): Builder {
+        fun command(action: CommandHandler.Builder.Action): Builder {
             commandHandler = CommandHandler.Builder().apply {
                 action.apply {
                     initialize()
@@ -91,16 +89,16 @@ class FlyLib(
             plugin,
             commandHandler,
         )
+
+        fun interface Action {
+            fun Builder.initialize()
+        }
     }
 
     companion object {
         @JvmStatic
-        fun inject(plugin: JavaPlugin, action: FlyLibAction): FlyLib = Builder(plugin).apply { action.apply { initialize() } }.build()
+        fun inject(plugin: JavaPlugin, action: Builder.Action): FlyLib = Builder(plugin).apply { action.apply { initialize() } }.build()
     }
-}
-
-fun interface FlyLibAction {
-    fun FlyLib.Builder.initialize()
 }
 
 /**
