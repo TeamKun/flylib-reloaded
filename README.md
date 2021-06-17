@@ -124,7 +124,7 @@ class ParentCommand extends Command {
         addChild(new ChildrenCommand());
     }
 
-    class ChildrenCommand extends Command {
+    static class ChildrenCommand extends Command {
         public ChildrenCommand() {
             super("children");
         }
