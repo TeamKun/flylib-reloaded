@@ -24,7 +24,7 @@ You can implement tab completion, type checking, help message generation, and su
 <div>
 
 ```kotlin
-class TestPlugin : JavaPlugin() {
+class KTestPlugin : JavaPlugin() {
     override fun onEnable() {
         flyLib {
             command {
@@ -35,6 +35,13 @@ class TestPlugin : JavaPlugin() {
                 register(PrintNumberCommand)
                 register(TabCompleteCommand)
                 register(ParentCommand)
+                register(MenuCommand)
+                register("direct") {
+                    description("Directly registered command")
+                    executes {
+                        send("Hello direct command!")
+                    }
+                }
             }
         }
     }
@@ -45,7 +52,7 @@ object PrintNumberCommand : Command("printnumber") {
         Usage(
             arrayOf(Argument.Integer("number", min = 0, max = 10))
         ) {
-            sendMessage("You sent ${args.first()}!")
+            send("You sent ${args.first()}!")
         }
     )
 }
@@ -67,7 +74,23 @@ object ParentCommand : Command("parent") {
 
     object ChildrenCommand : Command("children") {
         override fun CommandContext.execute() {
-            sendMessage("You executed children command!")
+            send("You executed children command!")
+        }
+    }
+}
+
+object MenuCommand : Command("menu") {
+    override fun CommandContext.execute() {
+        ChestMenu.display(player!!) {
+            item(5, 1, item(Material.DIAMOND) {
+                displayName("Super Diamond")
+                lore("Very Expensive!")
+                enchant(LUCK, true)
+            }) {
+                send {
+                    append("You clicked me!?", TextDecoration.BOLD)
+                }
+            }
         }
     }
 }
@@ -91,6 +114,13 @@ class TestPlugin extends JavaPlugin {
             command.register(new PrintNumberCommand());
             command.register(new TabCompleteCommand());
             command.register(new ParentCommand());
+            command.register(new MenuCommand());
+            command.register("direct", builder -> {
+                builder.description("Directly registered command");
+                builder.executes(context -> {
+                    context.send("Hello direct command!");
+                });
+            });
         }));
     }
 }
@@ -98,10 +128,13 @@ class TestPlugin extends JavaPlugin {
 class PrintNumberCommand extends Command {
     public PrintNumberCommand() {
         super("printnumber");
-        addUsage(usage -> {
+        usage(usage -> {
             usage.intArgument("number", 0, 10);
             usage.executes(context -> {
-                context.sendMessage("You sent " + context.getArgs()[0] + "!");
+                context.send("You sent " + context.getArgs()[0] + "!");
+                context.send(builder -> {
+                    builder.append(Component.text(""));
+                });
             });
         });
     }
@@ -110,7 +143,7 @@ class PrintNumberCommand extends Command {
 class TabCompleteCommand extends Command {
     public TabCompleteCommand() {
         super("tabcomplete");
-        addUsage(usage -> {
+        usage(usage -> {
             usage.selectionArgument("mode", "active", "inactive");
             usage.playerArgument("target");
             usage.positionArgument("position");
@@ -121,13 +154,34 @@ class TabCompleteCommand extends Command {
 class ParentCommand extends Command {
     public ParentCommand() {
         super("parent");
-        addChild(new ChildrenCommand());
+        child(new JChildrenCommand());
     }
 
     static class ChildrenCommand extends Command {
         public ChildrenCommand() {
             super("children");
         }
+    }
+}
+
+class MenuCommand extends Command {
+    public MenuCommand() {
+        super("menu");
+    }
+
+    @Override
+    public void execute(@NotNull CommandContext context) {
+        ChestMenu.display(context.getPlayer(), builder -> {
+            builder.item(5, 1, ExtensionsKt.item(Material.DIAMOND, itemBuilder -> {
+                itemBuilder.displayName("Super Diamond");
+                itemBuilder.lore("Very Expensive!");
+                itemBuilder.enchant(Enchantment.LUCK, true);
+            }), event -> {
+                context.send(componentBuilder -> {
+                    TextExtensionsKt.append(componentBuilder, "You clicked me!?", TextDecoration.BOLD);
+                });
+            });
+        });
     }
 }
 ```
