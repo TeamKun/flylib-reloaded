@@ -24,11 +24,21 @@ import kotlin.collections.set
 
 
 class CommandHandler(
-    private val commands: List<Command>,
     val commandDefault: CommandDefault
 ) : FlyLibComponent {
     private val plugin: JavaPlugin by inject()
     private val logger: Logger by inject()
+    private val commands = mutableListOf<Command>()
+
+    fun register(command: Command) {
+        fun List<Command>.setParent(parent: Command): Unit = forEach {
+            it.parent = parent
+            it.children.setParent(it)
+        }
+
+        command.children.setParent(command)
+        commands.add(command)
+    }
 
     fun initialize() {
         plugin.server.pluginManager.addPermission(
@@ -233,13 +243,15 @@ class CommandHandler(
          * Registers the specified command. It is not necessary to register commands or permissions in plugin.yml.
          */
         fun register(command: Command): Builder {
-            fun List<Command>.setParent(parent: Command): Unit = forEach {
-                it.parent = parent
-                it.children.setParent(it)
-            }
-
-            command.children.setParent(command)
             commands.add(command)
+            return this
+        }
+
+        /**
+         * Registers the specified command. It is not necessary to register commands or permissions in plugin.yml.
+         */
+        fun register(name: String, action: Command.Builder.Action): Builder {
+            register(Command.Builder(name).apply { action.apply { initialize() } }.build())
             return this
         }
 
@@ -248,10 +260,11 @@ class CommandHandler(
          *
          * @return CommandHandler Instance
          */
-        fun build() = CommandHandler(
-            commands,
-            commandDefault
-        )
+        fun build() = CommandHandler(commandDefault).apply {
+            commands.forEach {
+                register(it)
+            }
+        }
 
         fun interface Action {
             fun Builder.initialize()
