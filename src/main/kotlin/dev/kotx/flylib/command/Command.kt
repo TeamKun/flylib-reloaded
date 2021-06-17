@@ -95,27 +95,24 @@ abstract class Command(
      * A method that sends command usage, aliases, examples, etc. to the user in the current context.
      * It is supposed to be executed within execute.
      */
-    fun CommandContext.sendHelp() {
+    private fun CommandContext.sendHelp() {
         commandHandler.commandDefault.sendHelp.apply { execute() }
     }
 
-    fun addUsage(action: UsageAction) {
+    fun usage(action: Usage.Builder.Action) {
         usages.add(Usage.Builder().apply { action.apply { initialize() } }.build())
     }
 
-    fun addExample(example: String) {
+    fun example(example: String) {
         examples.add(example)
     }
 
-    fun addAlias(alias: String) {
+    fun alias(alias: String) {
         aliases.add(alias)
     }
 
-    fun addChild(child: Command) {
+    fun child(child: Command) {
         children.add(child)
     }
 }
 
-fun interface CommandAction {
-    fun CommandContext.execute()
-}
