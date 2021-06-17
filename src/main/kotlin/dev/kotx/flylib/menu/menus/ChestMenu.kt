@@ -5,36 +5,43 @@
 
 package dev.kotx.flylib.menu.menus
 
-import dev.kotx.flylib.FlyLibComponent
-import dev.kotx.flylib.menu.Menu
-import org.bukkit.entity.Player
-import org.bukkit.event.inventory.InventoryClickEvent
+import dev.kotx.flylib.*
+import dev.kotx.flylib.menu.*
+import org.bukkit.entity.*
+import org.bukkit.event.inventory.*
 
 class ChestMenu(
-    player: Player,
-    size: Int,
+    size: Size,
     items: MutableList<MenuItem>
-) : Menu(player, size, items), FlyLibComponent {
+) : Menu(size, items), FlyLibComponent {
+
     override fun display() {
         items.forEach {
             inventory.setItem(it.index, it.stack)
         }
-        player.openInventory(inventory)
     }
 
     override fun onClick(event: InventoryClickEvent) {
         event.isCancelled = true
 
-        items.firstOrNull { it.index == event.slot }?.also { it.onClick(event) }
+        event.whoClicked.closeInventory()
+
+        items.firstOrNull { it.index == event.slot }?.also { it.onClick.handleClick(event) }
     }
 
-    class Builder(player: Player) : Menu.Builder<ChestMenu>(player) {
-        override fun build(): ChestMenu = ChestMenu(player, size, items)
+    class Builder : Menu.Builder<ChestMenu>() {
+        override fun build(): ChestMenu = ChestMenu(size, items)
+
+        fun interface Action {
+            fun Builder.initialize()
+        }
     }
 
     companion object {
-        fun create(player: Player, block: Builder.() -> Unit) {
-            Builder(player).apply(block).build().display()
+        fun create(player: Player, block: Builder.Action) {
+            Builder().apply { block.apply { initialize() } }.build().display(player)
         }
     }
 }
+
+fun menu(block: ChestMenu.Builder.Action) = ChestMenu.Builder().apply { block.apply { initialize() } }.build()
