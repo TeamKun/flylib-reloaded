@@ -23,7 +23,7 @@ abstract class Command(
      * By default, it is set to blank
      * You can also write the description over multiple lines. In that case, it will be automatically formatted by sendHelp().
      */
-    open val description: String by lazy { commandHandler.commandDefault.description }
+    open var description: String = commandHandler.commandDefault.description
 
     /**
      * Command alias. A list of strings that can be used as abbreviations instead of using the official name of the command.
@@ -47,12 +47,12 @@ abstract class Command(
      * Permission to use the command. Permission.OP can be used only by OP, Permission.NOT_OP can be used by everyone except OP, and Permission.EVERYONE can be used by everyone.
      * By default, Permission.OP is specified.
      */
-    open val permission: Permission by lazy { commandHandler.commandDefault.permission }
+    open var permission: Permission = commandHandler.commandDefault.permission
 
     /**
      * Can only the player execute this command? By default it can also be run from the server console. (default: false)
      */
-    open val playerOnly: Boolean by lazy { commandHandler.commandDefault.playerOnly }
+    open var playerOnly: Boolean = commandHandler.commandDefault.playerOnly
 
     /**
      * A subcommand of this command. If the string entered as an argument matches the name or alias of these commands, the matching command will be executed.
@@ -114,5 +114,79 @@ abstract class Command(
     fun child(child: Command) {
         children.add(child)
     }
-}
 
+    class Builder(
+        private val name: String
+    ) {
+        private var description: String? = null
+        private var permission: Permission? = null
+        private var playerOnly: Boolean? = null
+        private var action: CommandContext.Action? = null
+        private val aliases = mutableListOf<String>()
+        private val usages = mutableListOf<Usage>()
+        private val examples = mutableListOf<String>()
+        private val children = mutableListOf<Command>()
+
+        fun description(description: String): Builder {
+            this.description = description
+            return this
+        }
+
+        fun permission(permission: Permission): Builder {
+            this.permission = permission
+            return this
+        }
+
+        fun playerOnly(playerOnly: Boolean): Builder {
+            this.playerOnly = playerOnly
+            return this
+        }
+
+        fun alias(vararg alias: String): Builder {
+            aliases.addAll(alias)
+            return this
+        }
+
+        fun usage(usage: Usage): Builder {
+            this.usages.add(usage)
+            return this
+        }
+
+        fun usage(action: Usage.Builder.Action): Builder {
+            this.usages.add(Usage.Builder().apply { action.apply { initialize() } }.build())
+            return this
+        }
+
+        fun example(vararg example: String): Builder {
+            this.examples.addAll(example)
+            return this
+        }
+
+        fun child(vararg child: Command): Builder {
+            this.children.addAll(child)
+
+            return this
+        }
+
+        fun executes(action: CommandContext.Action): Builder {
+            this.action = action
+            return this
+        }
+
+        fun build() = object : Command(name) {
+            init {
+                this@Builder.description?.also { this.description = it }
+                this@Builder.permission?.also { this.permission = it }
+                this@Builder.playerOnly?.also { this.playerOnly = it }
+                aliases.addAll(this@Builder.aliases)
+                usages.addAll(this@Builder.usages)
+                examples.addAll(this@Builder.examples)
+                children.addAll(this@Builder.children)
+            }
+        }
+
+        fun interface Action {
+            fun Builder.initialize()
+        }
+    }
+}
