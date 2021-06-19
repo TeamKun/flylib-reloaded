@@ -5,20 +5,22 @@
 
 package dev.kotx.flylib.menu.menus
 
-import dev.kotx.flylib.*
-import dev.kotx.flylib.menu.*
-import org.bukkit.entity.*
-import org.bukkit.event.inventory.*
+import dev.kotx.flylib.FlyLibComponent
+import dev.kotx.flylib.menu.Menu
+import org.bukkit.entity.Player
+import org.bukkit.event.inventory.InventoryClickEvent
 
 class ChestMenu(
-    size: Size,
-    items: MutableList<MenuItem>
+        size: Size,
+        items: MutableList<MenuItem>
 ) : Menu(size, items), FlyLibComponent {
 
     override fun display() {
         items.forEach {
             inventory.setItem(it.index, it.stack)
         }
+
+        player?.openInventory(inventory)
     }
 
     override fun onClick(event: InventoryClickEvent) {
