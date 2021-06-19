@@ -13,6 +13,12 @@ import net.kyori.adventure.text.format.*
 import org.bukkit.plugin.java.*
 import java.awt.*
 
+fun Audience.send(text: String) {
+    send {
+        append(text)
+    }
+}
+
 fun Audience.send(block: TextComponentAction) {
     sendMessage(Component.text().run { block.apply { initialize() }; this }.build(), MessageType.CHAT)
 }
