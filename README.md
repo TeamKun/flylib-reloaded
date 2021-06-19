@@ -27,11 +27,11 @@ You can implement tab completion, type checking, help message generation, and su
 class KTestPlugin : JavaPlugin() {
     override fun onEnable() {
         flyLib {
+            listen<PlayerMoveEvent> {
+                it.player.send("You moved from ${it.from} to ${it.to}")
+            }
+            
             command {
-                listen<PlayerMoveEvent> {
-                    it.player.send("You moved from ${it.from} to ${it.to}")
-                }
-                
                 defaultConfiguration {
                     permission(Permission.OP)
                 }
