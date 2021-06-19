@@ -92,13 +92,26 @@ class FlyLib(
          * With this method, you can add commands and make initial settings such as command description and permission.
          *
          * @param action Builder lambda expression for configuring the Command Handler.
+         *
+         * @see CommandHandler
          */
         fun command(action: CommandHandler.Builder.Action): Builder {
-            commandHandler = CommandHandler.Builder().apply {
+            command(CommandHandler.Builder().apply {
                 action.apply {
                     initialize()
                 }
-            }.build()
+            }.build())
+            return this
+        }
+
+        /**
+         * Configure the command handler.
+         * With this method, you can add commands and make initial settings such as command description and permission.
+         *
+         * @see CommandHandler
+         */
+        fun command(commandHandler: CommandHandler): Builder {
+            this.commandHandler = commandHandler
             return this
         }
 
@@ -135,6 +148,7 @@ class FlyLib(
 
         /**
          * An interface for handling the Builders that make up Fly Lib as lambda expressions from both Java and Kotlin.
+         * @see Builder
          */
         fun interface BuilderAction {
             fun Builder.initialize()
@@ -142,6 +156,7 @@ class FlyLib(
 
         /**
          * An interface for listening to events as a lambda expression from both Java and Kotlin.
+         * @see Builder.listen
          */
         fun interface ListenerAction<T : Event> {
             fun handle(event: T)

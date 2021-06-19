@@ -8,6 +8,7 @@ package kotx.minecraft.test;
 import dev.kotx.flylib.FlyLib;
 import dev.kotx.flylib.command.Command;
 import dev.kotx.flylib.command.CommandContext;
+import dev.kotx.flylib.command.CommandHandler;
 import dev.kotx.flylib.command.internal.Permission;
 import dev.kotx.flylib.menu.menus.ChestMenu;
 import dev.kotx.flylib.utils.ExtensionsKt;
