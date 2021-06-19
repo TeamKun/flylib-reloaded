@@ -88,11 +88,10 @@ class FlyLib(
         private val handlers = mutableMapOf<KClass<out Event>, MutableList<ListenerAction<in Event>>>()
 
         /**
-         * Configure the command module.
-         * This is a method that corresponds to Kotlin's apply builder pattern.
+         * Configure the command handler.
+         * With this method, you can add commands and make initial settings such as command description and permission.
          *
-         * @param action CommandHandler.Builder's Configurations
-         * @return FlyLib.Builder
+         * @param action Builder lambda expression for configuring the Command Handler.
          */
         fun command(action: CommandHandler.Builder.Action): Builder {
             commandHandler = CommandHandler.Builder().apply {
@@ -103,10 +102,21 @@ class FlyLib(
             return this
         }
 
+        /**
+         * Listen the event specified in the generics.
+         *
+         * @param action Lambda expression that handles the event specified in the generics
+         */
         inline fun <reified T : Event> listen(action: ListenerAction<T>) {
             listen(T::class.java, action)
         }
 
+        /**
+         * Listen the event specified in the clazz.
+         *
+         * @param clazz The event class to listen to. (eg, PlayerMoveEvent.class)
+         * @param action Lambda expression that handles the event specified in the clazz.
+         */
         fun <T : Event> listen(clazz: Class<T>, action: ListenerAction<T>) {
             handlers.putIfAbsent(clazz.kotlin, mutableListOf())
 
@@ -123,25 +133,49 @@ class FlyLib(
             handlers
         )
 
+        /**
+         * An interface for handling the Builders that make up Fly Lib as lambda expressions from both Java and Kotlin.
+         */
         fun interface BuilderAction {
             fun Builder.initialize()
         }
 
+        /**
+         * An interface for listening to events as a lambda expression from both Java and Kotlin.
+         */
         fun interface ListenerAction<T : Event> {
             fun handle(event: T)
         }
     }
 
     companion object {
+        /**
+         * Set FlyLib for the specified plug-in.
+         * The following permissions are automatically added by FlyLib, and command registration, event listening, etc. are performed when this method is executed.
+         *
+         * flylib.op - The authority of the command that the OP can execute.
+         * flylib.notop - Permission for commands that can be executed by anyone other than the OP.
+         * flylib.everyone - Permission for commands that everyone can execute.
+         *
+         * @param plugin Plugin that wants to inject FlyLib.
+         * @param action FlyLib.Builder lambda expression for configuring FlyLib.
+         *
+         * @return FlyLib Instance
+         */
         @JvmStatic
         fun inject(plugin: JavaPlugin, action: Builder.BuilderAction): FlyLib = Builder(plugin).apply { action.apply { initialize() } }.build()
     }
 }
 
 /**
- * An extended formula for builders to build FlyLib.
+ * Set FlyLib for the specified plug-in.
+ * The following permissions are automatically added by FlyLib, and command registration, event listening, etc. are performed when this method is executed.
  *
- * @param init FlyLib.Builder's Configurations
+ * flylib.op - The authority of the command that the OP can execute.
+ * flylib.notop - Permission for commands that can be executed by anyone other than the OP.
+ * flylib.everyone - Permission for commands that everyone can execute.
+ *
+ * @param init FlyLib.Builder lambda expression for configuring FlyLib.
  * @return FlyLib Instance
  */
 fun JavaPlugin.flyLib(init: FlyLib.Builder.() -> Unit = {}) = FlyLib.inject(this, init)

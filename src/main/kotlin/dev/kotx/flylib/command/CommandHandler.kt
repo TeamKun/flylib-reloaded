@@ -29,7 +29,7 @@ class CommandHandler(
     private val plugin: JavaPlugin by inject()
     private val logger: Logger by inject()
 
-    fun initialize() {
+    internal fun initialize() {
         plugin.server.pluginManager.addPermission(
             org.bukkit.permissions.Permission(
                 "flylib.op",
@@ -219,6 +219,8 @@ class CommandHandler(
 
         /**
          * Changes the default command settings. See CommandDefault below for details.
+         * @param action The lambda expression that makes up the Command Default.
+         *
          * @see CommandDefault
          */
         fun defaultConfiguration(action: CommandDefault.Action): Builder {
@@ -228,6 +230,7 @@ class CommandHandler(
 
         /**
          * Registers the specified command. It is not necessary to register commands or permissions in plugin.yml.
+         * @param command The command you want to register.
          */
         fun register(command: Command): Builder {
             fun List<Command>.setParent(parent: Command): Unit = forEach {
@@ -242,6 +245,8 @@ class CommandHandler(
 
         /**
          * Registers the specified command. It is not necessary to register commands or permissions in plugin.yml.
+         * @param name The name of the command you want to register.
+         * @param action Builder lambda expressions that make up the Command.
          */
         fun register(name: String, action: Command.Builder.Action): Builder {
             register(Command.Builder(name).apply { action.apply { initialize() } }.build())
