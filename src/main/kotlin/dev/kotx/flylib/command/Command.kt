@@ -183,6 +183,12 @@ abstract class Command(
                 examples.addAll(this@Builder.examples)
                 children.addAll(this@Builder.children)
             }
+
+            override fun CommandContext.execute() {
+                this@Builder.action?.apply {
+                    execute()
+                }
+            }
         }
 
         fun interface Action {
