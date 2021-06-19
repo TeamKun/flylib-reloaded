@@ -28,6 +28,10 @@ class KTestPlugin : JavaPlugin() {
     override fun onEnable() {
         flyLib {
             command {
+                listen<PlayerMoveEvent> {
+                    it.player.send("You moved from ${it.from} to ${it.to}")
+                }
+                
                 defaultConfiguration {
                     permission(Permission.OP)
                 }
@@ -106,22 +110,28 @@ object MenuCommand : Command("menu") {
 class TestPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
-        FlyLib.inject(this, flyLib -> flyLib.command(command -> {
-            command.defaultConfiguration(defaultConfiguration -> {
-                defaultConfiguration.permission(Permission.OP);
+        FlyLib.inject(this, flyLib -> {
+            flyLib.listen(PlayerMoveEvent.class, event -> {
+                event.getPlayer().sendMessage("You moved from " + event.getFrom() + " to " + event.getTo());
             });
 
-            command.register(new PrintNumberCommand());
-            command.register(new TabCompleteCommand());
-            command.register(new ParentCommand());
-            command.register(new MenuCommand());
-            command.register("direct", builder -> {
-                builder.description("Directly registered command");
-                builder.executes(context -> {
-                    context.send("Hello direct command!");
+            flyLib.command(command -> {
+                command.defaultConfiguration(defaultConfiguration -> {
+                    defaultConfiguration.permission(Permission.OP);
+                });
+
+                command.register(new PrintNumberCommand());
+                command.register(new TabCompleteCommand());
+                command.register(new ParentCommand());
+                command.register(new MenuCommand());
+                command.register("direct", builder -> {
+                    builder.description("Directly registered command");
+                    builder.executes(context -> {
+                        context.send("Hello direct command!");
+                    });
                 });
             });
-        }));
+        });
     }
 }
 
