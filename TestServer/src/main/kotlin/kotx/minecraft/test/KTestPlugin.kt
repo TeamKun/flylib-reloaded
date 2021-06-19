@@ -14,6 +14,7 @@ import net.kyori.adventure.text.format.*
 import org.bukkit.*
 import org.bukkit.enchantments.Enchantment.*
 import org.bukkit.event.player.*
+import org.bukkit.inventory.*
 import org.bukkit.plugin.java.*
 
 class KTestPlugin : JavaPlugin() {
@@ -82,7 +83,8 @@ object KMenuCommand : Command("menu") {
             item(5, 1, item(Material.DIAMOND) {
                 displayName("Super Diamond")
                 lore("Very Expensive!")
-                enchant(LUCK, true)
+                enchant(LUCK)
+                flag(ItemFlag.HIDE_ENCHANTS)
             }) {
                 send {
                     append("You clicked me!?", TextDecoration.BOLD)

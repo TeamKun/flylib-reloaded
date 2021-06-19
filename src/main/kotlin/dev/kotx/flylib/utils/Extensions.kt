@@ -12,6 +12,7 @@ import net.kyori.adventure.text.*
 import net.minecraft.server.v1_16_R3.*
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.inventory.*
 import org.bukkit.inventory.ItemStack
 
 operator fun List<Command>.get(query: String) =
@@ -71,6 +72,7 @@ class ItemBuilder(private val material: Material) {
     private var displayName: Component? = null
     private val lores = mutableListOf<Component>()
     private val enchants = mutableListOf<Enchantment>()
+    private val flags = mutableListOf<ItemFlag>()
     private var amount = 1
 
     fun displayName(name: String): ItemBuilder {
@@ -83,8 +85,8 @@ class ItemBuilder(private val material: Material) {
         return this
     }
 
-    fun lore(lore: String): ItemBuilder {
-        this.lores.add(lore.asTextComponent())
+    fun lore(vararg lore: String): ItemBuilder {
+        lores.addAll(lore.map { it.asTextComponent() })
         return this
     }
 
@@ -94,17 +96,9 @@ class ItemBuilder(private val material: Material) {
     }
 
     @JvmOverloads
-    fun enchant(enchantment: org.bukkit.enchantments.Enchantment, level: Int = 0, hide: Boolean = false): ItemBuilder {
+    fun enchant(enchantment: org.bukkit.enchantments.Enchantment, level: Int = 0): ItemBuilder {
         this.enchants.add(
-            Enchantment(enchantment, level, hide)
-        )
-
-        return this
-    }
-
-    fun enchant(enchantment: org.bukkit.enchantments.Enchantment, hide: Boolean = false): ItemBuilder {
-        this.enchants.add(
-            Enchantment(enchantment, 1, hide)
+            Enchantment(enchantment, level)
         )
 
         return this
@@ -115,12 +109,22 @@ class ItemBuilder(private val material: Material) {
         return this
     }
 
+    fun flag(vararg flags: ItemFlag): ItemBuilder {
+        this.flags.addAll(flags)
+        return this
+    }
+
     fun build() = ItemStack(material, amount).apply {
-        itemMeta.apply {
+        itemMeta = itemMeta.apply {
             this.displayName(this@ItemBuilder.displayName)
             this@ItemBuilder.enchants.forEach {
-                addEnchant(it.enchantment, it.level, it.hide)
+                addEnchant(it.enchantment, it.level, true)
             }
+
+            flags.forEach {
+                addItemFlags(it)
+            }
+
             this.lore(lores)
         }
     }
@@ -128,7 +132,6 @@ class ItemBuilder(private val material: Material) {
     private class Enchantment(
         val enchantment: org.bukkit.enchantments.Enchantment,
         val level: Int,
-        val hide: Boolean
     )
 
     fun interface Action {
