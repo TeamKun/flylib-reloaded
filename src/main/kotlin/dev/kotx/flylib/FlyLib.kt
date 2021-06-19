@@ -6,13 +6,18 @@
 package dev.kotx.flylib
 
 import dev.kotx.flylib.command.*
+import org.bukkit.event.*
+import org.bukkit.plugin.*
 import org.bukkit.plugin.java.*
 import org.koin.dsl.*
 import org.slf4j.*
+import kotlin.reflect.*
+import kotlin.reflect.full.*
 
 class FlyLib(
     private val plugin: JavaPlugin,
     private val commandHandler: CommandHandler,
+    handlers: Map<KClass<out Event>, List<Builder.ListenerAction<in Event>>>,
 ) {
     private val logger = LoggerFactory.getLogger("::FlyLib Reloaded::")!!
 
@@ -28,6 +33,22 @@ class FlyLib(
                 })
             }.also {
                 FlyLibContext.startKoin(FlyLibContext, it)
+            }
+
+            handlers.forEach { event, actions ->
+                (event::functions.get().find { it.name == "getHandlerList" }?.call() as HandlerList).register(
+                    RegisteredListener(
+                        object : Listener {},
+                        { _, event ->
+                            actions.forEach {
+                                it.handle(event)
+                            }
+                        },
+                        EventPriority.NORMAL,
+                        plugin,
+                        false
+                    )
+                )
             }
 
             commandHandler.initialize()
@@ -64,6 +85,7 @@ class FlyLib(
         private val plugin: JavaPlugin
     ) {
         private var commandHandler: CommandHandler = CommandHandler.Builder().build()
+        private val handlers = mutableMapOf<KClass<out Event>, MutableList<ListenerAction<in Event>>>()
 
         /**
          * Configure the command module.
@@ -81,6 +103,16 @@ class FlyLib(
             return this
         }
 
+        inline fun <reified T : Event> listen(action: ListenerAction<T>) {
+            listen(T::class.java, action)
+        }
+
+        fun <T : Event> listen(clazz: Class<T>, action: ListenerAction<T>) {
+            handlers.putIfAbsent(clazz.kotlin, mutableListOf())
+
+            handlers[clazz.kotlin]!!.add(action as ListenerAction<in Event>)
+        }
+
         /**
          * Build and initialize FlyLib.
          * It is recommended to call it with the onEnable clause of the JavaPlugin, since commands are registered at this time.
@@ -88,16 +120,21 @@ class FlyLib(
         fun build(): FlyLib = FlyLib(
             plugin,
             commandHandler,
+            handlers
         )
 
-        fun interface Action {
+        fun interface BuilderAction {
             fun Builder.initialize()
+        }
+
+        fun interface ListenerAction<T : Event> {
+            fun handle(event: T)
         }
     }
 
     companion object {
         @JvmStatic
-        fun inject(plugin: JavaPlugin, action: Builder.Action): FlyLib = Builder(plugin).apply { action.apply { initialize() } }.build()
+        fun inject(plugin: JavaPlugin, action: Builder.BuilderAction): FlyLib = Builder(plugin).apply { action.apply { initialize() } }.build()
     }
 }
 
