@@ -4,6 +4,7 @@
  */
 
 plugins {
+    java
     kotlin("jvm")
     id("com.github.johnrengelman.shadow") version "6.0.0"
 }
@@ -20,7 +21,6 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
     implementation(parent!!)
 }
 
