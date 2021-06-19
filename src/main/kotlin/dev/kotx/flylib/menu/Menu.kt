@@ -5,21 +5,22 @@
 
 package dev.kotx.flylib.menu
 
-import dev.kotx.flylib.*
-import dev.kotx.flylib.menu.Menu.*
-import org.bukkit.*
-import org.bukkit.entity.*
-import org.bukkit.event.*
-import org.bukkit.event.inventory.*
-import org.bukkit.inventory.*
-import org.bukkit.plugin.java.*
-import org.koin.core.component.*
+import dev.kotx.flylib.FlyLibComponent
+import dev.kotx.flylib.menu.Menu.Action
+import org.bukkit.Bukkit
+import org.bukkit.entity.Player
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.inventory.ItemStack
+import org.bukkit.plugin.java.JavaPlugin
+import org.koin.core.component.inject
 
 abstract class Menu(
     size: Size,
     val items: MutableList<MenuItem>
 ) : Listener, FlyLibComponent {
-    private var player: Player? = null
+    internal var player: Player? = null
 
     private val plugin by inject<JavaPlugin>()
     protected val inventory = Bukkit.createInventory(null, size.size)
