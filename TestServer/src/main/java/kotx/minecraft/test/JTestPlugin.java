@@ -16,28 +16,35 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-class JTestPlugin extends JavaPlugin {
+public class JTestPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
-        FlyLib.inject(this, flyLib -> flyLib.command(command -> {
-            command.defaultConfiguration(defaultConfiguration -> {
-                defaultConfiguration.permission(Permission.OP);
+        FlyLib.inject(this, flyLib -> {
+            flyLib.listen(PlayerMoveEvent.class, event -> {
+                event.getPlayer().sendMessage("You moved from " + event.getFrom() + " to " + event.getTo());
             });
 
-            command.register(new JPrintNumberCommand());
-            command.register(new JTabCompleteCommand());
-            command.register(new JParentCommand());
-            command.register(new JMenuCommand());
-            command.register("direct", builder -> {
-                builder.description("Directly registered command");
-                builder.executes(context -> {
-                    context.send("Hello direct command!");
+            flyLib.command(command -> {
+                command.defaultConfiguration(defaultConfiguration -> {
+                    defaultConfiguration.permission(Permission.OP);
+                });
+
+                command.register(new JPrintNumberCommand());
+                command.register(new JTabCompleteCommand());
+                command.register(new JParentCommand());
+                command.register(new JMenuCommand());
+                command.register("direct", builder -> {
+                    builder.description("Directly registered command");
+                    builder.executes(context -> {
+                        context.send("Hello direct command!");
+                    });
                 });
             });
-        }));
+        });
     }
 }
 
