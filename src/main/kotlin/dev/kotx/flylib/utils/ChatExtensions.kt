@@ -15,6 +15,8 @@ import net.kyori.adventure.text.format.*
 import org.bukkit.plugin.java.*
 import java.awt.*
 
+fun Component.content() = (this as TextComponent).content()
+
 fun Audience.send(text: String) {
     send {
         append(text)
