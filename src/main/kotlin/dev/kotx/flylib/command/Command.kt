@@ -95,7 +95,7 @@ abstract class Command(
      * A method that sends command usage, aliases, examples, etc. to the user in the current context.
      * It is supposed to be executed within execute.
      */
-    private fun CommandContext.sendHelp() {
+    protected fun CommandContext.sendHelp() {
         CommandDefault.getHelp().apply { execute() }
     }
 
@@ -187,7 +187,7 @@ abstract class Command(
             override fun CommandContext.execute() {
                 this@Builder.action?.apply {
                     execute()
-                }
+                } ?: sendHelp()
             }
         }
 
