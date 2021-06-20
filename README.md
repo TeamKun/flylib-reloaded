@@ -24,13 +24,13 @@ You can implement tab completion, type checking, help message generation, and su
 <div>
 
 ```kotlin
-class KTestPlugin : JavaPlugin() {
+class TestPlugin : JavaPlugin() {
     override fun onEnable() {
         flyLib {
             listen<PlayerMoveEvent> {
                 it.player.send("You moved from ${it.from} to ${it.to}")
             }
-            
+
             command {
                 defaultConfiguration {
                     permission(Permission.OP)
@@ -52,29 +52,31 @@ class KTestPlugin : JavaPlugin() {
 }
 
 object PrintNumberCommand : Command("printnumber") {
-    override val usages: MutableList<Usage> = mutableListOf(
-        Usage(
-            arrayOf(Argument.Integer("number", min = 0, max = 10))
-        ) {
-            send("You sent ${args.first()}!")
+    init {
+        usage {
+            intArgument("number", 0, 10)
+
+            executes {
+                send("You sent ${args.first()}!")
+            }
         }
-    )
+    }
 }
 
 object TabCompleteCommand : Command("tabcomplete") {
-    override val usages: MutableList<Usage> = mutableListOf(
-        Usage(
-            arrayOf(
-                Argument.Selection("mode", "active", "inactive"),
-                Argument.Player("target"),
-                Argument.Position("position")
-            )
-        )
-    )
+    init {
+        usage {
+            selectionArgument("mode", "active", "inactive")
+            playerArgument("target")
+            positionArgument("position")
+        }
+    }
 }
 
 object ParentCommand : Command("parent") {
-    override val children: MutableList<Command> = mutableListOf(ChildrenCommand)
+    init {
+        child(ChildrenCommand)
+    }
 
     object ChildrenCommand : Command("children") {
         override fun CommandContext.execute() {
@@ -89,7 +91,8 @@ object MenuCommand : Command("menu") {
             item(5, 1, item(Material.DIAMOND) {
                 displayName("Super Diamond")
                 lore("Very Expensive!")
-                enchant(LUCK, true)
+                enchant(LUCK)
+                flag(ItemFlag.HIDE_ENCHANTS)
             }) {
                 send {
                     append("You clicked me!?", TextDecoration.BOLD)
@@ -107,29 +110,22 @@ object MenuCommand : Command("menu") {
 <div>
 
 ```java
-class TestPlugin extends JavaPlugin {
+public class TestPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         FlyLib.inject(this, flyLib -> {
-            flyLib.listen(PlayerMoveEvent.class, event -> {
-                event.getPlayer().sendMessage("You moved from " + event.getFrom() + " to " + event.getTo());
-            });
+            flyLib.listen(PlayerMoveEvent.class, event -> event.getPlayer().sendMessage("You moved from " + event.getFrom() + " to " + event.getTo()));
 
             flyLib.command(command -> {
-                command.defaultConfiguration(defaultConfiguration -> {
-                    defaultConfiguration.permission(Permission.OP);
-                });
+                command.defaultConfiguration(defaultConfiguration -> defaultConfiguration.permission(Permission.OP));
 
                 command.register(new PrintNumberCommand());
                 command.register(new TabCompleteCommand());
                 command.register(new ParentCommand());
                 command.register(new MenuCommand());
-                command.register("direct", builder -> {
-                    builder.description("Directly registered command");
-                    builder.executes(context -> {
-                        context.send("Hello direct command!");
-                    });
-                });
+                command.register("direct", builder -> builder
+                        .description("Directly registered command")
+                        .executes(context -> context.send("Hello direct command!")));
             });
         });
     }
@@ -138,26 +134,21 @@ class TestPlugin extends JavaPlugin {
 class PrintNumberCommand extends Command {
     public PrintNumberCommand() {
         super("printnumber");
-        usage(usage -> {
-            usage.intArgument("number", 0, 10);
-            usage.executes(context -> {
-                context.send("You sent " + context.getArgs()[0] + "!");
-                context.send(builder -> {
-                    builder.append(Component.text(""));
-                });
-            });
-        });
+        usage(usage -> usage
+                .intArgument("number", 0, 10)
+                .executes(context -> context.send("You sent " + context.getArgs()[0] + "!")));
     }
 }
 
 class TabCompleteCommand extends Command {
     public TabCompleteCommand() {
         super("tabcomplete");
-        usage(usage -> {
-            usage.selectionArgument("mode", "active", "inactive");
-            usage.playerArgument("target");
-            usage.positionArgument("position");
-        });
+        usage(usage -> usage
+                .selectionArgument("mode", "active", "inactive")
+                .playerArgument("target")
+                .positionArgument("position"));
+
+
     }
 }
 
@@ -168,7 +159,7 @@ class ParentCommand extends Command {
     }
 
     static class ChildrenCommand extends Command {
-        public ChildrenCommand() {
+        public JChildrenCommand() {
             super("children");
         }
     }
@@ -181,17 +172,14 @@ class MenuCommand extends Command {
 
     @Override
     public void execute(@NotNull CommandContext context) {
-        ChestMenu.display(context.getPlayer(), builder -> {
-            builder.item(5, 1, ExtensionsKt.item(Material.DIAMOND, itemBuilder -> {
-                itemBuilder.displayName("Super Diamond");
-                itemBuilder.lore("Very Expensive!");
-                itemBuilder.enchant(Enchantment.LUCK, true);
-            }), event -> {
-                context.send(componentBuilder -> {
-                    TextExtensionsKt.append(componentBuilder, "You clicked me!?", TextDecoration.BOLD);
-                });
-            });
-        });
+        ChestMenu.display(context.getPlayer(), menu -> menu
+                .size(Menu.Size.LARGE_CHEST)
+                .item(5, 1, Utils.item(Material.DIAMOND, item -> item
+                                .displayName("Super Diamond")
+                                .lore("Very Expensive")
+                                .enchant(Enchantment.LUCK)
+                                .flag(ItemFlag.HIDE_ENCHANTS)),
+                        event -> context.send(component -> ChatUtils.append(component, "You clicked me!?", TextDecoration.BOLD))));
     }
 }
 ```

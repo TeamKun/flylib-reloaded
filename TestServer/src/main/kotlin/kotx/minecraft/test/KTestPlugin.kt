@@ -32,6 +32,7 @@ class KTestPlugin : JavaPlugin() {
                 register(KPrintNumberCommand)
                 register(KTabCompleteCommand)
                 register(KParentCommand)
+                register(KMenuCommand)
                 register("direct") {
                     description("Directly registered command")
                     executes {
