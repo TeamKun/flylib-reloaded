@@ -103,16 +103,16 @@ abstract class Command(
         usages.add(Usage.Builder().apply { action.apply { initialize() } }.build())
     }
 
-    fun example(example: String) {
-        examples.add(example)
+    fun example(vararg example: String) {
+        examples.addAll(example)
     }
 
-    fun alias(alias: String) {
-        aliases.add(alias)
+    fun alias(vararg alias: String) {
+        aliases.addAll(alias)
     }
 
-    fun child(child: Command) {
-        children.add(child)
+    fun child(vararg child: Command) {
+        children.addAll(child)
     }
 
     class Builder(
