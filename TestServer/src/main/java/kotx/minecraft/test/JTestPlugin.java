@@ -11,8 +11,8 @@ import dev.kotx.flylib.command.CommandContext;
 import dev.kotx.flylib.command.internal.Permission;
 import dev.kotx.flylib.menu.Menu;
 import dev.kotx.flylib.menu.menus.ChestMenu;
-import dev.kotx.flylib.utils.ExtensionsKt;
-import dev.kotx.flylib.utils.TextExtensionsKt;
+import dev.kotx.flylib.utils.ChatUtils;
+import dev.kotx.flylib.utils.Utils;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -58,6 +58,8 @@ class JTabCompleteCommand extends Command {
                 .selectionArgument("mode", "active", "inactive")
                 .playerArgument("target")
                 .positionArgument("position"));
+
+
     }
 }
 
@@ -83,11 +85,11 @@ class JMenuCommand extends Command {
     public void execute(@NotNull CommandContext context) {
         ChestMenu.display(context.getPlayer(), menu -> menu
                 .size(Menu.Size.LARGE_CHEST)
-                .item(5, 1, ExtensionsKt.item(Material.DIAMOND, item -> item
+                .item(5, 1, Utils.item(Material.DIAMOND, item -> item
                                 .displayName("Super Diamond")
                                 .lore("Very Expensive")
                                 .enchant(Enchantment.LUCK)
                                 .flag(ItemFlag.HIDE_ENCHANTS)),
-                        event -> context.send(component -> TextExtensionsKt.append(component, "You clicked me!?", TextDecoration.BOLD))));
+                        event -> context.send(component -> ChatUtils.append(component, "You clicked me!?", TextDecoration.BOLD))));
     }
 }

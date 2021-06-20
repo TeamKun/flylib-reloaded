@@ -3,6 +3,9 @@
  * Twitter: https://twitter.com/kotx__
  */
 
+@file:JvmName("Utils")
+@file:JvmMultifileClass
+
 package dev.kotx.flylib.utils
 
 import com.mojang.brigadier.context.CommandContext
@@ -11,7 +14,6 @@ import dev.kotx.flylib.command.internal.*
 import net.kyori.adventure.text.*
 import net.minecraft.server.v1_16_R3.*
 import org.bukkit.Material
-import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.*
 import org.bukkit.inventory.ItemStack
 

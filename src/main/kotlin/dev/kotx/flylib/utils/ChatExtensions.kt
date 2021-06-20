@@ -2,6 +2,8 @@
  * Copyright (c) 2021 kotx__.
  * Twitter: https://twitter.com/kotx__
  */
+@file:JvmName("ChatUtils")
+@file:JvmMultifileClass
 
 package dev.kotx.flylib.utils
 
