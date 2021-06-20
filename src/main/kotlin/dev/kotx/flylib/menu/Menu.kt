@@ -5,16 +5,15 @@
 
 package dev.kotx.flylib.menu
 
-import dev.kotx.flylib.FlyLibComponent
-import dev.kotx.flylib.menu.Menu.Action
-import org.bukkit.Bukkit
-import org.bukkit.entity.Player
-import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
-import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.inventory.ItemStack
-import org.bukkit.plugin.java.JavaPlugin
-import org.koin.core.component.inject
+import dev.kotx.flylib.*
+import dev.kotx.flylib.menu.Menu.*
+import org.bukkit.*
+import org.bukkit.entity.*
+import org.bukkit.event.*
+import org.bukkit.event.inventory.*
+import org.bukkit.inventory.*
+import org.bukkit.plugin.java.*
+import org.koin.core.component.*
 
 abstract class Menu(
     size: Size,
@@ -49,19 +48,44 @@ abstract class Menu(
 
     abstract class Builder<T : Menu> {
         protected val items = mutableListOf<MenuItem>()
-        var size: Size = Size.CHEST
+        protected var size: Size = Size.CHEST
 
-        fun item(index: Int, itemStack: ItemStack, onClick: Action = Action { }) {
+        fun size(size: Size): Builder<T> {
+            this.size = size
+            return this
+        }
+
+        @JvmOverloads
+        fun item(index: Int, itemStack: ItemStack, onClick: Action = Action { }): Builder<T> {
             if (index >= size.size)
                 throw IllegalArgumentException("index provided $index exceeds size: ${size.size}")
 
             items.removeIf { it.index == index }
             items.add(MenuItem(index, itemStack, onClick))
+
+            return this
         }
 
-        fun item(x: Int, y: Int, itemStack: ItemStack, onClick: Action = Action { }) {
+        @JvmOverloads
+        fun item(x: Int, y: Int, itemStack: ItemStack, onClick: Action = Action { }): Builder<T> {
             val index = (y - 1) * 9 + (x - 1)
             item(index, itemStack, onClick)
+
+            return this
+        }
+
+        @JvmOverloads
+        fun item(index: Int, material: Material, onClick: Action = Action { }): Builder<T> {
+            item(index, ItemStack(material), onClick)
+
+            return this
+        }
+
+        @JvmOverloads
+        fun item(x: Int, y: Int, material: Material, onClick: Action = Action { }): Builder<T> {
+            item(x, y, ItemStack(material), onClick)
+
+            return this
         }
 
         abstract fun build(): T

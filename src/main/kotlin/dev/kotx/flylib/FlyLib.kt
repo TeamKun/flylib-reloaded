@@ -17,7 +17,7 @@ import kotlin.reflect.full.*
 class FlyLib(
     private val plugin: JavaPlugin,
     private val commandHandler: CommandHandler,
-    handlers: Map<KClass<out Event>, List<Builder.ListenerAction<in Event>>>,
+    handlers: Map<KClass<out Event>, List<Pair<Builder.ListenerAction<in Event>, EventPriority>>>,
 ) {
     private val logger = LoggerFactory.getLogger("::FlyLib Reloaded::")!!
 
@@ -36,19 +36,18 @@ class FlyLib(
             }
 
             handlers.forEach { event, actions ->
-                (event::functions.get().find { it.name == "getHandlerList" }?.call() as HandlerList).register(
-                    RegisteredListener(
-                        object : Listener {},
-                        { _, event ->
-                            actions.forEach {
-                                it.handle(event)
-                            }
-                        },
-                        EventPriority.NORMAL,
-                        plugin,
-                        false
+                val handlerList = event::functions.get().find { it.name == "getHandlerList" }?.call() as HandlerList
+                actions.forEach {
+                    handlerList.register(
+                        RegisteredListener(
+                            object : Listener {},
+                            { _, event -> it.first.handle(event) },
+                            it.second,
+                            plugin,
+                            false
+                        )
                     )
-                )
+                }
             }
 
             commandHandler.initialize()
@@ -85,7 +84,7 @@ class FlyLib(
         private val plugin: JavaPlugin
     ) {
         private var commandHandler: CommandHandler = CommandHandler.Builder().build()
-        private val handlers = mutableMapOf<KClass<out Event>, MutableList<ListenerAction<in Event>>>()
+        private val handlers = mutableMapOf<KClass<out Event>, MutableList<Pair<ListenerAction<in Event>, EventPriority>>>()
 
         /**
          * Configure the command handler.
@@ -120,8 +119,8 @@ class FlyLib(
          *
          * @param action Lambda expression that handles the event specified in the generics
          */
-        inline fun <reified T : Event> listen(action: ListenerAction<T>) {
-            listen(T::class.java, action)
+        inline fun <reified T : Event> listen(priority: EventPriority = EventPriority.NORMAL, action: ListenerAction<T>) {
+            listen(T::class.java, action, priority)
         }
 
         /**
@@ -130,10 +129,11 @@ class FlyLib(
          * @param clazz The event class to listen to. (eg, PlayerMoveEvent.class)
          * @param action Lambda expression that handles the event specified in the clazz.
          */
-        fun <T : Event> listen(clazz: Class<T>, action: ListenerAction<T>) {
+        @JvmOverloads
+        fun <T : Event> listen(clazz: Class<T>, action: ListenerAction<T>, priority: EventPriority = EventPriority.NORMAL) {
             handlers.putIfAbsent(clazz.kotlin, mutableListOf())
 
-            handlers[clazz.kotlin]!!.add(action as ListenerAction<in Event>)
+            handlers[clazz.kotlin]!!.add(action as ListenerAction<in Event> to priority)
         }
 
         /**
