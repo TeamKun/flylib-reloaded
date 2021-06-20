@@ -12,11 +12,11 @@ jobs:
       - name: Grant read permission for gradle configuration file
         run: chmod +r ./build.gradle.kts
 
-      - name: Add permission to auto_release scripts.
-        run: chmod +x ./auto_release.sh
+      - name: Add permission to release scripts.
+        run: chmod +x ./release.sh
 
       - name: Check if it can be released
-        run: ./auto_release.sh
+        run: ./release.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
