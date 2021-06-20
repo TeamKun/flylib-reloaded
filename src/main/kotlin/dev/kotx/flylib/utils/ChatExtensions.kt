@@ -17,7 +17,7 @@ import java.awt.*
 
 fun Component.content() = (this as TextComponent).content()
 
-fun textComponent() = Component.text()
+fun text(block: ComponentBuilder<*, *>.() -> Unit) = Component.text().apply(block).build()
 
 fun Audience.send(text: String) {
     send {
