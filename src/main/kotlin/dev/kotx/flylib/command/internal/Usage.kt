@@ -54,6 +54,11 @@ class Usage @JvmOverloads constructor(
             return this
         }
 
+        fun literalArgument(name: String): Builder {
+            args.add(Argument.Literal(name))
+            return this
+        }
+
         @JvmOverloads
         fun textArgument(name: String, type: Argument.Text.StringType = Argument.Text.StringType.WORD, tabComplete: Argument.Action? = null): Builder {
             args.add(Argument.Text(name, type, tabComplete))
