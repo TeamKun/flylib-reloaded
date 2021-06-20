@@ -17,6 +17,8 @@ import java.awt.*
 
 fun Component.content() = (this as TextComponent).content()
 
+fun textComponent() = Component.text()
+
 fun Audience.send(text: String) {
     send {
         append(text)
