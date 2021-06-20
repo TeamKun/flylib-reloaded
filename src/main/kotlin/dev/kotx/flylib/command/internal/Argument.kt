@@ -18,6 +18,10 @@ sealed class Argument<T>(
     val parser: (Context, String) -> T,
     val tabComplete: Action? = null,
 ) {
+    class Literal(
+        name: String,
+    ): Argument<String>(name,null, { _, s -> s }, null)
+
     class Anchor @JvmOverloads constructor(
         name: String,
         tabComplete: Action? = null,
@@ -194,7 +198,9 @@ sealed class Argument<T>(
     ) : Argument<String>(name, StringArgumentType.string(), { ctx: Context, key: String ->
         StringArgumentType.getString(ctx, key)
     }, tabComplete = {
-        selections.map { Suggestion(it) }
+        selections.forEach {
+            suggest(it)
+        }
     })
 
     class Integer @JvmOverloads constructor(
