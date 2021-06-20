@@ -13,16 +13,15 @@ import dev.kotx.flylib.utils.*
 import net.kyori.adventure.text.format.*
 import org.bukkit.*
 import org.bukkit.enchantments.Enchantment.*
-import org.bukkit.event.player.*
 import org.bukkit.inventory.*
 import org.bukkit.plugin.java.*
 
 class KTestPlugin : JavaPlugin() {
     override fun onEnable() {
         flyLib {
-            listen<PlayerMoveEvent> {
-                it.player.send("You moved from ${it.from} to ${it.to}")
-            }
+//            listen<PlayerMoveEvent> {
+//                it.player.send("You moved from ${it.from} to ${it.to}")
+//            }
 
             command {
                 defaultConfiguration {
