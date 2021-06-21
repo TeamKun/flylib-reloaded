@@ -80,6 +80,48 @@ class FlyLib(
         }
     }
 
+    fun config() = plugin.config
+
+    fun intConfig(key: String): Int {
+        plugin.reloadConfig()
+        return plugin.config.getInt(key)
+    }
+
+    fun longConfig(key: String): Long {
+        plugin.reloadConfig()
+        return plugin.config.getLong(key)
+    }
+
+    fun doubleConfig(key: String): Double {
+        plugin.reloadConfig()
+        return plugin.config.getDouble(key)
+    }
+
+    fun intListConfig(key: String): List<Int> {
+        plugin.reloadConfig()
+        return plugin.config.getIntegerList(key)
+    }
+
+    fun longListConfig(key: String): List<Long> {
+        plugin.reloadConfig()
+        return plugin.config.getLongList(key)
+    }
+
+    fun doubleListConfig(key: String): List<Double> {
+        plugin.reloadConfig()
+        return plugin.config.getDoubleList(key)
+    }
+
+    fun stringConfig(key: String): String? {
+        plugin.reloadConfig()
+        return plugin.config.getString(key)
+    }
+
+    fun stringListConfig(key: String): List<String> {
+        plugin.reloadConfig()
+        return plugin.config.getStringList(key)
+    }
+
     class Builder(
         private val plugin: JavaPlugin
     ) {

@@ -9,6 +9,7 @@
 package dev.kotx.flylib.utils
 
 import com.mojang.brigadier.context.CommandContext
+import dev.kotx.flylib.*
 import dev.kotx.flylib.command.*
 import dev.kotx.flylib.command.internal.*
 import net.kyori.adventure.text.*
@@ -139,4 +140,8 @@ class ItemBuilder(private val material: Material) {
     fun interface Action {
         fun ItemBuilder.initialize()
     }
+}
+
+fun getIntConfig(key: String) {
+    val flyLib: FlyLib = FlyLibContext.get().get()
 }
