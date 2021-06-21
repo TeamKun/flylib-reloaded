@@ -99,7 +99,12 @@ object CommandDefault {
                     append("Usages:\n", highlightTextColor, decoration = TextDecoration.BOLD)
 
                     command.usages.associate { it ->
-                        command.handleParent(it.args.joinToString(" ") { "<${it.name}>" }) to it.description
+                        command.handleParent(it.args.joinToString(" ") {
+                            if (it is Argument.Literal)
+                                "${it.name}"
+                            else
+                                "<${it.name}>"
+                        }) to it.description
                     }.forEach { (usage, description) ->
                         append(usage, mainColor)
                         if (description.isNotEmpty()) {
@@ -165,6 +170,7 @@ object CommandDefault {
         permission = defaultPermission
         return this
     }
+
     fun getPermission() = permission
 
     /**
@@ -174,6 +180,7 @@ object CommandDefault {
         playerOnly = defaultPlayerOnly
         return this
     }
+
     fun isPlayerOnly() = playerOnly
 
     /**
