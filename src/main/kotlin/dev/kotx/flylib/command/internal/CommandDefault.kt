@@ -101,7 +101,7 @@ object CommandDefault {
                     command.usages.associate { it ->
                         command.handleParent(it.args.joinToString(" ") {
                             if (it is Argument.Literal)
-                                "${it.name}"
+                                it.name
                             else
                                 "<${it.name}>"
                         }) to it.description
