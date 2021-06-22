@@ -13,6 +13,7 @@ import org.bukkit.event.*
 import org.bukkit.event.inventory.*
 import org.bukkit.inventory.*
 import org.bukkit.plugin.java.*
+import org.bukkit.scheduler.*
 import org.koin.core.component.*
 
 abstract class Menu(
@@ -33,11 +34,19 @@ abstract class Menu(
 
         setInventory()
 
-        player.openInventory(inventory)
+        object: BukkitRunnable() {
+            override fun run() {
+                player.openInventory(inventory)
+            }
+        }.runTask(plugin)
     }
 
     fun update(updater: InventoryUpdateAction) {
-        player!!.openInventory(inventory.apply { updater.apply { initialize() } })
+        object: BukkitRunnable() {
+            override fun run() {
+                player!!.openInventory(inventory.apply { updater.apply { initialize() } })
+            }
+        }.runTask(plugin)
     }
 
     protected abstract fun setInventory()
