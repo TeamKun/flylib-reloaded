@@ -12,6 +12,7 @@ import dev.kotx.flylib.*
 import dev.kotx.flylib.command.internal.*
 import dev.kotx.flylib.command.internal.Permission
 import dev.kotx.flylib.utils.*
+import kotlinx.coroutines.*
 import net.minecraft.server.v1_16_R3.*
 import org.bukkit.*
 import org.bukkit.craftbukkit.v1_16_R3.*
@@ -28,6 +29,7 @@ class CommandHandler(
 ) : FlyLibComponent {
     private val plugin: JavaPlugin by inject()
     private val logger: Logger by inject()
+    private val scope = CoroutineScope(Dispatchers.Default + CoroutineName("FlyLib Command Dispatcher"))
 
     internal fun initialize() {
         plugin.server.pluginManager.addPermission(
@@ -122,7 +124,8 @@ class CommandHandler(
                     .literal<CommandListenerWrapper?>(child.name)
                     .requires { child.validate(it.bukkitSender) }
                     .executes {
-                        child.apply { it.asFlyLibContext(child, emptyList(), depthMap[child] ?: 0).execute() }
+                        if (child.runAsync) scope.launch { child.apply { it.asFlyLibContext(child, emptyList(), depthMap[child] ?: 0).execute() } }
+                        else child.apply { it.asFlyLibContext(child, emptyList(), depthMap[child] ?: 0).execute() }
                         1
                     }
                 child.handle(childBase)
@@ -133,7 +136,10 @@ class CommandHandler(
                         .literal<CommandListenerWrapper?>(it)
                         .requires { child.validate(it.bukkitSender) }
                         .executes {
-                            child.apply { it.asFlyLibContext(child, emptyList(), depthMap[child] ?: 0).execute() }
+                            if (child.runAsync)
+                                scope.launch { child.apply { it.asFlyLibContext(child, emptyList(), depthMap[child] ?: 0).execute() } }
+                            else
+                                child.apply { it.asFlyLibContext(child, emptyList(), depthMap[child] ?: 0).execute() }
                             1
                         }
                     child.handle(childAliasBase)
@@ -146,7 +152,10 @@ class CommandHandler(
             .literal<CommandListenerWrapper?>(name)
             .requires { command.validate(it.bukkitSender) }
             .executes {
-                command.apply { it.asFlyLibContext(command, emptyList(), 0).execute() }
+                if (command.runAsync)
+                    scope.launch { command.apply { it.asFlyLibContext(command, emptyList(), 0).execute() } }
+                else
+                    command.apply { it.asFlyLibContext(command, emptyList(), 0).execute() }
                 1
             }
 
@@ -208,7 +217,10 @@ class CommandHandler(
         executes {
             val ctx = (it as CommandContext<CommandListenerWrapper>).asFlyLibContext(command, usage.args.toList(), depth)
 
-            usage.action?.apply { ctx.execute() } ?: command.apply { ctx.execute() }
+            if (usage.runAsync ?: command.runAsync)
+                scope.launch { usage.action?.apply { ctx.execute() } ?: command.apply { ctx.execute() } }
+            else
+                usage.action?.apply { ctx.execute() } ?: command.apply { ctx.execute() }
 
             1
         }

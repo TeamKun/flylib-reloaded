@@ -11,6 +11,7 @@ class Usage @JvmOverloads constructor(
     val args: Array<Argument<*>>,
     val description: String = "",
     val permission: Permission? = null,
+    val runAsync: Boolean? = null,
     val playerOnly: Boolean? = null,
     val options: List<Option> = emptyList(),
     val action: CommandContext.Action? = null
@@ -20,16 +21,18 @@ class Usage @JvmOverloads constructor(
         args: Array<Argument<*>>,
         description: String = "",
         permission: Permission? = null,
+        runAsync: Boolean? = null,
         playerOnly: Boolean? = null,
         action: CommandContext.Action?
     ) : this(
-        args, description, permission, playerOnly, emptyList(), action
+        args, description, permission, runAsync, playerOnly, emptyList(), action
     )
 
     class Builder {
         private var args = mutableListOf<Argument<*>>()
         private var description: String = ""
         private var permission: Permission? = null
+        private var runAsync: Boolean? = null
         private var playerOnly: Boolean? = null
         private var options: List<Option> = emptyList()
         private var action: CommandContext.Action? = null
@@ -46,6 +49,11 @@ class Usage @JvmOverloads constructor(
 
         fun playerOnly(playerOnly: Boolean): Builder {
             this.playerOnly = playerOnly
+            return this
+        }
+
+        fun runAsync(runAsync: Boolean): Builder {
+            this.runAsync = runAsync
             return this
         }
 
@@ -240,7 +248,7 @@ class Usage @JvmOverloads constructor(
         }
 
         fun build() = Usage(
-            args.toTypedArray(), description, permission, playerOnly, options, action
+            args.toTypedArray(), description, permission, runAsync, playerOnly, options, action
         )
 
         fun interface Action {

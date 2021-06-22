@@ -55,6 +55,12 @@ abstract class Command(
     open var playerOnly: Boolean = CommandDefault.isPlayerOnly()
 
     /**
+     * Whether the command is executed asynchronously in another thread.
+     * Must be false when performing block operations.
+     */
+    open var runAsync: Boolean = CommandDefault.isRunAsync()
+
+    /**
      * A subcommand of this command. If the string entered as an argument matches the name or alias of these commands, the matching command will be executed.
      * This command will only be executed if there is no match.
      */
@@ -99,18 +105,34 @@ abstract class Command(
         CommandDefault.getHelp().apply { execute() }
     }
 
+    /**
+     * How to use the command in its entirety.
+     * Command completion, type checking, etc. will be performed according to the Usage added here.
+     * If a command matching the Usage is entered and an action is specified in the Usage, it will be executed.
+     * However, if no matching command is entered in Usage, or if a match is found but no action is specified, CommandContext.execute() of this command will be executed.
+     */
     fun usage(action: Usage.Builder.Action) {
         usages.add(Usage.Builder().apply { action.apply { initialize() } }.build())
     }
 
+    /**
+     * Command usage example. It is displayed in a list when you use sendHelp() in CommandContext.
+     */
     fun example(vararg example: String) {
         examples.addAll(example)
     }
 
+    /**
+     * Command alias. A list of strings that can be used as abbreviations instead of using the official name of the command.
+     */
     fun alias(vararg alias: String) {
         aliases.addAll(alias)
     }
 
+    /**
+     * A subcommand of this command. If the string entered as an argument matches the name or alias of these commands, the matching command will be executed.
+     * This command will only be executed if there is no match.
+     */
     fun child(vararg child: Command) {
         children.addAll(child)
     }
@@ -121,6 +143,7 @@ abstract class Command(
         private var description: String? = null
         private var permission: Permission? = null
         private var playerOnly: Boolean? = null
+        private var runAsync: Boolean? = null
         private var action: CommandContext.Action? = null
         private val aliases = mutableListOf<String>()
         private val usages = mutableListOf<Usage>()
@@ -139,6 +162,11 @@ abstract class Command(
 
         fun playerOnly(playerOnly: Boolean): Builder {
             this.playerOnly = playerOnly
+            return this
+        }
+
+        fun runAsync(runAsync: Boolean): Builder {
+            this.runAsync = runAsync
             return this
         }
 
@@ -178,6 +206,7 @@ abstract class Command(
                 this@Builder.description?.also { this.description = it }
                 this@Builder.permission?.also { this.permission = it }
                 this@Builder.playerOnly?.also { this.playerOnly = it }
+                this@Builder.runAsync?.also { this.runAsync = it }
                 aliases.addAll(this@Builder.aliases)
                 usages.addAll(this@Builder.usages)
                 examples.addAll(this@Builder.examples)
