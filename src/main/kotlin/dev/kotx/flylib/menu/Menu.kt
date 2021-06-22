@@ -104,7 +104,7 @@ abstract class Menu(
     )
 
     fun interface Action {
-        fun Menu.handleClick(event: InventoryClickEvent)
+        fun Menu.handle(event: InventoryClickEvent)
     }
 
     fun interface InventoryUpdateAction {

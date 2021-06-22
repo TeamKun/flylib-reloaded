@@ -24,7 +24,7 @@ class ChestMenu(
     override fun onClick(event: InventoryClickEvent) {
         event.isCancelled = true
 
-        items.firstOrNull { it.index == event.slot }?.also { it.onClick.apply { handleClick(event) } }
+        items.firstOrNull { it.index == event.slot }?.also { it.onClick.apply { handle(event) } }
     }
 
     class Builder : Menu.Builder<ChestMenu>() {
