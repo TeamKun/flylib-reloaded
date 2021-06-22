@@ -10,11 +10,11 @@ import dev.kotx.flylib.command.*
 import dev.kotx.flylib.command.internal.*
 import dev.kotx.flylib.menu.menus.*
 import dev.kotx.flylib.utils.*
-import net.kyori.adventure.text.format.*
 import org.bukkit.*
 import org.bukkit.enchantments.Enchantment.*
 import org.bukkit.inventory.*
 import org.bukkit.plugin.java.*
+import java.awt.Color
 
 class KTestPlugin : JavaPlugin() {
     override fun onEnable() {
@@ -84,7 +84,9 @@ object KMenuCommand : Command("menu") {
                 flag(ItemFlag.HIDE_ENCHANTS)
             }) {
                 send {
-                    append("You clicked me!?", TextDecoration.BOLD)
+                    bold("DIAMOND", Color.CYAN)
+                    append(" > ", Color.GRAY)
+                    bold("You clicked me!?!?")
                 }
             }
         }

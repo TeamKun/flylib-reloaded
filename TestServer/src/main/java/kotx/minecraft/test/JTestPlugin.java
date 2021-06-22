@@ -87,8 +87,6 @@ class JMenuCommand extends Command {
                                 .lore("Very Expensive")
                                 .enchant(Enchantment.LUCK)
                                 .flag(ItemFlag.HIDE_ENCHANTS)),
-                        (menu, event) -> {
-
-                        }));
+                        (menu, event) -> context.send(message -> message.bold("DIAMOND", Color.CYAN).append(" > ", Color.GRAY).bold("You clicked me!?!?"))));
     }
 }
