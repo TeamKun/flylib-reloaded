@@ -184,6 +184,7 @@ fun BookMeta.clear(): BookMeta {
     return this
 }
 
+private val clickListeners = mutableMapOf<ItemStack, MutableList<Pair<Player?, RegisteredListener>>>()
 fun ItemStack.onClick(player: Player? = null, action: ItemClickAction) {
     val flyLib: FlyLib = FlyLibContext.get().get()
     lateinit var listener: RegisteredListener
@@ -192,12 +193,23 @@ fun ItemStack.onClick(player: Player? = null, action: ItemClickAction) {
         if (player != null && event.player.uniqueId != player.uniqueId) return@registerListener
         if (event.item != this) return@registerListener
 
-        action.handle(event)
+        if (action.handle(event))
+            flyLib.unRegisterListener<PlayerInteractEvent>(listener)
+    }
 
-        flyLib.unRegisterListener<PlayerInteractEvent>(listener)
+    clickListeners.putIfAbsent(this, mutableListOf())
+    clickListeners[this]!!.add(player to listener)
+}
+
+fun ItemStack.unRegister(player: Player? = null) {
+    val flyLib: FlyLib = FlyLibContext.get().get()
+    if (player != null) clickListeners[this]?.filter { it.first != null && it.first!!.uniqueId == player.uniqueId }?.forEach {
+        flyLib.unRegisterListener<PlayerInteractEvent>(it.second)
+    } else clickListeners[this]?.forEach {
+        flyLib.unRegisterListener<PlayerInteractEvent>(it.second)
     }
 }
 
 fun interface ItemClickAction {
-    fun handle(event: PlayerInteractEvent)
+    fun handle(event: PlayerInteractEvent): Boolean
 }
