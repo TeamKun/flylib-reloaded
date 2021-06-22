@@ -11,6 +11,7 @@ package dev.kotx.flylib.utils
 import com.mojang.brigadier.context.CommandContext
 import dev.kotx.flylib.command.*
 import dev.kotx.flylib.command.internal.*
+import dev.kotx.flylib.utils.component.*
 import net.kyori.adventure.text.*
 import net.minecraft.server.v1_16_R3.*
 import org.bukkit.Material
@@ -159,7 +160,7 @@ fun BookMeta.page(text: String): BookMeta {
     return this
 }
 
-fun BookMeta.page(block: ComponentBuilder<*, *>.() -> Unit): BookMeta {
+fun BookMeta.page(block: TextComponentBuilder.() -> Unit): BookMeta {
     addPages(text(block))
     return this
 }
