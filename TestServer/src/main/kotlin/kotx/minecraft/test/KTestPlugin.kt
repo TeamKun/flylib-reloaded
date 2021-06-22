@@ -28,10 +28,7 @@ class KTestPlugin : JavaPlugin() {
                     permission(Permission.OP)
                 }
 
-                register(KPrintNumberCommand)
-                register(KTabCompleteCommand)
-                register(KParentCommand)
-                register(KMenuCommand)
+                register(KPrintNumberCommand, KTabCompleteCommand, KParentCommand, KMenuCommand)
                 register("direct") {
                     description("Directly registered command")
                     executes {

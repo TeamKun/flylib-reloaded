@@ -9,14 +9,19 @@
 package dev.kotx.flylib.utils
 
 import com.mojang.brigadier.context.CommandContext
+import dev.kotx.flylib.*
 import dev.kotx.flylib.command.*
 import dev.kotx.flylib.command.internal.*
 import net.kyori.adventure.text.*
 import net.minecraft.server.v1_16_R3.*
 import org.bukkit.Material
+import org.bukkit.entity.*
+import org.bukkit.event.player.*
 import org.bukkit.inventory.*
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.*
+import org.bukkit.plugin.*
+import org.koin.core.component.*
 
 operator fun List<Command>.get(query: String) =
     find { it.name.equals(query, true) } ?: find { it -> it.aliases.any { it == query } }
@@ -71,13 +76,16 @@ fun <T> List<T>.joint(other: (T) -> T): List<T> {
 fun item(material: Material) = ItemStack(material)
 fun item(material: Material, action: ItemBuilder.Action) = ItemBuilder(material).apply { action.apply { initialize() } }.build()
 
-class ItemBuilder(private val material: Material) {
+class ItemBuilder(private val material: Material) : FlyLibComponent {
+    private val flyLib: FlyLib by inject()
+
     private var displayName: Component? = null
     private val lores = mutableListOf<Component>()
     private val enchants = mutableListOf<Enchantment>()
     private val flags = mutableListOf<ItemFlag>()
     private var amount = 1
     private var meta: ItemMetaAction? = null
+    private var onClick: Pair<Player, ItemClickAction>? = null
 
     fun displayName(name: String): ItemBuilder {
         this.displayName = name.component()
@@ -123,6 +131,12 @@ class ItemBuilder(private val material: Material) {
         return this
     }
 
+    fun onClick(player: Player, handler: ItemClickAction): ItemBuilder {
+        this.onClick = player to handler
+        return this
+    }
+
+    @Suppress("JoinDeclarationAndAssignment")
     fun build() = ItemStack(material, amount).apply {
         itemMeta = itemMeta.apply {
             this.displayName(this@ItemBuilder.displayName)
@@ -138,6 +152,19 @@ class ItemBuilder(private val material: Material) {
 
             this@ItemBuilder.meta?.apply { initialize() }
         }
+    }.also { itemStack ->
+        if (onClick == null) return@also
+
+        lateinit var listener: RegisteredListener
+        listener = flyLib.registerListener<PlayerInteractEvent> { event ->
+            if (event.action != org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK && event.action != org.bukkit.event.block.Action.RIGHT_CLICK_AIR) return@registerListener
+            if (event.player.uniqueId != onClick!!.first.uniqueId) return@registerListener
+            if (event.item != itemStack) return@registerListener
+
+            onClick!!.second.handle(event)
+
+            flyLib.unRegisterListener<PlayerInteractEvent>(listener)
+        }
     }
 
     private class Enchantment(
@@ -151,6 +178,10 @@ class ItemBuilder(private val material: Material) {
 
     fun interface ItemMetaAction {
         fun ItemMeta.initialize()
+    }
+
+    fun interface ItemClickAction {
+        fun handle(event: PlayerInteractEvent)
     }
 }
 

@@ -80,6 +80,28 @@ class FlyLib(
         }
     }
 
+    inline fun <reified T : Event> registerListener(priority: EventPriority = EventPriority.NORMAL, action: Builder.ListenerAction<T>): RegisteredListener {
+        val plugin: JavaPlugin = FlyLibContext.get().get()
+        val handlerList = T::class::functions.get().find { it.name == "getHandlerList" }?.call() as HandlerList
+        val registeredListener = RegisteredListener(
+            object : Listener {},
+            { _, event -> action.handle(event as T) },
+            priority,
+            plugin,
+            false
+        )
+        handlerList.register(
+            registeredListener
+        )
+
+        return registeredListener
+    }
+
+    inline fun <reified T : Event> unRegisterListener(listener: RegisteredListener) {
+        val handlerList = T::class::functions.get().find { it.name == "getHandlerList" }?.call() as HandlerList
+        handlerList.unregister(listener)
+    }
+
     class Builder(
         private val plugin: JavaPlugin
     ) {
