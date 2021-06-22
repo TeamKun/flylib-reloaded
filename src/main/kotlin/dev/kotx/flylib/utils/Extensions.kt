@@ -153,3 +153,18 @@ class ItemBuilder(private val material: Material) {
         fun ItemMeta.initialize()
     }
 }
+
+fun BookMeta.page(text: String): BookMeta {
+    addPages(text { append(text) })
+    return this
+}
+
+fun BookMeta.page(block: ComponentBuilder<*, *>.() -> Unit): BookMeta {
+    addPages(text(block))
+    return this
+}
+
+fun BookMeta.clear(): BookMeta {
+    pages(emptyList())
+    return this
+}

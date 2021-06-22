@@ -7,6 +7,7 @@
 
 package dev.kotx.flylib.utils
 
+import dev.kotx.flylib.utils.component.*
 import net.kyori.adventure.audience.*
 import net.kyori.adventure.text.*
 import net.kyori.adventure.text.Component
@@ -17,7 +18,7 @@ import java.awt.*
 
 fun Component.content() = (this as TextComponent).content()
 
-fun text(block: ComponentBuilder<*, *>.() -> Unit) = Component.text().apply(block).build()
+fun text(block: TextComponentBuilder.() -> Unit) = TextComponentBuilder().apply(block).build()
 
 fun Audience.send(text: String) {
     send {
@@ -25,11 +26,12 @@ fun Audience.send(text: String) {
     }
 }
 
-fun Audience.send(block: TextComponentAction) {
-    sendMessage(Component.text().run { block.apply { initialize() }; this }.build(), MessageType.CHAT)
+fun Audience.send(block: TextComponentBuilder.() -> Unit) {
+    sendMessage(TextComponentBuilder().apply(block).build(), MessageType.CHAT)
 }
 
 fun ComponentBuilder<*, *>.append(text: String): ComponentBuilder<*, *> = append(Component.text(text))
+
 fun ComponentBuilder<*, *>.append(
     text: String,
     color: Color = Color.WHITE,
@@ -74,12 +76,12 @@ fun interface TextComponentAction {
     fun ComponentBuilder<*, *>.initialize()
 }
 
-fun Audience.sendPluginMessage(plugin: JavaPlugin, block: TextComponentAction) {
+fun Audience.sendPluginMessage(plugin: JavaPlugin, block: TextComponentBuilder.() -> Unit) {
     send {
         append("[", Color.GRAY)
         append(plugin.name, Color.RED)
         append("] ", Color.GRAY)
-        block.apply { initialize() }
+        apply(block)
     }
 }
 
@@ -128,3 +130,4 @@ fun Audience.success(text: String) {
 fun String.asTextComponent(color: Color = Color.WHITE) = Component.text(this, TextColor.color(color.red, color.green, color.blue))
 fun String.asTextComponent(style: Style) = Component.text(this, style)
 fun String.asTextComponent(decoration: TextDecoration) = Component.text(this, Style.style(decoration))
+fun String.asTextComponent(color: Color, vararg decorations: TextDecoration = emptyArray()) = Component.text(this, Style.style(TextColor.color(color.rgb), *decorations))
