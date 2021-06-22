@@ -31,10 +31,16 @@ abstract class Menu(
     fun display(player: Player) {
         this.player = player
 
-        display()
+        setInventory()
+
+        player.openInventory(inventory)
     }
 
-    protected abstract fun display()
+    fun update(updater: InventoryUpdateAction) {
+        player!!.openInventory(inventory.apply { updater.apply { initialize() } })
+    }
+
+    protected abstract fun setInventory()
 
     @EventHandler
     fun handleClick(event: InventoryClickEvent) {
@@ -98,7 +104,11 @@ abstract class Menu(
     )
 
     fun interface Action {
-        fun handleClick(event: InventoryClickEvent)
+        fun Menu.handleClick(event: InventoryClickEvent)
+    }
+
+    fun interface InventoryUpdateAction {
+        fun Inventory.initialize()
     }
 
     enum class Size(val size: Int) {

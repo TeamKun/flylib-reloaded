@@ -5,30 +5,26 @@
 
 package dev.kotx.flylib.menu.menus
 
-import dev.kotx.flylib.FlyLibComponent
-import dev.kotx.flylib.menu.Menu
-import org.bukkit.entity.Player
-import org.bukkit.event.inventory.InventoryClickEvent
+import dev.kotx.flylib.*
+import dev.kotx.flylib.menu.*
+import org.bukkit.entity.*
+import org.bukkit.event.inventory.*
 
 class ChestMenu(
         size: Size,
         items: MutableList<MenuItem>
 ) : Menu(size, items), FlyLibComponent {
 
-    override fun display() {
+    override fun setInventory() {
         items.forEach {
             inventory.setItem(it.index, it.stack)
         }
-
-        player?.openInventory(inventory)
     }
 
     override fun onClick(event: InventoryClickEvent) {
         event.isCancelled = true
 
-        event.whoClicked.closeInventory()
-
-        items.firstOrNull { it.index == event.slot }?.also { it.onClick.handleClick(event) }
+        items.firstOrNull { it.index == event.slot }?.also { it.onClick.apply { handleClick(event) } }
     }
 
     class Builder : Menu.Builder<ChestMenu>() {
@@ -41,11 +37,11 @@ class ChestMenu(
 
     companion object {
         @JvmStatic
-        fun display(player: Player, block: Builder.Action) {
-            Builder().apply { block.apply { initialize() } }.build().display(player)
+        fun display(player: Player, block: Builder.Action): ChestMenu {
+            return Builder().apply { block.apply { initialize() } }.build().also { it.display(player) }
         }
 
         @JvmStatic
-        fun menu(block: ChestMenu.Builder.Action) = ChestMenu.Builder().apply { block.apply { initialize() } }.build()
+        fun menu(block: Builder.Action) = Builder().apply { block.apply { initialize() } }.build()
     }
 }

@@ -80,13 +80,15 @@ class JMenuCommand extends Command {
 
     @Override
     public void execute(@NotNull CommandContext context) {
-        ChestMenu.display(context.getPlayer(), menu -> menu
+        ChestMenu.display(context.getPlayer(), menuBuilder -> menuBuilder
                 .size(Menu.Size.LARGE_CHEST)
                 .item(5, 1, Utils.item(Material.DIAMOND, item -> item
                                 .displayName("Super Diamond")
                                 .lore("Very Expensive")
                                 .enchant(Enchantment.LUCK)
                                 .flag(ItemFlag.HIDE_ENCHANTS)),
-                        event -> context.send(component -> component.bold("DIAMOND", Color.CYAN).append("> ").append("You clicked me!?!?"))));
+                        (menu, event) -> {
+
+                        }));
     }
 }
