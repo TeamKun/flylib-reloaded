@@ -82,7 +82,7 @@ object CommandDefault {
                 1 -> {
                     val usage = command.usages.first()
 
-                    append("Usage: ", Color.WHITE, decoration = TextDecoration.BOLD)
+                    append("Usage: ", Color.WHITE, TextDecoration.BOLD)
 
                     append(command.handleParent(usage.args.joinToString(" ") { "<${it.name}>" }), mainColor)
 
@@ -96,7 +96,7 @@ object CommandDefault {
                 else -> {
                     appendln()
                     append("# ", Color.WHITE)
-                    append("Usages:\n", highlightTextColor, decoration = TextDecoration.BOLD)
+                    append("Usages:\n", highlightTextColor, TextDecoration.BOLD)
 
                     command.usages.associate { it ->
                         command.handleParent(it.args.joinToString(" ") {
@@ -122,7 +122,7 @@ object CommandDefault {
                 }
 
                 1 -> {
-                    append("Example: ", Color.WHITE, decoration = TextDecoration.BOLD)
+                    append("Example: ", Color.WHITE, TextDecoration.BOLD)
                     append("/${command.examples.first()}\n", mainColor)
                     appendln()
                 }
@@ -130,12 +130,12 @@ object CommandDefault {
                 else -> {
                     appendln()
                     append("# ", Color.WHITE)
-                    append("Examples:\n", highlightTextColor, decoration = TextDecoration.BOLD)
+                    append("Examples:\n", highlightTextColor, TextDecoration.BOLD)
                     command.examples.map {
-                        "/$it".asTextComponent(mainColor)
+                        "/$it".component(mainColor)
                             .clickEvent(ClickEvent.runCommand(it))
-                            .hoverEvent(HoverEvent.showText("Click to run!".asTextComponent(Color.LIGHT_GRAY)))
-                    }.joint("\n".asTextComponent()) {
+                            .hoverEvent(HoverEvent.showText("Click to run!".component(Color.LIGHT_GRAY)))
+                    }.joint("\n".component()) {
                         append(it)
                     }
                     appendln()
@@ -143,7 +143,7 @@ object CommandDefault {
             }
 
             if (command.children.isNotEmpty()) {
-                command.children.map { "    ${it.name}".asTextComponent(highlightTextColor) }.joint("\n".asTextComponent()) {
+                command.children.map { "    ${it.name}".component(highlightTextColor) }.joint("\n".component()) {
                     append(it)
                 }
                 appendln()

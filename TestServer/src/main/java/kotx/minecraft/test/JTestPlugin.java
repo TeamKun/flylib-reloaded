@@ -21,6 +21,8 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
+
 public class JTestPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
@@ -90,6 +92,6 @@ class JMenuCommand extends Command {
                                 .lore("Very Expensive")
                                 .enchant(Enchantment.LUCK)
                                 .flag(ItemFlag.HIDE_ENCHANTS)),
-                        event -> context.send(component -> ChatUtils.append(component, "You clicked me!?", TextDecoration.BOLD))));
+                        event -> context.send(component -> component.bold("DIAMOND", Color.CYAN).append("> ").append("You clicked me!?!?"))));
     }
 }

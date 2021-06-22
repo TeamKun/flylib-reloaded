@@ -11,7 +11,6 @@ package dev.kotx.flylib.utils
 import com.mojang.brigadier.context.CommandContext
 import dev.kotx.flylib.command.*
 import dev.kotx.flylib.command.internal.*
-import dev.kotx.flylib.utils.component.*
 import net.kyori.adventure.text.*
 import net.minecraft.server.v1_16_R3.*
 import org.bukkit.Material
@@ -81,7 +80,7 @@ class ItemBuilder(private val material: Material) {
     private var meta: ItemMetaAction? = null
 
     fun displayName(name: String): ItemBuilder {
-        this.displayName = name.asTextComponent()
+        this.displayName = name.component()
         return this
     }
 
@@ -91,7 +90,7 @@ class ItemBuilder(private val material: Material) {
     }
 
     fun lore(vararg lore: String): ItemBuilder {
-        lores.addAll(lore.map { it.asTextComponent() })
+        lores.addAll(lore.map { it.component() })
         return this
     }
 
@@ -160,7 +159,7 @@ fun BookMeta.page(text: String): BookMeta {
     return this
 }
 
-fun BookMeta.page(block: TextComponentBuilder.() -> Unit): BookMeta {
+fun BookMeta.page(block: TextComponentAction): BookMeta {
     addPages(text(block))
     return this
 }
