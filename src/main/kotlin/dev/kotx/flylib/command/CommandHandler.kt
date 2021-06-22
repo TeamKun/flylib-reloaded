@@ -242,16 +242,18 @@ class CommandHandler(
 
         /**
          * Registers the specified command. It is not necessary to register commands or permissions in plugin.yml.
-         * @param command The command you want to register.
+         * @param commands The commands you want to register.
          */
-        fun register(command: Command): Builder {
+        fun register(vararg commands: Command): Builder {
             fun List<Command>.setParent(parent: Command): Unit = forEach {
                 it.parent = parent
                 it.children.setParent(it)
             }
 
-            command.children.setParent(command)
-            commands.add(command)
+            commands.forEach {
+                it.children.setParent(it)
+                this.commands.add(it)
+            }
             return this
         }
 

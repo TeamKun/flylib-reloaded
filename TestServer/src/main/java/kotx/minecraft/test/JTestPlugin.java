@@ -11,9 +11,7 @@ import dev.kotx.flylib.command.CommandContext;
 import dev.kotx.flylib.command.internal.Permission;
 import dev.kotx.flylib.menu.Menu;
 import dev.kotx.flylib.menu.menus.ChestMenu;
-import dev.kotx.flylib.utils.ChatUtils;
 import dev.kotx.flylib.utils.Utils;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -32,13 +30,10 @@ public class JTestPlugin extends JavaPlugin {
             flyLib.command(command -> {
                 command.defaultConfiguration(defaultConfiguration -> defaultConfiguration.permission(Permission.OP));
 
-                command.register(new JPrintNumberCommand());
-                command.register(new JTabCompleteCommand());
-                command.register(new JParentCommand());
-                command.register(new JMenuCommand());
-                command.register("direct", builder -> builder
-                        .description("Directly registered command")
-                        .executes(context -> context.send("Hello direct command!")));
+                command.register(new JPrintNumberCommand(), new JTabCompleteCommand(), new JParentCommand(), new JMenuCommand())
+                        .register("direct", builder -> builder
+                                .description("Directly registered command")
+                                .executes(context -> context.send("Hello direct command!")));
             });
         });
     }
