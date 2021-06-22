@@ -16,6 +16,7 @@ import net.minecraft.server.v1_16_R3.*
 import org.bukkit.Material
 import org.bukkit.inventory.*
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.*
 
 operator fun List<Command>.get(query: String) =
     find { it.name.equals(query, true) } ?: find { it -> it.aliases.any { it == query } }
@@ -76,6 +77,7 @@ class ItemBuilder(private val material: Material) {
     private val enchants = mutableListOf<Enchantment>()
     private val flags = mutableListOf<ItemFlag>()
     private var amount = 1
+    private var meta: ItemMetaAction? = null
 
     fun displayName(name: String): ItemBuilder {
         this.displayName = name.asTextComponent()
@@ -116,6 +118,11 @@ class ItemBuilder(private val material: Material) {
         return this
     }
 
+    fun meta(action: ItemMetaAction): ItemBuilder {
+        this.meta = action
+        return this
+    }
+
     fun build() = ItemStack(material, amount).apply {
         itemMeta = itemMeta.apply {
             this.displayName(this@ItemBuilder.displayName)
@@ -128,6 +135,8 @@ class ItemBuilder(private val material: Material) {
             }
 
             this.lore(lores)
+
+            this@ItemBuilder.meta?.apply { initialize() }
         }
     }
 
@@ -138,5 +147,9 @@ class ItemBuilder(private val material: Material) {
 
     fun interface Action {
         fun ItemBuilder.initialize()
+    }
+
+    fun interface ItemMetaAction {
+        fun ItemMeta.initialize()
     }
 }
