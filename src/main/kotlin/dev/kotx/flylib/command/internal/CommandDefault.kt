@@ -31,7 +31,7 @@ object CommandDefault {
     /**
      * Whether only the player specified by default can execute when nothing is specified
      */
-    private var runAsync: Boolean = true
+    private var runAsync: Boolean = false
 
     /**
      * The method that will be executed when you call sendHelp() when nothing is implemented.
