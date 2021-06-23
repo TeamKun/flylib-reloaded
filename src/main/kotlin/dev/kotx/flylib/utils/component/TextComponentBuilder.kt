@@ -107,9 +107,7 @@ class TextComponentBuilder {
         append(this)
     }
 
-    operator fun TextComponentAction.unaryPlus() {
-        append(text(this))
-    }
-
     fun build() = textComponentBuilder.build()
 }
+
+operator fun Component.plus(component: Component) = this.append(component)
