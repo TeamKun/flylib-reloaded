@@ -20,6 +20,7 @@ class BasicMenu(
     private var items: List<Menu.Item<BasicMenu>>,
     private var type: Menu.Type,
     private var title: Component?,
+    private var reopen: Boolean
 ) : Menu {
     private val plugin: JavaPlugin by inject()
     private val inventories: MutableMap<Player, Inventory> = mutableMapOf()
@@ -39,6 +40,7 @@ class BasicMenu(
             inventory.setItem(it.index, it.item)
         }
 
+        inventories.remove(player)
         inventories[player] = inventory
         player.openInventory(inventory)
     }
@@ -48,11 +50,9 @@ class BasicMenu(
         items = inv.items
         type = inv.type
         title = inv.title
+        reopen = inv.reopen
 
-        val players = inventories.toMap().keys
-        inventories.clear()
-
-        players.forEach {
+        inventories.toMap().keys.forEach {
             display(it)
         }
     }
@@ -60,6 +60,7 @@ class BasicMenu(
     @EventHandler
     fun onInventoryClick(event: InventoryClickEvent) {
         if (inventories[event.whoClicked] != event.inventory) return
+        event.isCancelled = true
         items.find { it.index == event.rawSlot }?.action?.apply {
             handle(event)
         }
@@ -69,12 +70,16 @@ class BasicMenu(
     fun onInventoryClose(event: InventoryCloseEvent) {
         if (event.reason != InventoryCloseEvent.Reason.OPEN_NEW)
             inventories.remove(event.player)
+
+        if (event.reason == InventoryCloseEvent.Reason.PLAYER)
+            display(event.player as Player)
     }
 
     class Builder : Menu.Builder<BasicMenu> {
         private val items = mutableListOf<Menu.Item<BasicMenu>>()
         private var title: Component? = null
         private var type: Menu.Type = Menu.Type.CHEST
+        private var reopen: Boolean = false
 
         fun title(text: String): Builder {
             title = text.component()
@@ -88,6 +93,11 @@ class BasicMenu(
 
         fun title(builder: TextComponentAction): Builder {
             title = text(builder)
+            return this
+        }
+
+        fun automaticallyReOpen(): Builder {
+            reopen = true
             return this
         }
 
@@ -146,7 +156,8 @@ class BasicMenu(
         override fun build(): BasicMenu = BasicMenu(
             items,
             type,
-            title
+            title,
+            reopen
         )
 
         fun interface Action {
