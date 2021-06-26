@@ -6,122 +6,51 @@
 package dev.kotx.flylib.menu
 
 import dev.kotx.flylib.*
-import dev.kotx.flylib.menu.Menu.*
+import dev.kotx.flylib.utils.*
 import org.bukkit.*
 import org.bukkit.entity.*
 import org.bukkit.event.*
 import org.bukkit.event.inventory.*
 import org.bukkit.inventory.*
-import org.bukkit.plugin.java.*
-import org.bukkit.scheduler.*
-import org.koin.core.component.*
 
-abstract class Menu(
-    size: Size,
-    val items: MutableList<MenuItem>
-) : Listener, FlyLibComponent {
-    internal var player: Player? = null
+interface Menu : Listener, FlyLibComponent {
+    fun display(player: Player)
 
-    private val plugin by inject<JavaPlugin>()
-    protected val inventory = Bukkit.createInventory(null, size.size)
-
-    init {
-        plugin.server.pluginManager.registerEvents(this, plugin)
+    interface Builder<T : Menu> {
+        fun build(): T
     }
 
-    fun display(player: Player) {
-        this.player = player
-
-        setInventory()
-
-        object: BukkitRunnable() {
-            override fun run() {
-                player.openInventory(inventory)
-            }
-        }.runTask(plugin)
+    fun interface Action<T: Menu> {
+        fun T.handle(event: InventoryClickEvent)
     }
 
-    fun update(updater: InventoryUpdateAction) {
-        object: BukkitRunnable() {
-            override fun run() {
-                player!!.openInventory(inventory.apply { updater.apply { initialize() } })
-            }
-        }.runTask(plugin)
-    }
-
-    protected abstract fun setInventory()
-
-    @EventHandler
-    fun handleClick(event: InventoryClickEvent) {
-        if (event.whoClicked.uniqueId != player?.uniqueId) return
-        if (event.inventory != inventory) return
-
-        onClick(event)
-    }
-
-    abstract fun onClick(event: InventoryClickEvent)
-
-    abstract class Builder<T : Menu> {
-        protected val items = mutableListOf<MenuItem>()
-        protected var size: Size = Size.CHEST
-
-        fun size(size: Size): Builder<T> {
-            this.size = size
-            return this
-        }
-
-        @JvmOverloads
-        fun item(index: Int, itemStack: ItemStack, onClick: Action = Action { }): Builder<T> {
-            if (index >= size.size)
-                throw IllegalArgumentException("index provided $index exceeds size: ${size.size}")
-
-            items.removeIf { it.index == index }
-            items.add(MenuItem(index, itemStack, onClick))
-
-            return this
-        }
-
-        @JvmOverloads
-        fun item(x: Int, y: Int, itemStack: ItemStack, onClick: Action = Action { }): Builder<T> {
-            val index = (y - 1) * 9 + (x - 1)
-            item(index, itemStack, onClick)
-
-            return this
-        }
-
-        @JvmOverloads
-        fun item(index: Int, material: Material, onClick: Action = Action { }): Builder<T> {
-            item(index, ItemStack(material), onClick)
-
-            return this
-        }
-
-        @JvmOverloads
-        fun item(x: Int, y: Int, material: Material, onClick: Action = Action { }): Builder<T> {
-            item(x, y, ItemStack(material), onClick)
-
-            return this
-        }
-
-        abstract fun build(): T
-    }
-
-    class MenuItem(
+    data class Item<T: Menu>(
         val index: Int,
-        val stack: ItemStack,
-        val onClick: Action = Action { }
-    )
+        val item: ItemStack,
+        val action: Action<T>
+    ) : ItemStack(item) {
+        class Builder<T: Menu>(private val index: Int, material: Material) : ItemBuilder(material) {
+            private var action: Menu.Action<T> = Menu.Action { }
 
-    fun interface Action {
-        fun Menu.handle(event: InventoryClickEvent)
+            fun executes(action: Menu.Action<T>): Builder<T> {
+                this.action = action
+                return this
+            }
+
+            fun create(): Item<T> = Item(
+                index,
+                super.build(),
+                action
+            )
+
+            fun interface Action<T: Menu> {
+                fun Builder<T>.initialize()
+            }
+        }
     }
 
-    fun interface InventoryUpdateAction {
-        fun Inventory.initialize()
-    }
-
-    enum class Size(val size: Int) {
+    enum class Type(val value: Int) {
         CHEST(27),
-        LARGE_CHEST(56)
+        LARGE_CHEST(27),
     }
 }
