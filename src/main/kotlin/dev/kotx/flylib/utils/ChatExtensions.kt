@@ -84,6 +84,7 @@ fun Audience.success(text: String) {
     }
 }
 
+@JvmOverloads
 fun String.component(color: Color = Color.WHITE, vararg decorations: TextDecoration = emptyArray(), style: Style.Builder.() -> Unit = {}) =
     Component.text(this, Style.style().color(TextColor.color(color.rgb)).decorate(*decorations).apply(style).build())
 
