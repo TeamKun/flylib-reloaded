@@ -68,6 +68,8 @@ class BasicMenu(
 
     @EventHandler
     fun onInventoryClose(event: InventoryCloseEvent) {
+        if (event.inventory != inventories[event.player]) return
+
         if (event.reason == InventoryCloseEvent.Reason.PLAYER && reopen)
             display(event.player as Player)
         else if (event.reason != InventoryCloseEvent.Reason.OPEN_NEW)
