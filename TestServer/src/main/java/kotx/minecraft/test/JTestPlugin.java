@@ -10,10 +10,11 @@ import dev.kotx.flylib.command.Command;
 import dev.kotx.flylib.command.CommandContext;
 import dev.kotx.flylib.command.internal.Permission;
 import dev.kotx.flylib.menu.Menu;
-import dev.kotx.flylib.menu.menus.ChestMenu;
-import dev.kotx.flylib.utils.Utils;
+import dev.kotx.flylib.menu.menus.BasicMenu;
+import dev.kotx.flylib.utils.ChatUtils;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -80,13 +81,13 @@ class JMenuCommand extends Command {
 
     @Override
     public void execute(@NotNull CommandContext context) {
-        ChestMenu.display(context.getPlayer(), menuBuilder -> menuBuilder
-                .size(Menu.Size.LARGE_CHEST)
-                .item(5, 1, Utils.item(Material.DIAMOND, item -> item
-                                .displayName("Super Diamond")
-                                .lore("Very Expensive")
-                                .enchant(Enchantment.LUCK)
-                                .flag(ItemFlag.HIDE_ENCHANTS)),
-                        (menu, event) -> context.send(message -> message.bold("DIAMOND", Color.CYAN).append(" > ", Color.GRAY).bold("You clicked me!?!?"))));
+        BasicMenu.display(context.getPlayer(), menuBuilder -> menuBuilder
+                .type(Menu.Type.CHEST)
+                .item(Material.DIAMOND, itemBuilder -> itemBuilder
+                        .executes((menu, event) -> context.send(component -> component.append("Hello!", Color.GREEN)))
+                        .displayName(ChatUtils.component("Super Diamond", Color.CYAN))
+                        .lore("Very Expensive!")
+                        .enchant(Enchantment.LUCK)
+                        .flag(ItemFlag.HIDE_ENCHANTS)));
     }
 }

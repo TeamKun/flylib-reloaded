@@ -9,7 +9,6 @@ import dev.kotx.flylib.*
 import dev.kotx.flylib.command.*
 import dev.kotx.flylib.command.internal.*
 import dev.kotx.flylib.menu.menus.*
-import dev.kotx.flylib.utils.*
 import org.bukkit.*
 import org.bukkit.enchantments.Enchantment.*
 import org.bukkit.inventory.*
@@ -76,17 +75,19 @@ object KParentCommand : Command("parent") {
 
 object KMenuCommand : Command("menu") {
     override fun CommandContext.execute() {
-        ChestMenu.display(player!!) {
-            item(5, 1, item(Material.DIAMOND) {
+        BasicMenu.display(player!!) {
+            item(5, 1, Material.DIAMOND) {
                 displayName("Super Diamond")
                 lore("Very Expensive!")
                 enchant(LUCK)
                 flag(ItemFlag.HIDE_ENCHANTS)
-            }) {
-                send {
-                    bold("DIAMOND", Color.CYAN)
-                    append(" > ", Color.GRAY)
-                    bold("You clicked me!?!?")
+
+                executes {
+                    send {
+                        bold("DIAMOND", Color.CYAN)
+                        append(" > ", Color.GRAY)
+                        bold("You clicked me!?!?")
+                    }
                 }
             }
         }
