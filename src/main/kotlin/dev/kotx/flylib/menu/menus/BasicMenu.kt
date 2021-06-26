@@ -68,11 +68,10 @@ class BasicMenu(
 
     @EventHandler
     fun onInventoryClose(event: InventoryCloseEvent) {
-        if (event.reason != InventoryCloseEvent.Reason.OPEN_NEW)
-            inventories.remove(event.player)
-
         if (event.reason == InventoryCloseEvent.Reason.PLAYER && reopen)
             display(event.player as Player)
+        else if (event.reason != InventoryCloseEvent.Reason.OPEN_NEW)
+            inventories.remove(event.player)
     }
 
     class Builder : Menu.Builder<BasicMenu> {
