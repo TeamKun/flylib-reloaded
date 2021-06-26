@@ -75,14 +75,13 @@ fun <T> List<T>.joint(other: (T) -> T): List<T> {
 fun item(material: Material) = ItemStack(material)
 fun item(material: Material, action: ItemBuilder.Action) = ItemBuilder(material).apply { action.apply { initialize() } }.build()
 
-class ItemBuilder(private val material: Material) {
+open class ItemBuilder(private val material: Material) {
     private var displayName: Component? = null
     private val lores = mutableListOf<Component>()
     private val enchants = mutableListOf<Enchantment>()
     private val flags = mutableListOf<ItemFlag>()
     private var amount = 1
     private var meta: ItemMetaAction? = null
-    private var onClick: Pair<Player?, ItemClickAction>? = null
 
     fun displayName(name: String): ItemBuilder {
         this.displayName = name.component()
@@ -128,13 +127,8 @@ class ItemBuilder(private val material: Material) {
         return this
     }
 
-    fun onClick(player: Player?, handler: ItemClickAction): ItemBuilder {
-        this.onClick = player to handler
-        return this
-    }
-
     @Suppress("JoinDeclarationAndAssignment")
-    fun build() = ItemStack(material, amount).apply {
+    open fun build() = ItemStack(material, amount).apply {
         itemMeta = itemMeta.apply {
             this.displayName(this@ItemBuilder.displayName)
             this@ItemBuilder.enchants.forEach {
@@ -149,10 +143,6 @@ class ItemBuilder(private val material: Material) {
 
             this@ItemBuilder.meta?.apply { initialize() }
         }
-    }.also { itemStack ->
-        if (onClick == null) return@also
-
-        itemStack.onClick(onClick!!.first, onClick!!.second)
     }
 
     private class Enchantment(
