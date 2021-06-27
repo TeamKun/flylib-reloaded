@@ -55,6 +55,6 @@ interface Menu : Listener, FlyLibComponent {
 
     enum class Type(val value: Int) {
         CHEST(27),
-        LARGE_CHEST(27),
+        LARGE_CHEST(54),
     }
 }
