@@ -76,6 +76,7 @@ object KParentCommand : Command("parent") {
 object KMenuCommand : Command("menu") {
     override fun CommandContext.execute() {
         BasicMenu.display(player!!) {
+            disableUnregisterAutomatically()
             item(5, 1, Material.DIAMOND) {
                 displayName("Super Diamond")
                 lore("Very Expensive!")
@@ -87,6 +88,10 @@ object KMenuCommand : Command("menu") {
                         bold("DIAMOND", Color.CYAN)
                         append(" > ", Color.GRAY)
                         bold("You clicked me!?!?")
+                    }
+
+                    update {
+
                     }
                 }
             }

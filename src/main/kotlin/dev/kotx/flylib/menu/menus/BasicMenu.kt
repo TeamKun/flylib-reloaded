@@ -17,10 +17,10 @@ import org.bukkit.plugin.java.*
 import org.koin.core.component.*
 
 class BasicMenu(
-    private var items: List<Menu.Item<BasicMenu>>,
-    private var type: Menu.Type,
-    private var title: Component?,
-    private var reopen: Boolean
+    private val items: List<Menu.Item<BasicMenu>>,
+    private val type: Menu.Type,
+    private val title: Component?,
+    private val unregisterAutomatically: Boolean
 ) : Menu {
     private val plugin: JavaPlugin by inject()
     private val inventories: MutableMap<Player, Inventory> = mutableMapOf()
@@ -31,7 +31,7 @@ class BasicMenu(
 
     override fun display(player: Player) {
         val inventory = if (title != null)
-            player.server.createInventory(player, type.value, title!!)
+            player.server.createInventory(player, type.value, title)
         else
             player.server.createInventory(player, type.value)
 
@@ -40,21 +40,30 @@ class BasicMenu(
             inventory.setItem(it.index, it.item)
         }
 
-        inventories.remove(player)
-        inventories[player] = inventory
         player.openInventory(inventory)
+
+        inventories[player] = inventory
     }
 
     fun update(builder: Builder.Action) {
         val inv = create(builder)
-        items = inv.items
-        type = inv.type
-        title = inv.title
-        reopen = inv.reopen
 
         inventories.toMap().keys.forEach {
-            display(it)
+            inv.display(it)
         }
+    }
+
+    fun close(player: Player) {
+        player.closeInventory()
+        inventories.remove(player)
+    }
+
+    fun closeAll() {
+        inventories.keys.forEach {
+            it.closeInventory()
+        }
+
+        inventories.clear()
     }
 
     @EventHandler
@@ -68,11 +77,7 @@ class BasicMenu(
 
     @EventHandler
     fun onInventoryClose(event: InventoryCloseEvent) {
-        if (event.inventory != inventories[event.player]) return
-
-        if (event.reason == InventoryCloseEvent.Reason.PLAYER && reopen)
-            display(event.player as Player)
-        else if (event.reason != InventoryCloseEvent.Reason.OPEN_NEW)
+        if (unregisterAutomatically)
             inventories.remove(event.player)
     }
 
@@ -80,7 +85,7 @@ class BasicMenu(
         private val items = mutableListOf<Menu.Item<BasicMenu>>()
         private var title: Component? = null
         private var type: Menu.Type = Menu.Type.CHEST
-        private var reopen: Boolean = false
+        private var unregisterAutomatically: Boolean = true
 
         fun title(text: String): Builder {
             title = text.component()
@@ -97,8 +102,8 @@ class BasicMenu(
             return this
         }
 
-        fun automaticallyReOpen(): Builder {
-            reopen = true
+        fun disableUnregisterAutomatically(): Builder {
+            unregisterAutomatically = false
             return this
         }
 
@@ -158,7 +163,7 @@ class BasicMenu(
             items,
             type,
             title,
-            reopen
+            unregisterAutomatically
         )
 
         fun interface Action {
