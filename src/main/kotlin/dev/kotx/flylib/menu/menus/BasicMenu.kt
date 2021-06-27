@@ -17,10 +17,7 @@ import org.bukkit.plugin.java.*
 import org.koin.core.component.*
 
 class BasicMenu(
-    private val items: List<Menu.Item<BasicMenu>>,
-    private val type: Menu.Type,
-    private val title: Component?,
-    private val unregisterAutomatically: Boolean
+    private var configuration: Configuration,
 ) : Menu {
     private val plugin: JavaPlugin by inject()
     private val inventories: MutableMap<Player, Inventory> = mutableMapOf()
@@ -30,13 +27,13 @@ class BasicMenu(
     }
 
     override fun display(player: Player) {
-        val inventory = if (title != null)
-            player.server.createInventory(player, type.value, title)
+        val inventory = if (configuration.title != null)
+            player.server.createInventory(player, configuration.type.value, configuration.title!!)
         else
-            player.server.createInventory(player, type.value)
+            player.server.createInventory(player, configuration.type.value)
 
 
-        items.forEach {
+        configuration.items.forEach {
             inventory.setItem(it.index, it.item)
         }
 
@@ -46,10 +43,10 @@ class BasicMenu(
     }
 
     fun update(builder: Builder.Action) {
-        val inv = create(builder)
+        configuration = create(builder)
 
         inventories.toMap().keys.forEach {
-            inv.display(it)
+            display(it)
         }
     }
 
@@ -68,24 +65,24 @@ class BasicMenu(
 
     @EventHandler
     fun onInventoryClick(event: InventoryClickEvent) {
-        if (inventories[event.whoClicked] == null) return
+        if (inventories[event.whoClicked] != event.inventory) return
         event.isCancelled = true
-        items.find { it.index == event.rawSlot }?.action?.apply {
+        configuration.items.find { it.index == event.rawSlot }?.action?.apply {
             handle(event)
         }
     }
 
     @EventHandler
     fun onInventoryClose(event: InventoryCloseEvent) {
-        if (unregisterAutomatically)
-            inventories.remove(event.player)
+        if (inventories[event.player as Player] != event.inventory) return
+
+        inventories.remove(event.player)
     }
 
     class Builder : Menu.Builder<BasicMenu> {
         private val items = mutableListOf<Menu.Item<BasicMenu>>()
         private var title: Component? = null
         private var type: Menu.Type = Menu.Type.CHEST
-        private var unregisterAutomatically: Boolean = true
 
         fun title(text: String): Builder {
             title = text.component()
@@ -99,11 +96,6 @@ class BasicMenu(
 
         fun title(builder: TextComponentAction): Builder {
             title = text(builder)
-            return this
-        }
-
-        fun disableUnregisterAutomatically(): Builder {
-            unregisterAutomatically = false
             return this
         }
 
@@ -159,11 +151,10 @@ class BasicMenu(
             return this
         }
 
-        override fun build(): BasicMenu = BasicMenu(
+        override fun build(): Configuration = Configuration(
             items,
             type,
             title,
-            unregisterAutomatically
         )
 
         fun interface Action {
@@ -171,11 +162,22 @@ class BasicMenu(
         }
     }
 
+    class Configuration(
+        internal val items: List<Menu.Item<BasicMenu>>,
+        internal val type: Menu.Type,
+        internal val title: Component?,
+    ): Menu.Configuration<BasicMenu> {
+        override fun instance(): BasicMenu = BasicMenu(this)
+    }
+
     companion object {
         @JvmStatic
-        fun create(builder: Builder.Action): BasicMenu = Builder().apply { builder.apply { initialize() } }.build()
+        fun create(builder: Builder.Action): Configuration = Builder().apply { builder.apply { initialize() } }.build()
 
         @JvmStatic
-        fun display(player: Player, builder: Builder.Action): BasicMenu = create(builder).also { it.display(player) }
+        fun createInstance(builder: Builder.Action): BasicMenu = Builder().apply { builder.apply { initialize() } }.build().instance()
+
+        @JvmStatic
+        fun display(player: Player, builder: Builder.Action): BasicMenu = create(builder).instance().also { it.display(player) }
     }
 }

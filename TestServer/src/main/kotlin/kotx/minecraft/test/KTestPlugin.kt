@@ -9,6 +9,7 @@ import dev.kotx.flylib.*
 import dev.kotx.flylib.command.*
 import dev.kotx.flylib.command.internal.*
 import dev.kotx.flylib.menu.menus.*
+import dev.kotx.flylib.utils.*
 import org.bukkit.*
 import org.bukkit.enchantments.Enchantment.*
 import org.bukkit.inventory.*
@@ -18,20 +19,33 @@ import java.awt.Color
 class KTestPlugin : JavaPlugin() {
     override fun onEnable() {
         flyLib {
-//            listen<PlayerMoveEvent> {
-//                it.player.send("You moved from ${it.from} to ${it.to}")
-//            }
+            val menu = lazy { BasicMenu.create {
+                item(5, 1, Material.DIAMOND) {
+                    displayName("Super Diamond")
+                    lore("Very Expensive!")
+                    enchant(LUCK)
+                    flag(ItemFlag.HIDE_ENCHANTS)
+
+                    executes {
+                        it.whoClicked.send {
+                            bold("DIAMOND", Color.CYAN)
+                            append(" > ", Color.GRAY)
+                            bold("You clicked me!?!?")
+                        }
+                    }
+                }
+            }.instance() }
 
             command {
                 defaultConfiguration {
                     permission(Permission.OP)
                 }
 
-                register(KPrintNumberCommand, KTabCompleteCommand, KParentCommand, KMenuCommand)
-                register("direct") {
+                register(KPrintNumberCommand, KTabCompleteCommand, KParentCommand)
+                register("menu") {
                     description("Directly registered command")
                     executes {
-                        send("Hello direct command!")
+                        menu.value.display(player!!)
                     }
                 }
             }
@@ -69,32 +83,6 @@ object KParentCommand : Command("parent") {
     object ChildrenCommand : Command("children") {
         override fun CommandContext.execute() {
             send("You executed children command!")
-        }
-    }
-}
-
-object KMenuCommand : Command("menu") {
-    override fun CommandContext.execute() {
-        BasicMenu.display(player!!) {
-            disableUnregisterAutomatically()
-            item(5, 1, Material.DIAMOND) {
-                displayName("Super Diamond")
-                lore("Very Expensive!")
-                enchant(LUCK)
-                flag(ItemFlag.HIDE_ENCHANTS)
-
-                executes {
-                    send {
-                        bold("DIAMOND", Color.CYAN)
-                        append(" > ", Color.GRAY)
-                        bold("You clicked me!?!?")
-                    }
-
-                    update {
-
-                    }
-                }
-            }
         }
     }
 }

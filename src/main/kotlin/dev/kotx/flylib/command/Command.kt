@@ -16,6 +16,7 @@ abstract class Command(
     val name: String
 ) : FlyLibComponent {
     internal val plugin by inject<JavaPlugin>()
+    val flyLib: FlyLib by inject()
     private val commandHandler by inject<CommandHandler>()
 
     /**

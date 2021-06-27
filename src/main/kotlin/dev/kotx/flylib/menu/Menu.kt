@@ -17,7 +17,11 @@ interface Menu : Listener, FlyLibComponent {
     fun display(player: Player)
 
     interface Builder<T : Menu> {
-        fun build(): T
+        fun build(): Configuration<T>
+    }
+
+    interface Configuration<T: Menu> {
+        fun instance(): T
     }
 
     fun interface Action<T: Menu> {
