@@ -17,6 +17,7 @@ import net.minecraft.server.v1_16_R3.*
 import org.bukkit.*
 import org.bukkit.craftbukkit.v1_16_R3.*
 import org.bukkit.entity.*
+import org.bukkit.event.server.*
 import org.bukkit.permissions.*
 import org.bukkit.plugin.java.*
 import org.koin.core.component.*
@@ -25,8 +26,9 @@ import kotlin.collections.set
 
 
 class CommandHandler(
-    val commands: List<Command>
+    private val commands: List<Command>
 ) : FlyLibComponent {
+    private val flyLib: FlyLib by inject()
     private val plugin: JavaPlugin by inject()
     private val logger: Logger by inject()
     private val scope = CoroutineScope(Dispatchers.Default + CoroutineName("FlyLib Command Dispatcher"))
@@ -84,6 +86,13 @@ class CommandHandler(
                 }
             }
         }, 0L)
+
+        flyLib.registerListener<PluginDisableEvent> {
+            val root = ((Bukkit.getServer() as CraftServer).server as MinecraftServer).commandDispatcher.a().root
+            commands.forEach {
+                root.removeCommand(it.name)
+            }
+        }
     }
 
     private fun register(
