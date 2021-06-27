@@ -68,7 +68,7 @@ class BasicMenu(
 
     @EventHandler
     fun onInventoryClick(event: InventoryClickEvent) {
-        if (inventories[event.whoClicked] != event.inventory) return
+        if (inventories[event.whoClicked] == null) return
         event.isCancelled = true
         items.find { it.index == event.rawSlot }?.action?.apply {
             handle(event)
