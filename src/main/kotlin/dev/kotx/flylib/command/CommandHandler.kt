@@ -15,46 +15,51 @@ import dev.kotx.flylib.utils.*
 import kotlinx.coroutines.*
 import net.minecraft.server.v1_16_R3.*
 import org.bukkit.*
+import org.bukkit.command.*
 import org.bukkit.craftbukkit.v1_16_R3.*
+import org.bukkit.craftbukkit.v1_16_R3.command.*
 import org.bukkit.entity.*
-import org.bukkit.event.server.*
 import org.bukkit.permissions.*
 import org.bukkit.plugin.java.*
 import org.koin.core.component.*
 import org.slf4j.*
+import java.lang.invoke.*
 import kotlin.collections.set
 
 
 class CommandHandler(
     private val commands: List<Command>
 ) : FlyLibComponent {
-    private val flyLib: FlyLib by inject()
     private val plugin: JavaPlugin by inject()
     private val logger: Logger by inject()
     private val scope = CoroutineScope(Dispatchers.Default + CoroutineName("FlyLib Command Dispatcher"))
 
-    internal fun initialize() {
+    internal fun onEnable() {
+        logger.info("[CommandHandler] Registering commands: (${commands.size})")
+
+        logger.info("[CommandHandler] Adding permissions")
         plugin.server.pluginManager.addPermission(
             org.bukkit.permissions.Permission(
-                "flylib.op",
+                "flylib.command.op",
                 PermissionDefault.OP
             )
         )
         plugin.server.pluginManager.addPermission(
             org.bukkit.permissions.Permission(
-                "flylib.notop",
+                "flylib.command.notop",
                 PermissionDefault.NOT_OP
             )
         )
         plugin.server.pluginManager.addPermission(
             org.bukkit.permissions.Permission(
-                "flylib.everyone",
+                "flylib.command.everyone",
                 PermissionDefault.TRUE
             )
         )
 
-        logger.info("Registering commands: (${commands.size})")
         commands.forEach { command ->
+            logger.info("[CommandHandler] Registering command: ${command.name}")
+
             register(
                 command,
                 command.name
@@ -67,32 +72,66 @@ class CommandHandler(
                 )
             }
         }
+    }
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, {
-            commands.forEach { cmd ->
-                plugin.server.commandMap.getCommand(cmd.name)?.permission = when (cmd.permission) {
-                    Permission.OP -> "flylib.op"
-                    Permission.NOT_OP -> "flylib.notop"
-                    Permission.EVERYONE -> "flylib.everyone"
-                }
+    internal fun onLoad() {
+        commands.forEach { cmd ->
+            logger.info("[CommandHandler] Registering permissions: ${cmd.name}")
 
-
-                cmd.aliases.forEach {
-                    plugin.server.commandMap.getCommand(it)?.permission = when (cmd.permission) {
-                        Permission.OP -> "flylib.op"
-                        Permission.NOT_OP -> "flylib.notop"
-                        Permission.EVERYONE -> "flylib.everyone"
-                    }
-                }
+            plugin.server.commandMap.getCommand(cmd.name)?.permission = when (cmd.permission) {
+                Permission.OP -> "flylib.command.op"
+                Permission.NOT_OP -> "flylib.command.notop"
+                Permission.EVERYONE -> "flylib.command.everyone"
             }
-        }, 0L)
 
-        flyLib.registerListener<PluginDisableEvent> {
-            val root = ((Bukkit.getServer() as CraftServer).server as MinecraftServer).commandDispatcher.a().root
-            commands.forEach {
-                root.removeCommand(it.name)
+            plugin.server.commandMap.getCommand("minecraft:${cmd.name}")?.permission = when (cmd.permission) {
+                Permission.OP -> "flylib.command.op"
+                Permission.NOT_OP -> "flylib.command.notop"
+                Permission.EVERYONE -> "flylib.command.everyone"
+            }
+
+            cmd.aliases.forEach {
+                plugin.server.commandMap.getCommand(it)?.permission = when (cmd.permission) {
+                    Permission.OP -> "flylib.command.op"
+                    Permission.NOT_OP -> "flylib.command.notop"
+                    Permission.EVERYONE -> "flylib.command.everyone"
+                }
+                plugin.server.commandMap.getCommand("minecraft:$it")?.permission = when (cmd.permission) {
+                    Permission.OP -> "flylib.command.op"
+                    Permission.NOT_OP -> "flylib.command.notop"
+                    Permission.EVERYONE -> "flylib.command.everyone"
+                }
             }
         }
+    }
+
+    internal fun onDisable() {
+        val root = ((Bukkit.getServer() as CraftServer).server as MinecraftServer).commandDispatcher.a().root
+        val commandNodes = MethodHandles.privateLookupIn(SimpleCommandMap::class.java, MethodHandles.lookup())
+            .findVarHandle(SimpleCommandMap::class.java, "knownCommands", MutableMap::class.java)
+            .get(Bukkit.getCommandMap()) as MutableMap<String, org.bukkit.command.Command>
+
+        logger.info("Unregistering commands: (${commands.size})")
+        commands.forEach {
+            logger.info("Unregistering command: ${it.name}")
+
+            root.removeCommand(it.name)
+            root.removeCommand("minecraft:${it.name}")
+            commandNodes.remove(it.name)
+            commandNodes.remove("minecraft:${it.name}")
+
+            it.aliases.forEach {
+                root.removeCommand(it)
+                root.removeCommand("minecraft:${it}")
+                commandNodes.remove(it)
+                commandNodes.remove("minecraft:${it}")
+            }
+        }
+
+        logger.info("Removing permissions")
+        plugin.server.pluginManager.removePermission("flylib.command.op")
+        plugin.server.pluginManager.removePermission("flylib.command.notop")
+        plugin.server.pluginManager.removePermission("flylib.command.everyone")
     }
 
     private fun register(
@@ -170,7 +209,17 @@ class CommandHandler(
 
         command.handle(base)
 
-        ((Bukkit.getServer() as CraftServer).server as MinecraftServer).commandDispatcher.a().register(base)
+        val dispatcher = ((Bukkit.getServer() as CraftServer).server as MinecraftServer).commandDispatcher
+        dispatcher.a().register(base)
+
+        val commandNodes = MethodHandles.privateLookupIn(SimpleCommandMap::class.java, MethodHandles.lookup())
+            .findVarHandle(SimpleCommandMap::class.java, "knownCommands", MutableMap::class.java)
+            .get(Bukkit.getCommandMap()) as MutableMap<String, org.bukkit.command.Command>
+
+        commandNodes[name] = VanillaCommandWrapper(
+            dispatcher,
+            base.build()
+        )
     }
 
     private fun getArgumentBuilder(argument: Argument<*>): ArgumentBuilder<CommandListenerWrapper, *> = if (argument.type == null)

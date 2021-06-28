@@ -11,7 +11,7 @@ import dev.kotx.flylib.command.internal.*
 import dev.kotx.flylib.menu.menus.*
 import dev.kotx.flylib.utils.*
 import org.bukkit.*
-import org.bukkit.enchantments.Enchantment.*
+import org.bukkit.enchantments.*
 import org.bukkit.inventory.*
 import org.bukkit.plugin.java.*
 import java.awt.Color
@@ -23,7 +23,7 @@ class KTestPlugin : JavaPlugin() {
                 item(5, 1, Material.DIAMOND) {
                     displayName("Super Diamond")
                     lore("Very Expensive!")
-                    enchant(LUCK)
+                    enchant(Enchantment.LUCK)
                     flag(ItemFlag.HIDE_ENCHANTS)
 
                     executes {

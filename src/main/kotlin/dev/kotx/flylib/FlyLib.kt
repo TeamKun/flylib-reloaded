@@ -6,7 +6,9 @@
 package dev.kotx.flylib
 
 import dev.kotx.flylib.command.*
+import org.bukkit.*
 import org.bukkit.event.*
+import org.bukkit.event.server.*
 import org.bukkit.plugin.*
 import org.bukkit.plugin.java.*
 import org.koin.dsl.*
@@ -17,40 +19,53 @@ import kotlin.reflect.full.*
 class FlyLib(
     private val plugin: JavaPlugin,
     private val commandHandler: CommandHandler,
-    handlers: Map<KClass<out Event>, List<Pair<Builder.ListenerAction<in Event>, EventPriority>>>,
+    private val handlers: Map<KClass<out Event>, List<Pair<Builder.ListenerAction<in Event>, EventPriority>>>,
 ) {
     private val logger = LoggerFactory.getLogger("::FlyLib Reloaded::")!!
 
-    init {
-        try {
-            logger.info("injection start.")
-            koinApplication {
-                modules(module {
-                    single { this@FlyLib }
-                    single { this@FlyLib.plugin }
-                    single { this@FlyLib.commandHandler }
-                    single { this@FlyLib.logger }
-                })
-            }.also {
-                FlyLibContext.startKoin(FlyLibContext, it)
-            }
+    private val registeredListeners = mutableMapOf<KClass<out Event>, MutableList<RegisteredListener>>()
 
-            handlers.forEach { event, actions ->
-                val handlerList = event::functions.get().find { it.name == "getHandlerList" }?.call() as HandlerList
-                actions.forEach {
-                    handlerList.register(
-                        RegisteredListener(
-                            object : Listener {},
-                            { _, event -> it.first.handle(event) },
-                            it.second,
-                            plugin,
-                            false
-                        )
-                    )
+    init {
+        koinApplication {
+            modules(module {
+                single { this@FlyLib }
+                single { this@FlyLib.plugin }
+                single { this@FlyLib.commandHandler }
+                single { this@FlyLib.logger }
+            })
+        }.also {
+            if (FlyLibContext.getOrNull() != null)
+                FlyLibContext.stop()
+
+            FlyLibContext.startKoin(FlyLibContext, it)
+        }
+
+        registerListener<PluginEnableEvent> {
+            if (it.plugin.name == this.plugin.name)
+                onEnable()
+        }
+
+        registerListener<PluginDisableEvent> {
+            if (it.plugin.name == this.plugin.name)
+                onDisable()
+        }
+    }
+
+    private fun onEnable() {
+        try {
+            logger.info("Injecting...")
+
+            handlers.map { (event, actions) ->
+                registeredListeners[event] to actions.map {
+                    registerListener(it.second, it.first)
                 }
             }
 
-            commandHandler.initialize()
+            commandHandler.onEnable()
+
+            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin) {
+                onLoad()
+            }
 
             println(
                 """
@@ -80,9 +95,42 @@ class FlyLib(
         }
     }
 
-    inline fun <reified T : Event> registerListener(priority: EventPriority = EventPriority.NORMAL, action: Builder.ListenerAction<T>): RegisteredListener {
+    private fun onLoad() {
+        commandHandler.onLoad()
+    }
+
+    private fun onDisable() {
+        try {
+            logger.info("Disabling...")
+
+            registeredListeners.forEach { k, v ->
+                v.forEach {
+                    unRegisterListener(k.java, it)
+                }
+            }
+
+            commandHandler.onDisable()
+
+            logger.info("Disable completed!")
+
+        } catch (e: Exception) {
+            println()
+            logger.error("Unregister failed.")
+            logger.error("Please contact https://github.com/TeamKun/flylib-reloaded/issues.")
+            logger.error("with the following stacktrace and a description of how to reproduce the problem.")
+            println()
+            e.printStackTrace()
+            println()
+        }
+    }
+
+    inline fun <reified T : Event> registerListener(priority: EventPriority = EventPriority.NORMAL, action: Builder.ListenerAction<in T>): RegisteredListener {
+        return registerListener(T::class.java, priority, action)
+    }
+
+    inline fun <reified T : Event> registerListener(clazz: Class<out T>, priority: EventPriority = EventPriority.NORMAL, action: Builder.ListenerAction<in T>): RegisteredListener {
         val plugin: JavaPlugin = FlyLibContext.get().get()
-        val handlerList = T::class::functions.get().find { it.name == "getHandlerList" }?.call() as HandlerList
+        val handlerList = clazz.kotlin::functions.get().find { it.name == "getHandlerList" }?.call() as HandlerList
         val registeredListener = RegisteredListener(
             object : Listener {},
             { _, event -> action.handle(event as T) },
@@ -98,7 +146,11 @@ class FlyLib(
     }
 
     inline fun <reified T : Event> unRegisterListener(listener: RegisteredListener) {
-        val handlerList = T::class::functions.get().find { it.name == "getHandlerList" }?.call() as HandlerList
+        unRegisterListener(T::class.java, listener)
+    }
+
+    inline fun <reified T : Event> unRegisterListener(clazz: Class<out T>, listener: RegisteredListener) {
+        val handlerList = clazz.kotlin::functions.get().find { it.name == "getHandlerList" }?.call() as HandlerList
         handlerList.unregister(listener)
     }
 
