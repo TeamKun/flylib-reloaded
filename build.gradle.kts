@@ -54,12 +54,16 @@ tasks {
 }
 
 val packageJavadoc by tasks.registering(Jar::class) {
-    from(tasks.javadoc.get())
+    from(tasks.javadoc.get().destinationDir)
     archiveClassifier.set("javadoc")
+    archiveExtension.set("jar")
+
+    dependsOn(tasks.javadoc)
 }
 
 val packageSources by tasks.registering(Jar::class) {
     from(sourceSets.main.get().allSource)
+    archiveClassifier.set("sources")
     archiveClassifier.set("sources")
 }
 
@@ -79,6 +83,7 @@ publishing {
                 name.set(projectName)
                 description.set("a utility library for Minecraft Paper that provides commands, menus, Kotlin extensions, and more.")
                 url.set("https://github.com/TeamKun/flylib-reloaded")
+
                 licenses {
                     license {
                         name.set("MIT License")
@@ -99,12 +104,18 @@ publishing {
                     developerConnection.set("git@github.com:TeamKun/flylib-reloaded.git")
                     url.set("https://github.com/TeamKun/flylib-reloaded")
                 }
+
+                organization {
+                    name.set("TeamKun")
+                    url.set("https://github.com/TeamKun")
+                }
             }
         }
     }
 
     repositories {
         maven {
+            name = "OSSRH"
             url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2")
 
             val mavenUserName = if (hasProperty("maven_username")) findProperty("maven_username") as String else ""
