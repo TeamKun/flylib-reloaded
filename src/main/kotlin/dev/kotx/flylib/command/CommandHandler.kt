@@ -10,7 +10,6 @@ import com.mojang.brigadier.builder.*
 import com.mojang.brigadier.context.CommandContext
 import dev.kotx.flylib.*
 import dev.kotx.flylib.command.internal.*
-import dev.kotx.flylib.command.internal.Permission
 import dev.kotx.flylib.utils.*
 import kotlinx.coroutines.*
 import net.minecraft.server.v1_16_R3.*
@@ -19,7 +18,6 @@ import org.bukkit.command.*
 import org.bukkit.craftbukkit.v1_16_R3.*
 import org.bukkit.craftbukkit.v1_16_R3.command.*
 import org.bukkit.entity.*
-import org.bukkit.permissions.*
 import org.bukkit.plugin.java.*
 import org.koin.core.component.*
 import org.slf4j.*
@@ -38,24 +36,13 @@ class CommandHandler(
         logger.info("[CommandHandler] Registering commands: (${commands.size})")
 
         logger.info("[CommandHandler] Adding permissions")
-        plugin.server.pluginManager.addPermission(
-            org.bukkit.permissions.Permission(
-                "flylib.command.op",
-                PermissionDefault.OP
-            )
-        )
-        plugin.server.pluginManager.addPermission(
-            org.bukkit.permissions.Permission(
-                "flylib.command.notop",
-                PermissionDefault.NOT_OP
-            )
-        )
-        plugin.server.pluginManager.addPermission(
-            org.bukkit.permissions.Permission(
-                "flylib.command.everyone",
-                PermissionDefault.TRUE
-            )
-        )
+
+        commands.distinctBy { it.permission.id }.forEach {
+            plugin.server.pluginManager.addPermission(org.bukkit.permissions.Permission(
+                "${plugin.name}.command.${it.permission.id}",
+                it.permission.default,
+            ))
+        }
 
         commands.forEach { command ->
             logger.info("[CommandHandler] Registering command: ${command.name}")
@@ -78,29 +65,13 @@ class CommandHandler(
         commands.forEach { cmd ->
             logger.info("[CommandHandler] Registering permissions: ${cmd.name}")
 
-            plugin.server.commandMap.getCommand(cmd.name)?.permission = when (cmd.permission) {
-                Permission.OP -> "flylib.command.op"
-                Permission.NOT_OP -> "flylib.command.notop"
-                Permission.EVERYONE -> "flylib.command.everyone"
-            }
+            plugin.server.commandMap.getCommand(cmd.name)?.permission = cmd.permission.id
 
-            plugin.server.commandMap.getCommand("minecraft:${cmd.name}")?.permission = when (cmd.permission) {
-                Permission.OP -> "flylib.command.op"
-                Permission.NOT_OP -> "flylib.command.notop"
-                Permission.EVERYONE -> "flylib.command.everyone"
-            }
+            plugin.server.commandMap.getCommand("minecraft:${cmd.name}")?.permission = cmd.permission.id
 
             cmd.aliases.forEach {
-                plugin.server.commandMap.getCommand(it)?.permission = when (cmd.permission) {
-                    Permission.OP -> "flylib.command.op"
-                    Permission.NOT_OP -> "flylib.command.notop"
-                    Permission.EVERYONE -> "flylib.command.everyone"
-                }
-                plugin.server.commandMap.getCommand("minecraft:$it")?.permission = when (cmd.permission) {
-                    Permission.OP -> "flylib.command.op"
-                    Permission.NOT_OP -> "flylib.command.notop"
-                    Permission.EVERYONE -> "flylib.command.everyone"
-                }
+                plugin.server.commandMap.getCommand(it)?.permission = cmd.permission.id
+                plugin.server.commandMap.getCommand("minecraft:$it")?.permission = cmd.permission.id
             }
         }
     }
@@ -129,9 +100,9 @@ class CommandHandler(
         }
 
         logger.info("Removing permissions")
-        plugin.server.pluginManager.removePermission("flylib.command.op")
-        plugin.server.pluginManager.removePermission("flylib.command.notop")
-        plugin.server.pluginManager.removePermission("flylib.command.everyone")
+        commands.distinctBy { it.permission.id }.forEach {
+            plugin.server.pluginManager.removePermission("${plugin.name}.command.${it.permission.id}")
+        }
     }
 
     private fun register(
@@ -234,11 +205,7 @@ class CommandHandler(
         depth: Int
     ) {
         requires {
-            val validPermission = when (usage.permission ?: command.permission) {
-                Permission.OP -> it.bukkitSender.isOp
-                Permission.NOT_OP -> !it.bukkitSender.isOp
-                Permission.EVERYONE -> true
-            }
+            val validPermission = it.bukkitSender.hasPermission((usage.permission ?: command.permission).id)
 
             if (!validPermission) return@requires false
 

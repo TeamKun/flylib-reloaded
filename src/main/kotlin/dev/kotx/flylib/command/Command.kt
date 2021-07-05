@@ -75,13 +75,13 @@ abstract class Command(
     var parent: Command? = null
 
     fun validate(sender: CommandSender): Boolean {
-        val validPermission = when (permission) {
-            Permission.OP -> sender.isOp
-            Permission.NOT_OP -> !sender.isOp
-            Permission.EVERYONE -> true
-        }
-
-        if (!validPermission) return false
+//        val validPermission = when (permission) {
+//            Permission.OP -> sender.isOp
+//            Permission.NOT_OP -> !sender.isOp
+//            Permission.EVERYONE -> true
+//        }
+//
+//        if (!validPermission) return false
 
         val validSender = !playerOnly || playerOnly && sender is Player
 
