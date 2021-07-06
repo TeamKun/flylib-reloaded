@@ -28,7 +28,6 @@ class CommandHandler(
     private val commands: List<Command>
 ) : FlyLibComponent {
     private val plugin: JavaPlugin by inject()
-    private val logger: Logger by inject()
 
     internal fun onEnable() {
         commands.forEach { command ->
@@ -68,8 +67,6 @@ class CommandHandler(
                 plugin.server.commandMap.getCommand("minecraft:$it")?.permission = "${plugin.name.lowercase()}.command.${command.name.lowercase()}"
             }
         }
-
-        logger.debug(plugin.server.pluginManager.permissions.filter { it.name.startsWith(plugin.name.lowercase()) }.joinToString("\n") { it.name })
     }
 
     internal fun onDisable() {
