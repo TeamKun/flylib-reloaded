@@ -12,7 +12,7 @@ plugins {
 
 val projectName = "flylib-reloaded"
 val projectGroup = "dev.kotx"
-val projectVersion = "0.2.42"
+val projectVersion = "0.2.43"
 
 group = projectGroup
 version = projectVersion
@@ -68,7 +68,7 @@ val packageJavadoc by tasks.registering(Jar::class) {
 val packageSources by tasks.registering(Jar::class) {
     from(sourceSets.main.get().allSource)
     archiveClassifier.set("sources")
-    archiveClassifier.set("sources")
+    archiveExtension.set("jar")
 }
 
 publishing {
