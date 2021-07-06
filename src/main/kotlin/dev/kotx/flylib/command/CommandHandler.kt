@@ -68,6 +68,8 @@ class CommandHandler(
                 plugin.server.commandMap.getCommand("minecraft:$it")?.permission = "${plugin.name.lowercase()}.command.${command.name.lowercase()}"
             }
         }
+
+        logger.debug(plugin.server.pluginManager.permissions.filter { it.name.startsWith(plugin.name.lowercase()) }.joinToString("\n") { it.name })
     }
 
     internal fun onDisable() {
@@ -220,21 +222,11 @@ class CommandHandler(
     class Builder {
         private val commands = mutableListOf<Command>()
 
-        /**
-         * Changes the default command settings. See CommandDefault below for details.
-         * @param action The lambda expression that makes up the Command Default.
-         *
-         * @see CommandDefault
-         */
         fun defaultConfiguration(action: CommandDefault.Action): Builder {
             CommandDefault.apply { action.apply { initialize() } }
             return this
         }
 
-        /**
-         * Registers the specified command. It is not necessary to register commands or permissions in plugin.yml.
-         * @param commands The commands you want to register.
-         */
         fun register(vararg commands: Command): Builder {
             fun List<Command>.setParent(parent: Command): Unit = forEach {
                 it.parent = parent
@@ -247,23 +239,13 @@ class CommandHandler(
             return this
         }
 
-        /**
-         * Registers the specified command. It is not necessary to register commands or permissions in plugin.yml.
-         * @param name The name of the command you want to register.
-         * @param action Builder lambda expressions that make up the Command.
-         */
-
         fun register(name: String, action: Command.Builder.Action): Builder {
             register(Command.Builder(name).apply { action.apply { initialize() } }.build())
             return this
         }
 
-        /**
-         * Build CommandHandler
-         *
-         * @return CommandHandler Instance
-         */
         fun build() = CommandHandler(commands)
+
         fun interface Action {
             fun Builder.initialize()
         }

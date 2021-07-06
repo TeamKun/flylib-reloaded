@@ -11,9 +11,6 @@ import org.bukkit.command.*
 import org.bukkit.entity.*
 import org.bukkit.plugin.java.*
 
-/**
- *
- */
 class Suggestion @JvmOverloads constructor(
     val content: String,
     val tooltip: String? = null

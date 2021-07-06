@@ -11,11 +11,6 @@ import org.bukkit.command.*
 import org.bukkit.entity.*
 import org.bukkit.plugin.java.*
 
-/**
- * By implementing Command execute and tabComplete as extended functions of CommandContext rather than as arguments,
- * you can avoid writing the same arguments to functions, and furthermore, you can aggregate functions that you want to be executed only from that command,
- * which improves the visibility.
- */
 class CommandContext(
     val command: Command,
     val plugin: JavaPlugin,

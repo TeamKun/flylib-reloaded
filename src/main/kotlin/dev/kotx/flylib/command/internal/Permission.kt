@@ -7,9 +7,6 @@ package dev.kotx.flylib.command.internal
 
 import org.bukkit.permissions.*
 
-/**
- * Permission to use the command. Permission.OP can be used only by OP, Permission.NOT_OP can be used by everyone except OP, and Permission.EVERYONE can be used by everyone.
- */
 class Permission(
     val default: PermissionDefault = PermissionDefault.OP,
 ) {
