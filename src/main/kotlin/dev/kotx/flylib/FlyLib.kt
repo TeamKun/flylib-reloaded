@@ -21,11 +21,13 @@ class FlyLib(
     private val commandHandler: CommandHandler,
     private val handlers: Map<KClass<out Event>, List<Pair<Builder.ListenerAction<in Event>, EventPriority>>>,
 ) {
-    private val logger = LoggerFactory.getLogger("::FlyLib Reloaded::")!!
+    private val logger = LoggerFactory.getLogger("FlyLib Reloaded")!!
 
     private val registeredListeners = mutableMapOf<KClass<out Event>, MutableList<RegisteredListener>>()
 
     init {
+        logger.info("Loading FlyLib...")
+
         koinApplication {
             modules(module {
                 single { this@FlyLib }
@@ -53,8 +55,6 @@ class FlyLib(
 
     private fun onEnable() {
         try {
-            logger.info("Injecting...")
-
             handlers.map { (event, actions) ->
                 registeredListeners[event] to actions.map {
                     registerListener(it.second, it.first)
@@ -78,7 +78,8 @@ class FlyLib(
                 \_|   |_|\__, \_____/_|_.__/  \_| \_\___|_|\___/ \__,_|\__,_|\___|\__,_|
                           __/ |                                                         
                          |___/
-                ::FlyLib Reloaded | by @kotx__ | Inject successfully.::
+                         
+                ::FlyLib Reloaded | by @kotx__ | Loaded successfully.::
                 
                 If you have any bugs, feature suggestions and questions, please contact us at https://github.com/TeamKun/flylib-reloaded.
                 
@@ -101,7 +102,7 @@ class FlyLib(
 
     private fun onDisable() {
         try {
-            logger.info("Disabling...")
+            logger.info("Removing FlyLib...")
 
             registeredListeners.forEach { k, v ->
                 v.forEach {
@@ -111,11 +112,10 @@ class FlyLib(
 
             commandHandler.onDisable()
 
-            logger.info("Disable completed!")
-
+            logger.info("FlyLib Removed.")
         } catch (e: Exception) {
             println()
-            logger.error("Unregister failed.")
+            logger.error("Removing FlyLib failed.")
             logger.error("Please contact https://github.com/TeamKun/flylib-reloaded/issues.")
             logger.error("with the following stacktrace and a description of how to reproduce the problem.")
             println()
