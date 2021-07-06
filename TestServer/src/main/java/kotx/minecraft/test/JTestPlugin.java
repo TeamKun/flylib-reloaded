@@ -56,8 +56,6 @@ class JTabCompleteCommand extends Command {
                 .selectionArgument("mode", "active", "inactive")
                 .playerArgument("target")
                 .positionArgument("position"));
-
-
     }
 }
 
