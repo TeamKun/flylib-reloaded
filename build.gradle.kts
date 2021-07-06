@@ -4,7 +4,7 @@
  */
 
 plugins {
-    kotlin("jvm") version "1.5.10"
+    kotlin("jvm") version "1.5.20"
     java
     `maven-publish`
     signing
@@ -43,6 +43,7 @@ tasks {
     compileJava {
         sourceCompatibility = "15"
         targetCompatibility = "15"
+        options.isFork = true
     }
 
     compileKotlin {
