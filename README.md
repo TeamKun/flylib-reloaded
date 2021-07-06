@@ -17,6 +17,7 @@ You can implement tab completion, type checking, help message generation, and su
 
 ❗ **There is no need to add any commands or permissions to plugin.yml. They will be automatically incorporated by FlyLib. permissions, aliases and other command informations are defined as variables in the command.**
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/eedeef2019374b658746245da1a69fbf)](https://app.codacy.com/gh/TeamKun/flylib-reloaded?utm_source=github.com&utm_medium=referral&utm_content=TeamKun/flylib-reloaded&utm_campaign=Badge_Grade_Settings)
 [![](https://i.imgur.com/M6Jpyj0.gif)]()
 
 <details>
