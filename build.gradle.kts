@@ -40,6 +40,11 @@ java {
 }
 
 tasks {
+    compileJava {
+        sourceCompatibility = "15"
+        targetCompatibility = "15"
+    }
+
     compileKotlin {
         kotlinOptions {
             jvmTarget = "15"
