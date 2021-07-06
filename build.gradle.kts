@@ -12,7 +12,7 @@ plugins {
 
 val projectName = "flylib-reloaded"
 val projectGroup = "dev.kotx"
-val projectVersion = "0.2.37"
+val projectVersion = "0.2.38"
 
 group = projectGroup
 version = projectVersion
@@ -44,7 +44,7 @@ java {
 tasks {
     compileKotlin {
         kotlinOptions {
-            jvmTarget = "1.8"
+            jvmTarget = "15"
         }
     }
 
