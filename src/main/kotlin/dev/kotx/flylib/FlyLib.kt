@@ -138,9 +138,7 @@ class FlyLib(
             plugin,
             false
         )
-        handlerList.register(
-            registeredListener
-        )
+        handlerList.register(registeredListener)
 
         return registeredListener
     }
