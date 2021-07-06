@@ -2,7 +2,6 @@
  * Copyright (c) 2021 kotx__.
  * Twitter: https://twitter.com/kotx__
  */
-
 package dev.kotx.flylib.command
 
 import com.mojang.brigadier.*
@@ -11,7 +10,6 @@ import com.mojang.brigadier.context.CommandContext
 import dev.kotx.flylib.*
 import dev.kotx.flylib.command.internal.*
 import dev.kotx.flylib.utils.*
-import kotlinx.coroutines.*
 import net.minecraft.server.v1_16_R3.*
 import org.bukkit.*
 import org.bukkit.command.*
@@ -24,54 +22,50 @@ import org.slf4j.*
 import java.lang.invoke.*
 import kotlin.collections.set
 
+typealias Perm = org.bukkit.permissions.Permission
 
 class CommandHandler(
     private val commands: List<Command>
 ) : FlyLibComponent {
     private val plugin: JavaPlugin by inject()
     private val logger: Logger by inject()
-    private val scope = CoroutineScope(Dispatchers.Default + CoroutineName("FlyLib Command Dispatcher"))
 
     internal fun onEnable() {
-        logger.info("[CommandHandler] Registering commands: (${commands.size})")
-
-        logger.info("[CommandHandler] Adding permissions")
-
-        commands.distinctBy { it.permission.id }.forEach {
-            plugin.server.pluginManager.addPermission(org.bukkit.permissions.Permission(
-                "${plugin.name}.command.${it.permission.id}",
-                it.permission.default,
-            ))
-        }
-
         commands.forEach { command ->
-            logger.info("[CommandHandler] Registering command: ${command.name}")
-
             register(
                 command,
                 command.name
             )
-
             command.aliases.forEach {
                 register(
                     command,
                     it
                 )
             }
+
+            plugin.server.pluginManager.addPermission(
+                Perm(
+                    "${plugin.name.lowercase()}.command.${command.name.lowercase()}", command.permission.default
+                )
+            )
+            command.usages.filter { it.permission != null }.forEach {
+                plugin.server.pluginManager.addPermission(
+                    Perm(
+                        "${plugin.name.lowercase()}.command.${command.name.lowercase()}.${it.args.joinToString(".") { it.name.lowercase() }}",
+                        it.permission!!.default
+                    )
+                )
+            }
         }
     }
 
     internal fun onLoad() {
-        commands.forEach { cmd ->
-            logger.info("[CommandHandler] Registering permissions: ${cmd.name}")
-
-            plugin.server.commandMap.getCommand(cmd.name)?.permission = cmd.permission.id
-
-            plugin.server.commandMap.getCommand("minecraft:${cmd.name}")?.permission = cmd.permission.id
-
-            cmd.aliases.forEach {
-                plugin.server.commandMap.getCommand(it)?.permission = cmd.permission.id
-                plugin.server.commandMap.getCommand("minecraft:$it")?.permission = cmd.permission.id
+        commands.forEach { command ->
+            plugin.server.commandMap.getCommand(command.name)?.permission = "${plugin.name.lowercase()}.command.${command.name.lowercase()}"
+            plugin.server.commandMap.getCommand("minecraft:${command.name}")?.permission = "${plugin.name.lowercase()}.command.${command.name.lowercase()}"
+            command.aliases.forEach {
+                plugin.server.commandMap.getCommand(it)?.permission = "${plugin.name.lowercase()}.command.${command.name.lowercase()}"
+                plugin.server.commandMap.getCommand("minecraft:$it")?.permission = "${plugin.name.lowercase()}.command.${command.name.lowercase()}"
             }
         }
     }
@@ -82,26 +76,22 @@ class CommandHandler(
             .findVarHandle(SimpleCommandMap::class.java, "knownCommands", MutableMap::class.java)
             .get(Bukkit.getCommandMap()) as MutableMap<String, org.bukkit.command.Command>
 
-        logger.info("Unregistering commands: (${commands.size})")
-        commands.forEach {
-            logger.info("Unregistering command: ${it.name}")
-
-            root.removeCommand(it.name)
-            root.removeCommand("minecraft:${it.name}")
-            commandNodes.remove(it.name)
-            commandNodes.remove("minecraft:${it.name}")
-
-            it.aliases.forEach {
+        commands.forEach { command ->
+            root.removeCommand(command.name)
+            root.removeCommand("minecraft:${command.name}")
+            commandNodes.remove(command.name)
+            commandNodes.remove("minecraft:${command.name}")
+            command.aliases.forEach {
                 root.removeCommand(it)
                 root.removeCommand("minecraft:${it}")
                 commandNodes.remove(it)
                 commandNodes.remove("minecraft:${it}")
             }
-        }
 
-        logger.info("Removing permissions")
-        commands.distinctBy { it.permission.id }.forEach {
-            plugin.server.pluginManager.removePermission("${plugin.name}.command.${it.permission.id}")
+            plugin.server.pluginManager.removePermission("${plugin.name.lowercase()}.command.${command.name.lowercase()}")
+            command.usages.filter { it.permission != null }.forEach {
+                plugin.server.pluginManager.removePermission("${plugin.name.lowercase()}.command.${command.name.lowercase()}.${it.args.joinToString(".") { it.name.lowercase() }}")
+            }
         }
     }
 
@@ -109,10 +99,8 @@ class CommandHandler(
         command: Command,
         name: String
     ) {
-
         val depthMap = mutableMapOf<Command, Int>()
         var depth = 0
-
         fun List<Command>.handleDepthMap() {
             if (!isEmpty()) {
                 depth++
@@ -120,13 +108,11 @@ class CommandHandler(
                 flatMap { it.children }.handleDepthMap()
             }
         }
-
         command.children.handleDepthMap()
 
         fun Command.handle(base: LiteralArgumentBuilder<CommandListenerWrapper>) {
             usages.forEach { usage ->
                 var usageBase: ArgumentBuilder<CommandListenerWrapper, *>? = null
-
                 usage.args.reversed().forEach {
                     val ch = usageBase
                     usageBase = getArgumentBuilder(it)
@@ -134,7 +120,6 @@ class CommandHandler(
                         usageBase?.then(ch)
                     usageBase?.setupArgument(usage, it, this, depthMap[this] ?: 0)
                 }
-
                 base.then(usageBase)
             }
 
@@ -143,22 +128,17 @@ class CommandHandler(
                     .literal<CommandListenerWrapper?>(child.name)
                     .requires { child.validate(it.bukkitSender) }
                     .executes {
-                        if (child.runAsync) scope.launch { child.apply { it.asFlyLibContext(child, emptyList(), depthMap[child] ?: 0).execute() } }
-                        else child.apply { it.asFlyLibContext(child, emptyList(), depthMap[child] ?: 0).execute() }
+                        child.apply { it.asFlyLibContext(child, emptyList(), depthMap[child] ?: 0).execute() }
                         1
                     }
                 child.handle(childBase)
                 base.then(childBase)
-
                 child.aliases.forEach { it ->
                     val childAliasBase = LiteralArgumentBuilder
                         .literal<CommandListenerWrapper?>(it)
                         .requires { child.validate(it.bukkitSender) }
                         .executes {
-                            if (child.runAsync)
-                                scope.launch { child.apply { it.asFlyLibContext(child, emptyList(), depthMap[child] ?: 0).execute() } }
-                            else
-                                child.apply { it.asFlyLibContext(child, emptyList(), depthMap[child] ?: 0).execute() }
+                            child.apply { it.asFlyLibContext(child, emptyList(), depthMap[child] ?: 0).execute() }
                             1
                         }
                     child.handle(childAliasBase)
@@ -171,10 +151,7 @@ class CommandHandler(
             .literal<CommandListenerWrapper?>(name)
             .requires { command.validate(it.bukkitSender) }
             .executes {
-                if (command.runAsync)
-                    scope.launch { command.apply { it.asFlyLibContext(command, emptyList(), 0).execute() } }
-                else
-                    command.apply { it.asFlyLibContext(command, emptyList(), 0).execute() }
+                command.apply { it.asFlyLibContext(command, emptyList(), 0).execute() }
                 1
             }
 
@@ -187,10 +164,7 @@ class CommandHandler(
             .findVarHandle(SimpleCommandMap::class.java, "knownCommands", MutableMap::class.java)
             .get(Bukkit.getCommandMap()) as MutableMap<String, org.bukkit.command.Command>
 
-        commandNodes[name] = VanillaCommandWrapper(
-            dispatcher,
-            base.build()
-        )
+        commandNodes[name] = VanillaCommandWrapper(dispatcher, base.build())
     }
 
     private fun getArgumentBuilder(argument: Argument<*>): ArgumentBuilder<CommandListenerWrapper, *> = if (argument.type == null)
@@ -205,18 +179,17 @@ class CommandHandler(
         depth: Int
     ) {
         requires {
-            val validPermission = it.bukkitSender.hasPermission((usage.permission ?: command.permission).id)
+            val perm = if (usage.permission != null)
+                "${plugin.name.lowercase()}.command.${command.name.lowercase()}.${usage.args.joinToString("."){ it.name.lowercase() }}"
+            else
+                "${plugin.name.lowercase()}.command.${command.name.lowercase()}"
 
-            if (!validPermission) return@requires false
-
+            if (!it.bukkitSender.hasPermission(perm)) return@requires false
             val playerOnly = usage.playerOnly ?: command.playerOnly
             val validSender = !playerOnly || playerOnly && it.bukkitSender is Player
-
             if (!validSender) return@requires false
-
             true
         }
-
         if (this is RequiredArgumentBuilder<CommandListenerWrapper, *> && argument.tabComplete != null) suggests { ctx, builder ->
             argument.tabComplete.run {
                 val context = ctx.asFlyLibContext(command, usage.args.toList(), depth)
@@ -235,18 +208,11 @@ class CommandHandler(
                 val toolTipMessage = it.tooltip?.let { LiteralMessage(it) }
                 builder.suggest(it.content, toolTipMessage)
             }
-
             builder.buildFuture()
         }
-
         executes {
             val ctx = (it as CommandContext<CommandListenerWrapper>).asFlyLibContext(command, usage.args.toList(), depth)
-
-            if (usage.runAsync ?: command.runAsync)
-                scope.launch { usage.action?.apply { ctx.execute() } ?: command.apply { ctx.execute() } }
-            else
-                usage.action?.apply { ctx.execute() } ?: command.apply { ctx.execute() }
-
+            usage.action?.apply { ctx.execute() } ?: command.apply { ctx.execute() }
             1
         }
     }
@@ -274,7 +240,6 @@ class CommandHandler(
                 it.parent = parent
                 it.children.setParent(it)
             }
-
             commands.forEach {
                 it.children.setParent(it)
                 this.commands.add(it)
@@ -287,6 +252,7 @@ class CommandHandler(
          * @param name The name of the command you want to register.
          * @param action Builder lambda expressions that make up the Command.
          */
+
         fun register(name: String, action: Command.Builder.Action): Builder {
             register(Command.Builder(name).apply { action.apply { initialize() } }.build())
             return this
@@ -298,7 +264,6 @@ class CommandHandler(
          * @return CommandHandler Instance
          */
         fun build() = CommandHandler(commands)
-
         fun interface Action {
             fun Builder.initialize()
         }
