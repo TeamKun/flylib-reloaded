@@ -29,11 +29,6 @@ object CommandDefault {
     private var playerOnly: Boolean = false
 
     /**
-     * Whether only the player specified by default can execute when nothing is specified
-     */
-    private var runAsync: Boolean = false
-
-    /**
      * The method that will be executed when you call sendHelp() when nothing is implemented.
      */
     private var sendHelp: CommandContext.Action = CommandContext.Action {
@@ -187,16 +182,6 @@ object CommandDefault {
     }
 
     fun isPlayerOnly() = playerOnly
-
-    /**
-     * Whether only the player specified by default can execute when nothing is specified
-     */
-    fun runAsync(runAsync: Boolean): CommandDefault {
-        this.runAsync = runAsync
-        return this
-    }
-
-    fun isRunAsync() = runAsync
 
     /**
      * The method that will be executed when you call sendHelp() when nothing is implemented.

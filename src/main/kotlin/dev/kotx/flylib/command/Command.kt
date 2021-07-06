@@ -17,7 +17,6 @@ abstract class Command(
 ) : FlyLibComponent {
     internal val plugin by inject<JavaPlugin>()
     val flyLib: FlyLib by inject()
-    private val commandHandler by inject<CommandHandler>()
 
     /**
      * Command description. It is automatically displayed as a description when you execute sendHelp() from within the CommandContext.
@@ -56,12 +55,6 @@ abstract class Command(
     open var playerOnly: Boolean = CommandDefault.isPlayerOnly()
 
     /**
-     * Whether the command is executed asynchronously in another thread.
-     * Must be false when performing block operations.
-     */
-    open var runAsync: Boolean = CommandDefault.isRunAsync()
-
-    /**
      * A subcommand of this command. If the string entered as an argument matches the name or alias of these commands, the matching command will be executed.
      * This command will only be executed if there is no match.
      */
@@ -75,13 +68,7 @@ abstract class Command(
     var parent: Command? = null
 
     fun validate(sender: CommandSender): Boolean {
-//        val validPermission = when (permission) {
-//            Permission.OP -> sender.isOp
-//            Permission.NOT_OP -> !sender.isOp
-//            Permission.EVERYONE -> true
-//        }
-//
-//        if (!validPermission) return false
+        if (!sender.hasPermission("${plugin.name.lowercase()}.command.${name.lowercase()}")) return false
 
         val validSender = !playerOnly || playerOnly && sender is Player
 
@@ -144,7 +131,6 @@ abstract class Command(
         private var description: String? = null
         private var permission: Permission? = null
         private var playerOnly: Boolean? = null
-        private var runAsync: Boolean? = null
         private var action: CommandContext.Action? = null
         private val aliases = mutableListOf<String>()
         private val usages = mutableListOf<Usage>()
@@ -163,11 +149,6 @@ abstract class Command(
 
         fun playerOnly(playerOnly: Boolean): Builder {
             this.playerOnly = playerOnly
-            return this
-        }
-
-        fun runAsync(runAsync: Boolean): Builder {
-            this.runAsync = runAsync
             return this
         }
 
@@ -207,7 +188,6 @@ abstract class Command(
                 this@Builder.description?.also { this.description = it }
                 this@Builder.permission?.also { this.permission = it }
                 this@Builder.playerOnly?.also { this.playerOnly = it }
-                this@Builder.runAsync?.also { this.runAsync = it }
                 aliases.addAll(this@Builder.aliases)
                 usages.addAll(this@Builder.usages)
                 examples.addAll(this@Builder.examples)
@@ -215,9 +195,7 @@ abstract class Command(
             }
 
             override fun CommandContext.execute() {
-                this@Builder.action?.apply {
-                    execute()
-                } ?: sendHelp()
+                this@Builder.action?.apply { execute() } ?: sendHelp()
             }
         }
 
