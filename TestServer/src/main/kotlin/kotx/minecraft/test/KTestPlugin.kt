@@ -19,33 +19,32 @@ import java.awt.Color
 class KTestPlugin : JavaPlugin() {
     override fun onEnable() {
         flyLib {
-            val menu = lazy { BasicMenu.create {
-                item(5, 1, Material.DIAMOND) {
-                    displayName("Super Diamond")
-                    lore("Very Expensive!")
-                    enchant(Enchantment.LUCK)
-                    flag(ItemFlag.HIDE_ENCHANTS)
-
-                    executes {
-                        it.whoClicked.send {
-                            bold("DIAMOND", Color.CYAN)
-                            append(" > ", Color.GRAY)
-                            bold("You clicked me!?!?")
-                        }
-                    }
-                }
-            }.instance() }
-
             command {
                 defaultConfiguration {
                     permission(Permission.OP)
                 }
 
                 register(KPrintNumberCommand, KTabCompleteCommand, KParentCommand)
+
                 register("menu") {
                     description("Directly registered command")
                     executes {
-                        menu.value.display(player!!)
+                        BasicMenu.display(player!!) {
+                            item(5, 1, Material.DIAMOND) {
+                                displayName("Super Diamond")
+                                lore("Very Expensive!")
+                                enchant(Enchantment.LUCK)
+                                flag(ItemFlag.HIDE_ENCHANTS)
+
+                                executes {
+                                    it.whoClicked.send {
+                                        bold("DIAMOND", Color.CYAN)
+                                        append(" > ", Color.GRAY)
+                                        bold("You clicked me!?!?")
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

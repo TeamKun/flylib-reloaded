@@ -3,10 +3,11 @@
 <p align="center"><b>FlyLib Reloaded</b> is a utility library for <a href="https://papermc.io">Minecraft Paper</a> that provides commands, menus, Kotlin extensions, and more.</p>
 
 <div align="center">
-    <a href="https://github.com/TeamKun/flylib-reloaded"><img src="https://img.shields.io/github/workflow/status/TeamKun/flylib-reloaded/Build?style=flat-square" alt="Build Result"></a>
-    <a href="https://github.com/TeamKun/flylib-reloaded"><img src="https://img.shields.io/maven-central/v/dev.kotx/flylib-reloaded?color=blueviolet&label=version&style=flat-square" alt="mavencentral release version"></a>
+    <img src="https://img.shields.io/github/workflow/status/TeamKun/flylib-reloaded/Build?style=flat-square" alt="Build Result">
+    <img src="https://img.shields.io/maven-central/v/dev.kotx/flylib-reloaded?color=blueviolet&label=version&style=flat-square" alt="mavencentral release version">
     <a href="https://opensource.org/licenses/mit-license.php"><img src="https://img.shields.io/static/v1?label=license&message=MIT&style=flat-square&color=blue" alt="License"></a>
     <a href="https://twitter.com/kotx__"><img src="https://img.shields.io/static/v1?label=developer&message=kotx__&style=flat-square&color=orange" alt="developer"></a>
+    <a href="https://www.codacy.com/gh/TeamKun/flylib-reloaded/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=TeamKun/flylib-reloaded&amp;utm_campaign=Badge_Grade"><img src="https://img.shields.io/codacy/grade/c836938f18e14bd88d9c56f6fd063dca?style=flat-square"/></a>
 </div>
 
 ⚠️**This library is currently under development (beta version is `0.*.*`), and the API will be changed or removed without notice.**
@@ -24,26 +25,37 @@ You can implement tab completion, type checking, help message generation, and su
 <div>
 
 ```kotlin
-class TestPlugin : JavaPlugin() {
+class KTestPlugin : JavaPlugin() {
     override fun onEnable() {
         flyLib {
-            listen<PlayerMoveEvent> {
-                it.player.send("You moved from ${it.from} to ${it.to}")
-            }
-
+            listen<PlayerMoveEvent> { it.player.send("You moved from ${it.from} to ${it.to}") }
+            
             command {
                 defaultConfiguration {
                     permission(Permission.OP)
                 }
 
-                register(PrintNumberCommand)
-                register(TabCompleteCommand)
-                register(ParentCommand)
-                register(MenuCommand)
-                register("direct") {
+                register(KPrintNumberCommand, KTabCompleteCommand, KParentCommand)
+
+                register("menu") {
                     description("Directly registered command")
                     executes {
-                        send("Hello direct command!")
+                        BasicMenu.display(player!!) {
+                            item(5, 1, Material.DIAMOND) {
+                                displayName("Super Diamond")
+                                lore("Very Expensive!")
+                                enchant(Enchantment.LUCK)
+                                flag(ItemFlag.HIDE_ENCHANTS)
+
+                                executes {
+                                    it.whoClicked.send {
+                                        bold("DIAMOND", Color.CYAN)
+                                        append(" > ", Color.GRAY)
+                                        bold("You clicked me!?!?")
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -51,7 +63,7 @@ class TestPlugin : JavaPlugin() {
     }
 }
 
-object PrintNumberCommand : Command("printnumber") {
+object KPrintNumberCommand : Command("printnumber") {
     init {
         usage {
             intArgument("number", 0, 10)
@@ -63,7 +75,7 @@ object PrintNumberCommand : Command("printnumber") {
     }
 }
 
-object TabCompleteCommand : Command("tabcomplete") {
+object KTabCompleteCommand : Command("tabcomplete") {
     init {
         usage {
             selectionArgument("mode", "active", "inactive")
@@ -73,7 +85,7 @@ object TabCompleteCommand : Command("tabcomplete") {
     }
 }
 
-object ParentCommand : Command("parent") {
+object KParentCommand : Command("parent") {
     init {
         child(ChildrenCommand)
     }
@@ -81,23 +93,6 @@ object ParentCommand : Command("parent") {
     object ChildrenCommand : Command("children") {
         override fun CommandContext.execute() {
             send("You executed children command!")
-        }
-    }
-}
-
-object MenuCommand : Command("menu") {
-    override fun CommandContext.execute() {
-        ChestMenu.display(player!!) {
-            item(5, 1, item(Material.DIAMOND) {
-                displayName("Super Diamond")
-                lore("Very Expensive!")
-                enchant(LUCK)
-                flag(ItemFlag.HIDE_ENCHANTS)
-            }) {
-                send {
-                    append("You clicked me!?", TextDecoration.BOLD)
-                }
-            }
         }
     }
 }
@@ -110,7 +105,7 @@ object MenuCommand : Command("menu") {
 <div>
 
 ```java
-public class TestPlugin extends JavaPlugin {
+public class JTestPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         FlyLib.inject(this, flyLib -> {
@@ -119,20 +114,25 @@ public class TestPlugin extends JavaPlugin {
             flyLib.command(command -> {
                 command.defaultConfiguration(defaultConfiguration -> defaultConfiguration.permission(Permission.OP));
 
-                command.register(new PrintNumberCommand());
-                command.register(new TabCompleteCommand());
-                command.register(new ParentCommand());
-                command.register(new MenuCommand());
-                command.register("direct", builder -> builder
-                        .description("Directly registered command")
-                        .executes(context -> context.send("Hello direct command!")));
+                command.register(new JPrintNumberCommand(), new JTabCompleteCommand(), new JParentCommand());
+
+                command.register("menu", builder -> builder
+                        .description("Direct registered command")
+                        .executes(context -> BasicMenu.display(context.getPlayer(), menuBuilder -> menuBuilder
+                                .type(Menu.Type.CHEST)
+                                .item(Material.DIAMOND, itemBuilder -> itemBuilder
+                                        .executes((menu, event) -> context.send(component -> component.append("Hello!", Color.GREEN)))
+                                        .displayName(ChatUtils.component("Super Diamond", Color.CYAN))
+                                        .lore("Very Expensive!")
+                                        .enchant(Enchantment.LUCK)
+                                        .flag(ItemFlag.HIDE_ENCHANTS)))));
             });
         });
     }
 }
 
-class PrintNumberCommand extends Command {
-    public PrintNumberCommand() {
+class JPrintNumberCommand extends Command {
+    public JPrintNumberCommand() {
         super("printnumber");
         usage(usage -> usage
                 .intArgument("number", 0, 10)
@@ -140,46 +140,26 @@ class PrintNumberCommand extends Command {
     }
 }
 
-class TabCompleteCommand extends Command {
-    public TabCompleteCommand() {
+class JTabCompleteCommand extends Command {
+    public JTabCompleteCommand() {
         super("tabcomplete");
         usage(usage -> usage
                 .selectionArgument("mode", "active", "inactive")
                 .playerArgument("target")
                 .positionArgument("position"));
-
-
     }
 }
 
-class ParentCommand extends Command {
-    public ParentCommand() {
+class JParentCommand extends Command {
+    public JParentCommand() {
         super("parent");
         child(new JChildrenCommand());
     }
 
-    static class ChildrenCommand extends Command {
+    static class JChildrenCommand extends Command {
         public JChildrenCommand() {
             super("children");
         }
-    }
-}
-
-class MenuCommand extends Command {
-    public MenuCommand() {
-        super("menu");
-    }
-
-    @Override
-    public void execute(@NotNull CommandContext context) {
-        ChestMenu.display(context.getPlayer(), menu -> menu
-                .size(Menu.Size.LARGE_CHEST)
-                .item(5, 1, Utils.item(Material.DIAMOND, item -> item
-                                .displayName("Super Diamond")
-                                .lore("Very Expensive")
-                                .enchant(Enchantment.LUCK)
-                                .flag(ItemFlag.HIDE_ENCHANTS)),
-                        event -> context.send(component -> ChatUtils.append(component, "You clicked me!?", TextDecoration.BOLD))));
     }
 }
 ```

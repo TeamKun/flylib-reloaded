@@ -7,18 +7,15 @@ package kotx.minecraft.test;
 
 import dev.kotx.flylib.FlyLib;
 import dev.kotx.flylib.command.Command;
-import dev.kotx.flylib.command.CommandContext;
 import dev.kotx.flylib.command.internal.Permission;
 import dev.kotx.flylib.menu.Menu;
 import dev.kotx.flylib.menu.menus.BasicMenu;
 import dev.kotx.flylib.utils.ChatUtils;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
@@ -31,10 +28,18 @@ public class JTestPlugin extends JavaPlugin {
             flyLib.command(command -> {
                 command.defaultConfiguration(defaultConfiguration -> defaultConfiguration.permission(Permission.OP));
 
-                command.register(new JPrintNumberCommand(), new JTabCompleteCommand(), new JParentCommand(), new JMenuCommand())
-                        .register("direct", builder -> builder
-                                .description("Directly registered command")
-                                .executes(context -> context.send("Hello direct command!")));
+                command.register(new JPrintNumberCommand(), new JTabCompleteCommand(), new JParentCommand());
+
+                command.register("menu", builder -> builder
+                        .description("Direct registered command")
+                        .executes(context -> BasicMenu.display(context.getPlayer(), menuBuilder -> menuBuilder
+                                .type(Menu.Type.CHEST)
+                                .item(Material.DIAMOND, itemBuilder -> itemBuilder
+                                        .executes((menu, event) -> context.send(component -> component.append("Hello!", Color.GREEN)))
+                                        .displayName(ChatUtils.component("Super Diamond", Color.CYAN))
+                                        .lore("Very Expensive!")
+                                        .enchant(Enchantment.LUCK)
+                                        .flag(ItemFlag.HIDE_ENCHANTS)))));
             });
         });
     }
@@ -69,23 +74,5 @@ class JParentCommand extends Command {
         public JChildrenCommand() {
             super("children");
         }
-    }
-}
-
-class JMenuCommand extends Command {
-    public JMenuCommand() {
-        super("menu");
-    }
-
-    @Override
-    public void execute(@NotNull CommandContext context) {
-        BasicMenu.display(context.getPlayer(), menuBuilder -> menuBuilder
-                .type(Menu.Type.CHEST)
-                .item(Material.DIAMOND, itemBuilder -> itemBuilder
-                        .executes((menu, event) -> context.send(component -> component.append("Hello!", Color.GREEN)))
-                        .displayName(ChatUtils.component("Super Diamond", Color.CYAN))
-                        .lore("Very Expensive!")
-                        .enchant(Enchantment.LUCK)
-                        .flag(ItemFlag.HIDE_ENCHANTS)));
     }
 }
