@@ -21,19 +21,18 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:latest.release")
     implementation(parent!!)
 }
 
 tasks {
     compileJava {
-        sourceCompatibility = "1.8"
-        targetCompatibility = "1.8"
+        sourceCompatibility = "15"
+        targetCompatibility = "15"
         options.encoding = "UTF-8"
     }
 
     compileKotlin {
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.jvmTarget = "15"
     }
 
     javadoc {
