@@ -7,9 +7,6 @@ package dev.kotx.flylib.command
 
 import dev.kotx.flylib.*
 
-interface CommandHandler {
-    val flyLib: FlyLib
-
-    fun register(command: Command)
-    fun unregister(command: Command)
+abstract class CommandHandler(protected val commands: List<Command>) {
+    abstract val flyLib: FlyLib
 }
