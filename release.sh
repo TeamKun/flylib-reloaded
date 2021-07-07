@@ -9,7 +9,7 @@ parseVersion() {
   awk 'match($0, /^([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?$/, groups) { print groups[$1] }'
 }
 
-semanticVersionToAbstractValue() {
+abstractVersion() {
   PROJECT_MAJOR=$(parseVersion $1 1)
   PROJECT_MINOR=$(parseVersion $1 2)
   PROJECT_PATCH=$(parseVersion $1 3)
@@ -29,10 +29,9 @@ semanticVersionToAbstractValue() {
   fi
 }
 
-TARGET_FILE="./build.gradle.kts"
-PROJECT_VERSION=$(cat $TARGET_FILE | grep -m 1 "val projectVersion = " | awk 'match($0, /val projectVersion = "(.+)"/, groups) { print groups[1] }')
+PROJECT_VERSION=$(cat < build.gradle.kts | awk 'match($0, /val projectVersion = "(.+)"/, groups) { print groups[1] }')
 REMOTE_VERSION=$(curl --silent "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/latest" | grep "\"tag_name\":" | sed -E "s/.*\"([^\"]+)\".*/\1/")
-CAN_RELEASE=$(semanticVersionToAbstractValue $PROJECT_VERSION $REMOTE_VERSION)
+CAN_RELEASE=$(abstractVersion $PROJECT_VERSION $REMOTE_VERSION)
 
 if [ -z $REMOTE_VERSION ]; then
   echo "RELEASE_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
