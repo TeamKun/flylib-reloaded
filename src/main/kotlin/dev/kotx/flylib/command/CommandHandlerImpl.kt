@@ -7,12 +7,20 @@ package dev.kotx.flylib.command
 
 import dev.kotx.flylib.*
 
-internal class CommandHandlerImpl(override val flyLib: FlyLib): CommandHandler {
-    override fun register(command: Command) {
+internal class CommandHandlerImpl(override val flyLib: FlyLib, commands: List<Command>) : CommandHandler(commands) {
+    internal fun enable() {
+        commands.forEach(::register)
+    }
+
+    internal fun disable() {
 
     }
 
-    override fun unregister(command: Command) {
+    internal fun load() {
+
+    }
+
+    private fun register(command: Command) {
 
     }
 }
