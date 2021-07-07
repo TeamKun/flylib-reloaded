@@ -194,7 +194,6 @@ The following code is a configuration of shadowJar that combines all dependencie
 It relocates all classes under the project's groupId to avoid conflicts that can occur when multiple plugins using different versions of flylib are deployed to the server.  
 
 By setting the following, the contents of the jar file will look like this  
-[![](https://cdn.kotx.dev/idea64_2021-06-14%2022-38-27.png)]()
 
 ```kotlin
 import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
@@ -233,7 +232,6 @@ The following code is a configuration of shadowJar that combines all dependencie
 It relocates all classes under the project's groupId to avoid conflicts that can occur when multiple plugins using different versions of flylib are deployed to the server.
 
 By setting the following, the contents of the jar file will look like this  
-[![](https://cdn.kotx.dev/idea64_2021-06-14%2022-38-27.png)]()
 
 ```groovy
 import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
