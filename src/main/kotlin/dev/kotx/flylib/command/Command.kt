@@ -10,7 +10,12 @@ import org.bukkit.permissions.*
 abstract class Command(
     val name: String
 ) {
-    internal var description: String? = null
-    internal var aliases: List<String> = emptyList()
-    internal var permission: Permission? = null
+    @JvmField
+    var description: String? = null
+    @JvmField
+    var permission: Permission? = null
+    @JvmField
+    val aliases: Array<String> = emptyArray()
+    @JvmField
+    val usages: MutableList<Usage> = mutableListOf()
 }
