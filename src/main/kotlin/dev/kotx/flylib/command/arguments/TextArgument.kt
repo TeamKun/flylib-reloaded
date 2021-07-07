@@ -10,12 +10,18 @@ import com.mojang.brigadier.context.*
 import dev.kotx.flylib.command.*
 import net.minecraft.server.v1_16_R3.*
 
-internal class TextArgument(name: String, type: TextArgumentType = TextArgumentType.WORD, suggestion: SuggestionBuilder.() -> Unit = {}) : Argument<String>(name, suggestion) {
+class TextArgument(override val name: String, type: Type = Type.WORD, override val suggestion: SuggestionBuilder.() -> Unit = {}) : Argument<String> {
     override val type = when (type) {
-        TextArgumentType.WORD -> StringArgumentType.word()
-        TextArgumentType.PHRASE_QUOTED -> StringArgumentType.string()
-        TextArgumentType.PHRASE -> StringArgumentType.greedyString()
+        Type.WORD -> StringArgumentType.word()
+        Type.PHRASE_QUOTED -> StringArgumentType.string()
+        Type.PHRASE -> StringArgumentType.greedyString()
     }
 
-    override fun parse(context: CommandContext<CommandListenerWrapper>, key: String): String = StringArgumentType.getString(context, key)
+    override fun parse(context: CommandContext<CommandListenerWrapper>, key: String) = StringArgumentType.getString(context, key)
+
+    enum class Type {
+        WORD,
+        PHRASE_QUOTED,
+        PHRASE
+    }
 }
