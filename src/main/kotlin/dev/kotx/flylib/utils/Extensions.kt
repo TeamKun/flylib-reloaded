@@ -25,6 +25,20 @@ import org.bukkit.plugin.*
 operator fun List<Command>.get(query: String) =
     find { it.name.equals(query, true) } ?: find { it -> it.aliases.any { it == query } }
 
+internal val Command.fullCommand: List<Command>
+    get() {
+        val commands = mutableListOf<Command>()
+        var c: Command? = this
+        commands.add(c!!)
+
+        while(c != null) {
+            c = c.parent
+            c?.also { commands.add(it) }
+        }
+
+        return commands.reversed()
+    }
+
 fun CommandContext<CommandListenerWrapper>.asFlyLibContext(command: Command, args: List<Argument<*>>, depth: Int = 0): dev.kotx.flylib.command.CommandContext {
     val replaced = input.replaceFirst("/", "")
     return CommandContext(

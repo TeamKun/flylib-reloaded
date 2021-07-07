@@ -18,7 +18,6 @@ import org.bukkit.craftbukkit.v1_16_R3.command.*
 import org.bukkit.entity.*
 import org.bukkit.plugin.java.*
 import org.koin.core.component.*
-import org.slf4j.*
 import java.lang.invoke.*
 import kotlin.collections.set
 
@@ -44,13 +43,13 @@ class CommandHandler(
 
             plugin.server.pluginManager.addPermission(
                 Perm(
-                    "${plugin.name.lowercase()}.command.${command.name.lowercase()}", command.permission.default
+                    "${plugin.name.lowercase()}.command.${command.fullCommand.joinToString(".") { it.name }.lowercase()}", command.permission.default
                 )
             )
             command.usages.filter { it.permission != null }.forEach {
                 plugin.server.pluginManager.addPermission(
                     Perm(
-                        "${plugin.name.lowercase()}.command.${command.name.lowercase()}.${it.args.joinToString(".") { it.name.lowercase() }}",
+                        "${plugin.name.lowercase()}.command.${command.fullCommand.joinToString(".") { it.name }.lowercase()}.${it.args.joinToString(".") { it.name.lowercase() }}",
                         it.permission!!.default
                     )
                 )
@@ -60,11 +59,11 @@ class CommandHandler(
 
     internal fun onLoad() {
         commands.forEach { command ->
-            plugin.server.commandMap.getCommand(command.name)?.permission = "${plugin.name.lowercase()}.command.${command.name.lowercase()}"
-            plugin.server.commandMap.getCommand("minecraft:${command.name}")?.permission = "${plugin.name.lowercase()}.command.${command.name.lowercase()}"
+            plugin.server.commandMap.getCommand(command.name)?.permission = "${plugin.name.lowercase()}.command.${command.fullCommand.joinToString(".") { it.name }.lowercase()}"
+            plugin.server.commandMap.getCommand("minecraft:${command.name}")?.permission = "${plugin.name.lowercase()}.command.${command.fullCommand.joinToString(".") { it.name }.lowercase()}"
             command.aliases.forEach {
-                plugin.server.commandMap.getCommand(it)?.permission = "${plugin.name.lowercase()}.command.${command.name.lowercase()}"
-                plugin.server.commandMap.getCommand("minecraft:$it")?.permission = "${plugin.name.lowercase()}.command.${command.name.lowercase()}"
+                plugin.server.commandMap.getCommand(it)?.permission = "${plugin.name.lowercase()}.command.${command.fullCommand.joinToString(".") { it.name }.lowercase()}"
+                plugin.server.commandMap.getCommand("minecraft:$it")?.permission = "${plugin.name.lowercase()}.command.${command.fullCommand.joinToString(".") { it.name }.lowercase()}"
             }
         }
     }
@@ -87,9 +86,9 @@ class CommandHandler(
                 commandNodes.remove("minecraft:${it}")
             }
 
-            plugin.server.pluginManager.removePermission("${plugin.name.lowercase()}.command.${command.name.lowercase()}")
+            plugin.server.pluginManager.removePermission("${plugin.name.lowercase()}.command.${command.fullCommand.joinToString(".") { it.name }.lowercase()}")
             command.usages.filter { it.permission != null }.forEach {
-                plugin.server.pluginManager.removePermission("${plugin.name.lowercase()}.command.${command.name.lowercase()}.${it.args.joinToString(".") { it.name.lowercase() }}")
+                plugin.server.pluginManager.removePermission("${plugin.name.lowercase()}.command.${command.fullCommand.joinToString(".") { it.name }.lowercase()}.${it.args.joinToString(".") { it.name.lowercase() }}")
             }
         }
     }
@@ -179,9 +178,9 @@ class CommandHandler(
     ) {
         requires {
             val perm = if (usage.permission != null)
-                "${plugin.name.lowercase()}.command.${command.name.lowercase()}.${usage.args.joinToString("."){ it.name.lowercase() }}"
+                "${plugin.name.lowercase()}.command.${command.fullCommand.joinToString(".") { it.name }.lowercase()}.${usage.args.joinToString(".") { it.name.lowercase() }}"
             else
-                "${plugin.name.lowercase()}.command.${command.name.lowercase()}"
+                "${plugin.name.lowercase()}.command.${command.fullCommand.joinToString(".") { it.name }.lowercase()}"
 
             if (!it.bukkitSender.hasPermission(perm)) return@requires false
             val playerOnly = usage.playerOnly ?: command.playerOnly

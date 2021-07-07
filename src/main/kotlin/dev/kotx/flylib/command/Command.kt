@@ -2,6 +2,7 @@ package dev.kotx.flylib.command
 
 import dev.kotx.flylib.*
 import dev.kotx.flylib.command.internal.*
+import dev.kotx.flylib.utils.*
 import org.bukkit.command.*
 import org.bukkit.entity.*
 import org.bukkit.plugin.java.*
@@ -28,7 +29,7 @@ abstract class Command(
 
     var parent: Command? = null
     fun validate(sender: CommandSender): Boolean {
-        if (!sender.hasPermission("${plugin.name.lowercase()}.command.${name.lowercase()}")) return false
+        if (!sender.hasPermission("${plugin.name.lowercase()}.command.${fullCommand.joinToString(".") { it.name }.lowercase()}")) return false
         val validSender = !playerOnly || playerOnly && sender is Player
         if (!validSender) return false
         return true
