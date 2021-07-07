@@ -21,6 +21,7 @@ import org.bukkit.inventory.*
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.*
 import org.bukkit.plugin.*
+import org.bukkit.plugin.java.*
 
 operator fun List<Command>.get(query: String) =
     find { it.name.equals(query, true) } ?: find { it -> it.aliases.any { it == query } }
@@ -38,6 +39,17 @@ internal val Command.fullCommand: List<Command>
 
         return commands.reversed()
     }
+
+fun getPermissionNameForCommand(plugin: JavaPlugin, command: Command) =
+    command.permission.name
+        ?: "${plugin.name.lowercase()}.command.${command.fullCommand.joinToString(".") { it.name }.lowercase()}"
+
+
+fun getPermissionNameForUsage(plugin: JavaPlugin, command: Command, usage: Usage) = if (usage.permission == null)
+    getPermissionNameForCommand(plugin, command)
+else
+    usage.permission.name
+        ?: "${plugin.name.lowercase()}.command.${command.fullCommand.joinToString(".") { it.name }.lowercase()}.${usage.args.joinToString(".") { it.name }.lowercase()}"
 
 fun CommandContext<CommandListenerWrapper>.asFlyLibContext(command: Command, args: List<Argument<*>>, depth: Int = 0): dev.kotx.flylib.command.CommandContext {
     val replaced = input.replaceFirst("/", "")

@@ -41,29 +41,21 @@ class CommandHandler(
                 )
             }
 
-            plugin.server.pluginManager.addPermission(
-                Perm(
-                    "${plugin.name.lowercase()}.command.${command.fullCommand.joinToString(".") { it.name }.lowercase()}", command.permission.default
-                )
-            )
+            plugin.server.pluginManager.addPermission(Perm(getPermissionNameForCommand(plugin, command), command.permission.default))
+
             command.usages.filter { it.permission != null }.forEach {
-                plugin.server.pluginManager.addPermission(
-                    Perm(
-                        "${plugin.name.lowercase()}.command.${command.fullCommand.joinToString(".") { it.name }.lowercase()}.${it.args.joinToString(".") { it.name.lowercase() }}",
-                        it.permission!!.default
-                    )
-                )
+                plugin.server.pluginManager.addPermission(Perm(getPermissionNameForUsage(plugin, command, it), it.permission!!.default))
             }
         }
     }
 
     internal fun onLoad() {
         commands.forEach { command ->
-            plugin.server.commandMap.getCommand(command.name)?.permission = "${plugin.name.lowercase()}.command.${command.fullCommand.joinToString(".") { it.name }.lowercase()}"
-            plugin.server.commandMap.getCommand("minecraft:${command.name}")?.permission = "${plugin.name.lowercase()}.command.${command.fullCommand.joinToString(".") { it.name }.lowercase()}"
+            plugin.server.commandMap.getCommand(command.name)?.permission = getPermissionNameForCommand(plugin, command)
+            plugin.server.commandMap.getCommand("minecraft:${command.name}")?.permission = getPermissionNameForCommand(plugin, command)
             command.aliases.forEach {
-                plugin.server.commandMap.getCommand(it)?.permission = "${plugin.name.lowercase()}.command.${command.fullCommand.joinToString(".") { it.name }.lowercase()}"
-                plugin.server.commandMap.getCommand("minecraft:$it")?.permission = "${plugin.name.lowercase()}.command.${command.fullCommand.joinToString(".") { it.name }.lowercase()}"
+                plugin.server.commandMap.getCommand(it)?.permission = getPermissionNameForCommand(plugin, command)
+                plugin.server.commandMap.getCommand("minecraft:$it")?.permission = getPermissionNameForCommand(plugin, command)
             }
         }
     }
@@ -86,9 +78,9 @@ class CommandHandler(
                 commandNodes.remove("minecraft:${it}")
             }
 
-            plugin.server.pluginManager.removePermission("${plugin.name.lowercase()}.command.${command.fullCommand.joinToString(".") { it.name }.lowercase()}")
+            plugin.server.pluginManager.removePermission(getPermissionNameForCommand(plugin, command))
             command.usages.filter { it.permission != null }.forEach {
-                plugin.server.pluginManager.removePermission("${plugin.name.lowercase()}.command.${command.fullCommand.joinToString(".") { it.name }.lowercase()}.${it.args.joinToString(".") { it.name.lowercase() }}")
+                plugin.server.pluginManager.removePermission(getPermissionNameForUsage(plugin, command, it))
             }
         }
     }
@@ -129,6 +121,7 @@ class CommandHandler(
                         child.apply { it.asFlyLibContext(child, emptyList(), depthMap[child] ?: 0).execute() }
                         1
                     }
+
                 child.handle(childBase)
                 base.then(childBase)
                 child.aliases.forEach { it ->
@@ -177,12 +170,7 @@ class CommandHandler(
         depth: Int
     ) {
         requires {
-            val perm = if (usage.permission != null)
-                "${plugin.name.lowercase()}.command.${command.fullCommand.joinToString(".") { it.name }.lowercase()}.${usage.args.joinToString(".") { it.name.lowercase() }}"
-            else
-                "${plugin.name.lowercase()}.command.${command.fullCommand.joinToString(".") { it.name }.lowercase()}"
-
-            if (!it.bukkitSender.hasPermission(perm)) return@requires false
+            if (!it.bukkitSender.hasPermission(getPermissionNameForUsage(plugin, command, usage))) return@requires false
             val playerOnly = usage.playerOnly ?: command.playerOnly
             val validSender = !playerOnly || playerOnly && it.bukkitSender is Player
             if (!validSender) return@requires false

@@ -8,14 +8,18 @@ package dev.kotx.flylib.command.internal
 import org.bukkit.permissions.*
 
 class Permission(
+    val name: String? = null,
     val default: PermissionDefault = PermissionDefault.OP,
 ) {
     companion object {
         @JvmField
-        val OP = Permission(PermissionDefault.OP)
+        val OP = Permission(default = PermissionDefault.OP)
+
         @JvmField
-        val EVERYONE = Permission(PermissionDefault.TRUE)
+        val EVERYONE = Permission(default = PermissionDefault.TRUE)
+
         @JvmStatic
-        fun create(id: String) = Permission(id)
+        @JvmOverloads
+        fun create(id: String? = null, default: PermissionDefault) = Permission(id, default)
     }
 }

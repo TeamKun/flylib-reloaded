@@ -29,7 +29,7 @@ abstract class Command(
 
     var parent: Command? = null
     fun validate(sender: CommandSender): Boolean {
-        if (!sender.hasPermission("${plugin.name.lowercase()}.command.${fullCommand.joinToString(".") { it.name }.lowercase()}")) return false
+        if (!sender.hasPermission(getPermissionNameForCommand(plugin, this))) return false
         val validSender = !playerOnly || playerOnly && sender is Player
         if (!validSender) return false
         return true

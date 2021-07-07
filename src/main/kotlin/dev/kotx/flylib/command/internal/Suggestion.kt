@@ -18,7 +18,7 @@ class Suggestion @JvmOverloads constructor(
     class Builder (
         val command: Command,
         val plugin: JavaPlugin,
-        private val sender: CommandSender,
+        val sender: CommandSender,
         val message: String,
         val args: Array<String>,
         val typedArgs: Array<Any?>
