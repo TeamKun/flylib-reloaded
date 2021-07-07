@@ -8,7 +8,6 @@ package dev.kotx.flylib
 import dev.kotx.flylib.command.*
 import org.bukkit.plugin.java.*
 
-interface FlyLib {
-    val plugin: JavaPlugin
-    val commandHandler: CommandHandler
+internal class FlyLibImpl(override val plugin: JavaPlugin) : FlyLib {
+    override val commandHandler = CommandHandlerImpl(this)
 }
