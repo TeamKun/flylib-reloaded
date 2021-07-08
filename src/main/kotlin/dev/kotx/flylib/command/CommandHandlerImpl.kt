@@ -141,7 +141,7 @@ internal class CommandHandlerImpl(override val flyLib: FlyLibImpl, private val c
                             if (it.tooltip == null)
                                 builder.suggest(it.content)
                             else
-                                builder.suggest(it.content, it.tooltip)
+                                builder.suggest(it.content) { it.tooltip }
                         }
 
                         builder.buildFuture()
