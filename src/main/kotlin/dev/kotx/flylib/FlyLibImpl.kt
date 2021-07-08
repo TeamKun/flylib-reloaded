@@ -36,14 +36,16 @@ internal class FlyLibImpl(override val plugin: JavaPlugin, commands: List<Comman
 
     private fun enable() {
         commandHandler.enable()
+        println()
         println("""
               ______ _
              |  ____| |
-             | |__  | |      FlyLib Reloaded v0.2.43
+             | |__  | |      FlyLib Reloaded v0.3.0
              |  __| | |      by Kotx
              | |    | |____
              |_|    |______|
         """.trimIndent())
+        println()
     }
 
     private fun disable() {
