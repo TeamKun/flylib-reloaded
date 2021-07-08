@@ -5,7 +5,7 @@
 
 package dev.kotx.flylib.command
 
-internal class Suggestion(
-    internal val content: String,
-    internal val tooltip: String? = null
+class Suggestion(
+    val content: String,
+    val tooltip: String? = null
 )
