@@ -7,6 +7,6 @@ package dev.kotx.flylib.command
 
 import dev.kotx.flylib.*
 
-abstract class CommandHandler(protected val commands: List<Command>) {
-    abstract val flyLib: FlyLib
+interface CommandHandler {
+    val flyLib: FlyLib
 }
