@@ -6,7 +6,7 @@
 package dev.kotx.flylib.command.arguments
 
 import com.mojang.brigadier.arguments.*
-import com.mojang.brigadier.context.*
+import com.mojang.brigadier.context.CommandContext
 import dev.kotx.flylib.command.*
 import net.minecraft.server.v1_16_R3.*
 
@@ -14,7 +14,7 @@ class LongArgument(
     override val name: String,
     min: Long = Long.MIN_VALUE,
     max: Long = Long.MAX_VALUE,
-    override val suggestion: SuggestionBuilder.() -> Unit = {}
+    override val suggestion: (SuggestionBuilder.() -> Unit)? = null
 ) : Argument<Long> {
     override val type: ArgumentType<*>? = LongArgumentType.longArg(min, max)
 
