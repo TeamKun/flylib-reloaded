@@ -11,5 +11,5 @@ class Usage(
     val arguments: List<Argument<*>>,
     val description: String? = null,
     val permission: Permission? = null,
-    val action: (() -> Unit)? = null
+    val action: (CommandContext.() -> Unit)? = null
 )
