@@ -6,12 +6,12 @@
 package dev.kotx.flylib.command
 
 import com.mojang.brigadier.arguments.*
-import com.mojang.brigadier.context.*
+import com.mojang.brigadier.context.CommandContext
 import net.minecraft.server.v1_16_R3.*
 
 interface Argument<T> {
     val name: String
-    val suggestion: SuggestionBuilder.() -> Unit
+    val suggestion: (SuggestionBuilder.() -> Unit)?
     val type: ArgumentType<*>?
 
     fun parse(context: CommandContext<CommandListenerWrapper>, key: String): T
