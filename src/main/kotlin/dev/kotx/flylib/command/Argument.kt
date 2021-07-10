@@ -11,7 +11,7 @@ import net.minecraft.server.v1_16_R3.*
 
 interface Argument<T> {
     val name: String
-    val suggestion: (SuggestionBuilder.() -> Unit)?
+    val suggestion: SuggestionAction?
     val type: ArgumentType<*>?
 
     fun parse(context: CommandContext<CommandListenerWrapper>, key: String): T
