@@ -17,7 +17,8 @@ interface FlyLib {
          * Start FlyLib with the specified plugin. It also supports disabling and enabling plug-ins by Plug Man, etc.
          */
         @JvmStatic
-        fun create(plugin: JavaPlugin, builder: FlyLibAction): FlyLib = FlyLibBuilder(plugin).apply { builder.apply { initialize() } }.build()
+        fun create(plugin: JavaPlugin, builder: FlyLibAction): FlyLib =
+                FlyLibBuilder(plugin).apply { builder.apply { initialize() } }.build()
     }
 }
 
