@@ -14,6 +14,8 @@ interface FlyLib {
 
     companion object {
         @JvmStatic
-        fun create(plugin: JavaPlugin, commands: List<Command>): FlyLib = FlyLibImpl(plugin, commands)
+        fun create(plugin: JavaPlugin, builder: FlyLibAction): FlyLib = FlyLibBuilder(plugin).apply { builder.apply { initialize() } }.build()
     }
 }
+
+fun JavaPlugin.flyLib(builder: FlyLibAction) = FlyLib.create(this, builder)
