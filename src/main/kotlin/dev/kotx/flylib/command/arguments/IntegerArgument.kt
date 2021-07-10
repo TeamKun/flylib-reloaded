@@ -12,6 +12,9 @@ import dev.kotx.flylib.command.Argument
 import dev.kotx.flylib.command.SuggestionAction
 import net.minecraft.server.v1_16_R3.CommandListenerWrapper
 
+/**
+ * Int argument.
+ */
 class IntegerArgument(
         override val name: String,
         min: Int = Int.MIN_VALUE,
