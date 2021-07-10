@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 
 class ItemBuilder(
-    private val material: Material
+        private val material: Material
 ) {
     private var amount = 1
     private var name: Component? = null

@@ -9,11 +9,11 @@ import org.bukkit.command.CommandSender
 import org.bukkit.plugin.java.JavaPlugin
 
 class SuggestionBuilder(
-    val plugin: JavaPlugin,
-    val command: Command,
-    val sender: CommandSender,
-    val message: String,
-    val args: List<String>
+        val plugin: JavaPlugin,
+        val command: Command,
+        val sender: CommandSender,
+        val message: String,
+        val args: List<String>
 ) {
     private val suggestions = mutableListOf<Suggestion>()
 

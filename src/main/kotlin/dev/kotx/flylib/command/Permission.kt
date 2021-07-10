@@ -8,8 +8,8 @@ package dev.kotx.flylib.command
 import org.bukkit.permissions.PermissionDefault
 
 class Permission(
-    val name: String? = null,
-    val defaultPermission: PermissionDefault
+        val name: String? = null,
+        val defaultPermission: PermissionDefault
 ) {
 
     companion object {

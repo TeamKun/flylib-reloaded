@@ -11,12 +11,12 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 
 class CommandContext(
-    val plugin: JavaPlugin,
-    val command: Command,
-    val sender: CommandSender,
-    val world: World?,
-    val message: String,
-    depth: Int
+        val plugin: JavaPlugin,
+        val command: Command,
+        val sender: CommandSender,
+        val world: World?,
+        val message: String,
+        depth: Int
 ) {
     val player = sender as? Player
     val args = message.replaceFirst("^/".toRegex(), "").split(" ").drop(depth)

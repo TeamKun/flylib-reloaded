@@ -13,10 +13,10 @@ import dev.kotx.flylib.command.SuggestionAction
 import net.minecraft.server.v1_16_R3.CommandListenerWrapper
 
 class IntegerArgument(
-    override val name: String,
-    min: Int = Int.MIN_VALUE,
-    max: Int = Int.MAX_VALUE,
-    override val suggestion: SuggestionAction? = null
+        override val name: String,
+        min: Int = Int.MIN_VALUE,
+        max: Int = Int.MAX_VALUE,
+        override val suggestion: SuggestionAction? = null
 ) : Argument<Int> {
     override val type: ArgumentType<*>? = IntegerArgumentType.integer(min, max)
 

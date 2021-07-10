@@ -13,8 +13,8 @@ import net.minecraft.server.v1_16_R3.CommandListenerWrapper
 import org.bukkit.entity.Entity
 
 class EntityArgument(
-    override val name: String,
-    override val suggestion: SuggestionAction?
+        override val name: String,
+        override val suggestion: SuggestionAction?
 ) : Argument<List<Entity>> {
     override val type = ArgumentEntity.multipleEntities()
 

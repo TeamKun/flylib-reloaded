@@ -10,7 +10,7 @@ import dev.kotx.flylib.command.Permission
 import org.bukkit.plugin.java.JavaPlugin
 
 class FlyLibBuilder(
-    val plugin: JavaPlugin
+        val plugin: JavaPlugin
 ) {
     private val commands = mutableListOf<Command>()
     private var defaultPermission = Permission.OP

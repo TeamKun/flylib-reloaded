@@ -6,6 +6,6 @@
 package dev.kotx.flylib.command
 
 class Suggestion(
-    val content: String,
-    val tooltip: String? = null
+        val content: String,
+        val tooltip: String? = null
 )

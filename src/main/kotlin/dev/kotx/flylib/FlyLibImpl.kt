@@ -57,7 +57,7 @@ internal class FlyLibImpl(override val plugin: JavaPlugin, commands: List<Comman
         commandHandler.enable()
         println()
         println(
-            """
+                """
               ______ _
              |  ____| |
              | |__  | |      FlyLib Reloaded v0.3.0
@@ -82,11 +82,11 @@ internal class FlyLibImpl(override val plugin: JavaPlugin, commands: List<Comman
     private inline fun <reified T : Event> register(crossinline action: (T) -> Unit) {
         val handlerList = T::class.java.methods.find { it.name == "getHandlerList" }!!.invoke(null) as HandlerList
         val listener = RegisteredListener(
-            object : Listener {},
-            { _, event -> action(event as T) },
-            EventPriority.NORMAL,
-            plugin,
-            false
+                object : Listener {},
+                { _, event -> action(event as T) },
+                EventPriority.NORMAL,
+                plugin,
+                false
         )
 
         handlerList.register(listener)

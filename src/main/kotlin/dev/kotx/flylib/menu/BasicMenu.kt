@@ -14,9 +14,9 @@ import org.bukkit.inventory.ItemStack
 import java.awt.TextComponent
 
 class BasicMenu(
-    val title: String,
-    val size: Int,
-    val items: List<MenuItem>
+        val title: String,
+        val size: Int,
+        val items: List<MenuItem>
 ) : FlyLibComponent {
     private val players = mutableMapOf<Player, Inventory>()
 

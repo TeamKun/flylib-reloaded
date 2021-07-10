@@ -6,8 +6,8 @@
 package dev.kotx.flylib.command
 
 class Usage(
-    val arguments: List<Argument<*>>,
-    val description: String? = null,
-    val permission: Permission? = null,
-    val action: ContextAction? = null
+        val arguments: List<Argument<*>>,
+        val description: String? = null,
+        val permission: Permission? = null,
+        val action: ContextAction? = null
 )

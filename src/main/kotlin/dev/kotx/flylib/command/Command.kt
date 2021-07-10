@@ -6,7 +6,7 @@
 package dev.kotx.flylib.command
 
 abstract class Command(
-    internal val name: String
+        internal val name: String
 ) {
     /**
      * Command description
