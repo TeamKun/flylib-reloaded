@@ -24,3 +24,7 @@ class SuggestionBuilder(
 
     internal fun build() = suggestions.toList()
 }
+
+fun interface SuggestionAction {
+    fun SuggestionBuilder.initialize()
+}
