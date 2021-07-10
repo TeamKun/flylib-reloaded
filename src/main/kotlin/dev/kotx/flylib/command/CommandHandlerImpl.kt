@@ -18,7 +18,7 @@ import org.bukkit.craftbukkit.v1_16_R3.CraftServer
 import org.bukkit.craftbukkit.v1_16_R3.command.VanillaCommandWrapper
 import java.lang.invoke.MethodHandles
 
-typealias BukkitPermission = org.bukkit.permissions.Permission
+private typealias BukkitPermission = org.bukkit.permissions.Permission
 
 @Suppress("UNCHECKED_CAST")
 internal class CommandHandlerImpl(
