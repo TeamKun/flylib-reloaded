@@ -8,6 +8,7 @@ package dev.kotx.flylib.menu
 import dev.kotx.flylib.FlyLibComponent
 import dev.kotx.flylib.util.ItemBuilder
 import dev.kotx.flylib.util.ItemBuilderAction
+import dev.kotx.flylib.util.component
 import net.kyori.adventure.text.TextComponent
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -40,7 +41,12 @@ class BasicMenu(
      * Show the inventory to the player.
      */
     fun display(player: Player) {
-        val inventory = Bukkit.createInventory(player, size, title)
+        val inventory = Bukkit.createInventory(player, size, title.component())
+
+        items.forEach {
+            inventory.setItem(it.index, it.item)
+        }
+
         player.openInventory(inventory)!!
 
         players[player] = inventory
