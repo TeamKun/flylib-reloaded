@@ -6,7 +6,6 @@
 plugins {
     java
     kotlin("jvm")
-    id("com.github.johnrengelman.shadow") version "6.0.0"
 }
 
 group = "kotx.minecraft.libs"
@@ -19,8 +18,9 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
     implementation("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
+
+    implementation(kotlin("stdlib-jdk8"))
     implementation(parent!!)
 }
 
@@ -51,15 +51,15 @@ tasks {
         }
     }
 
-    shadowJar {
-        archiveFileName.set("TestPlugin.jar")
+    jar {
+        from(configurations.compileClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
     }
 
     create<Copy>("buildPlugin") {
         group = "plugin"
-        from(shadowJar)
+        from(jar)
         val dest = File(projectDir, "server/plugins")
-        if (File(dest, shadowJar.get().archiveFileName.get()).exists()) dest.delete()
+        if (File(dest, jar.get().archiveFileName.get()).exists()) dest.delete()
         into(dest)
     }
 
