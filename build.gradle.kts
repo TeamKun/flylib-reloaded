@@ -26,6 +26,8 @@ repositories {
 dependencies {
     api(kotlin("stdlib-jdk8"))
     api("ch.qos.logback", "logback-classic", "1.2.3")
+    api("io.insert-koin:koin-core:2.2.2")
+    api("io.insert-koin:koin-core-ext:2.2.2")
     implementation("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
     implementation(fileTree("./libs"))
 }
