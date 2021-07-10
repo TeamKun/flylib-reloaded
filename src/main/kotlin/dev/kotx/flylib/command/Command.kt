@@ -5,6 +5,9 @@
 
 package dev.kotx.flylib.command
 
+/**
+ * An Command used for FlyLib
+ */
 abstract class Command(
         internal val name: String
 ) {
