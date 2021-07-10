@@ -8,9 +8,17 @@ package dev.kotx.flylib.command
 abstract class Command(
     internal val name: String
 ) {
+    /**
+     * Command description
+     * Used for the default help message.
+     */
     @JvmField
     internal var description: String? = null
 
+    /**
+     * Privileges required to execute commands.
+     * There is no need to register permissions in plugin.yml, they will be automatically registered and removed as plugins are loaded and unloaded.
+     */
     @JvmField
     internal var permission: Permission? = null
 
