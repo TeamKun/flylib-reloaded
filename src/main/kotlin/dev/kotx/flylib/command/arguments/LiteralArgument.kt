@@ -11,6 +11,9 @@ import dev.kotx.flylib.command.Argument
 import dev.kotx.flylib.command.SuggestionAction
 import net.minecraft.server.v1_16_R3.CommandListenerWrapper
 
+/**
+ * An argument that does not accept player input.
+ */
 class LiteralArgument(override val name: String) : Argument<String> {
     override val type: ArgumentType<*>? = null
     override val suggestion: SuggestionAction? = null
