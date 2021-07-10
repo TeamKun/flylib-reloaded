@@ -12,6 +12,9 @@ import dev.kotx.flylib.command.Argument
 import dev.kotx.flylib.command.SuggestionAction
 import net.minecraft.server.v1_16_R3.CommandListenerWrapper
 
+/**
+ * A long argument
+ */
 class LongArgument(
         override val name: String,
         min: Long = Long.MIN_VALUE,
