@@ -51,5 +51,8 @@ class SuggestionBuilder(
  * Builder Action to add a suggestion
  */
 fun interface SuggestionAction {
+    /**
+     * An method which replacing kotlin apply block.
+     */
     fun SuggestionBuilder.initialize()
 }

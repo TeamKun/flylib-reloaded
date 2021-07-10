@@ -51,5 +51,8 @@ class FlyLibBuilder(
  * In Java, it can be used for SAM conversion.
  */
 fun interface FlyLibAction {
+    /**
+     * An method which replacing kotlin apply block.
+     */
     fun FlyLibBuilder.initialize()
 }

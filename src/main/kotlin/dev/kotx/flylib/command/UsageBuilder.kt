@@ -162,5 +162,8 @@ class UsageBuilder {
  * Usage Builder actions
  */
 fun interface UsageAction {
+    /**
+     * An method which replacing kotlin apply block.
+     */
     fun UsageBuilder.initialize()
 }

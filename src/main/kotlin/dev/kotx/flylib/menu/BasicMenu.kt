@@ -167,6 +167,9 @@ class BasicMenuBuilder {
  * BasicMenu builder actions
  */
 fun interface BasicMenuAction {
+    /**
+     * An method which replacing kotlin apply block.
+     */
     fun BasicMenuBuilder.initialize()
 }
 

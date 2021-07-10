@@ -67,5 +67,8 @@ class CommandContext(
  * You can use SAM conversation in Java
  */
 fun interface ContextAction {
+    /**
+     * An method which replacing kotlin apply block.
+     */
     fun CommandContext.execute()
 }

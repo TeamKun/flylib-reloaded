@@ -111,10 +111,22 @@ class ItemBuilder(
     }
 }
 
+/**
+ * Item builder actions for Java
+ */
 fun interface ItemBuilderAction {
+    /**
+     * An method which replacing kotlin apply block.
+     */
     fun ItemBuilder.initialize()
 }
 
+/**
+ * Item Meta builder actions for java
+ */
 fun interface MetaBuilder {
+    /**
+     * An method which replacing kotlin apply block.
+     */
     fun ItemMeta.initialize()
 }
