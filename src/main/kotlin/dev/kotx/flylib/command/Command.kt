@@ -76,6 +76,9 @@ abstract class Command(
 
     internal var parent: Command? = null
 
+    /**
+     * The block that executes the command. The default is to display help for that command.
+     */
     open fun CommandContext.execute() {
         //sendHelp
     }
