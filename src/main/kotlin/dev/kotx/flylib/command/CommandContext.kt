@@ -10,6 +10,11 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 
+/**
+ * Command context.
+ * It is given as an argument when the command is executed and when Usage is executed.
+ * In Kotlin it is given as a receiver.
+ */
 class CommandContext(
         /**
          * Your plugin.
