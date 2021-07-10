@@ -15,13 +15,22 @@ class FlyLibBuilder(
     private var defaultPermission = Permission.OP
 
     fun command(vararg command: Command): FlyLibBuilder {
-        commands.addAll(command)
+        command.forEach {
+            it.children.setParent(it)
+            this.commands.add(it)
+        }
+
         return this
     }
 
     fun defaultPermission(permission: Permission): FlyLibBuilder {
         defaultPermission = permission
         return this
+    }
+
+    fun List<Command>.setParent(parent: Command): Unit = forEach {
+        it.parent = parent
+        it.children.setParent(it)
     }
 
     internal fun build(): FlyLib = FlyLibImpl(plugin, commands, defaultPermission)
