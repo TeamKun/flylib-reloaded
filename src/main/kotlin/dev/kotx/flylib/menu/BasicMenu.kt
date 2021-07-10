@@ -92,16 +92,25 @@ class BasicMenuBuilder {
     private var size = 27
     private val items = mutableListOf<MenuItem>()
 
+    /**
+     * Specify the title of the menu.
+     */
     fun title(title: String): BasicMenuBuilder {
         this.title = title
         return this
     }
 
+    /**
+     * Specifies the size of the menu.
+     */
     fun size(size: Int): BasicMenuBuilder {
         this.size = size
         return this
     }
 
+    /**
+     * Specifies the type of menu.
+     */
     fun type(type: InventoryType): BasicMenuBuilder {
         this.title = (type.defaultTitle() as TextComponent).text
         this.size = type.defaultSize
