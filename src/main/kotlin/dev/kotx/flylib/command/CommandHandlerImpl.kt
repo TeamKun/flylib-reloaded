@@ -17,15 +17,20 @@ import java.lang.invoke.*
 
 typealias BukkitPermission = org.bukkit.permissions.Permission
 
+@Suppress("UNCHECKED_CAST")
 internal class CommandHandlerImpl(override val flyLib: FlyLibImpl, private val commands: List<Command>) : CommandHandler {
+    private val depthMap = mutableMapOf<Command, Int>()
     internal fun enable() {
         val commandDispatcher = ((Bukkit.getServer() as CraftServer).server as MinecraftServer).commandDispatcher
         val commandNodes = MethodHandles.privateLookupIn(SimpleCommandMap::class.java, MethodHandles.lookup())
             .findVarHandle(SimpleCommandMap::class.java, "knownCommands", MutableMap::class.java)
             .get(Bukkit.getCommandMap()) as MutableMap<String, org.bukkit.command.Command>
 
+        commands.handle(1)
+
         commands.forEach { command ->
             val cmdArgument = getArgument(command.name, command)
+
             commandDispatcher.a().root.addChild(cmdArgument)
             commandNodes[command.name] = VanillaCommandWrapper(commandDispatcher, cmdArgument)
 
@@ -92,7 +97,8 @@ internal class CommandHandlerImpl(override val flyLib: FlyLibImpl, private val c
                     command,
                     ctx.source.bukkitSender,
                     ctx.source.bukkitWorld,
-                    ctx.input
+                    ctx.input,
+                    depthMap[command]!!
                 )
 
                 command.apply { context.execute() }
@@ -120,10 +126,11 @@ internal class CommandHandlerImpl(override val flyLib: FlyLibImpl, private val c
                             command,
                             ctx.source.bukkitSender,
                             ctx.source.bukkitWorld,
-                            ctx.input
+                            ctx.input,
+                            depthMap[command]!!
                         )
 
-                        usage.action?.invoke(context) ?: command.apply { context.execute() }
+                        usage.action?.apply { context.execute() } ?: command.apply { context.execute() }
 
                         1
                     }
@@ -135,9 +142,11 @@ internal class CommandHandlerImpl(override val flyLib: FlyLibImpl, private val c
                             context.source.bukkitSender,
                             context.input,
                             emptyList()
-                        ).apply(argument.suggestion!!).build()
+                        )
 
-                        suggestions.forEach {
+                        argument.suggestion!!.apply { suggestions.initialize() }
+
+                        suggestions.build().forEach {
                             if (it.tooltip == null)
                                 builder.suggest(it.content)
                             else
@@ -188,4 +197,14 @@ internal class CommandHandlerImpl(override val flyLib: FlyLibImpl, private val c
 
             return commands.reversed()
         }
+
+    fun List<Command>.handle(d: Int) {
+        val children = flatMap {
+            depthMap[it] = d
+            it.children
+        }
+
+        if (children.isNotEmpty())
+            children.handle(d + 1)
+    }
 }
