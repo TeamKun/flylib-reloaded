@@ -12,6 +12,9 @@ import net.minecraft.server.v1_16_R3.ArgumentEntity
 import net.minecraft.server.v1_16_R3.CommandListenerWrapper
 import org.bukkit.entity.Entity
 
+/**
+ * Argument to select an entity.
+ */
 class EntityArgument(
         override val name: String,
         override val suggestion: SuggestionAction?
