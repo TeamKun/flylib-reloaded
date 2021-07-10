@@ -48,7 +48,8 @@ internal class CommandHandlerImpl(
             }
         }
 
-        val permissions = (commands.map { it.getCommandPermission() } + commands.flatMap { cmd -> cmd.usages.map { cmd.getUsagePermission(it) } }).distinct()
+        val permissions = (commands.map { it.getCommandPermission() } +
+                commands.flatMap { cmd -> cmd.usages.map { cmd.getUsagePermission(it) } }).distinct()
         permissions.forEach {
             flyLib.plugin.server.pluginManager.addPermission(BukkitPermission(it.first, it.second.defaultPermission))
         }
@@ -149,26 +150,27 @@ internal class CommandHandlerImpl(
                         1
                     }
 
-                    if (this is RequiredArgumentBuilder<CommandListenerWrapper, *> && argument.suggestion != null) suggests { context, builder ->
-                        val suggestions = SuggestionBuilder(
-                                flyLib.plugin,
-                                command,
-                                context.source.bukkitSender,
-                                context.input,
-                                emptyList()
-                        )
+                    if (this is RequiredArgumentBuilder<CommandListenerWrapper, *> && argument.suggestion != null)
+                        suggests { context, builder ->
+                            val suggestions = SuggestionBuilder(
+                                    flyLib.plugin,
+                                    command,
+                                    context.source.bukkitSender,
+                                    context.input,
+                                    emptyList()
+                            )
 
-                        argument.suggestion!!.apply { suggestions.initialize() }
+                            argument.suggestion!!.apply { suggestions.initialize() }
 
-                        suggestions.build().forEach {
-                            if (it.tooltip == null)
-                                builder.suggest(it.content)
-                            else
-                                builder.suggest(it.content) { it.tooltip }
+                            suggestions.build().forEach {
+                                if (it.tooltip == null)
+                                    builder.suggest(it.content)
+                                else
+                                    builder.suggest(it.content) { it.tooltip }
+                            }
+
+                            builder.buildFuture()
                         }
-
-                        builder.buildFuture()
-                    }
                 }
 
                 if (usageArgument != null)
@@ -188,17 +190,20 @@ internal class CommandHandlerImpl(
         return commandArgument.build()
     }
 
-    private fun Command.getCommandPermission() = ((permission ?: defaultPermission).name
-            ?: flyLib.plugin.name.lowercase() +
-            ".command" +
-            ".${fullCommand.joinToString(".") { it.name }.lowercase()}") to (permission ?: defaultPermission)
+    private fun Command.getCommandPermission() =
+            ((permission ?: defaultPermission).name
+                    ?: flyLib.plugin.name.lowercase() +
+                    ".command" +
+                    ".${fullCommand.joinToString(".") { it.name }.lowercase()}") to
+                    (permission ?: defaultPermission)
 
-    private fun Command.getUsagePermission(usage: Usage) = ((usage.permission ?: permission ?: defaultPermission).name
-            ?: flyLib.plugin.name.lowercase() +
-            ".command" +
-            ".${fullCommand.joinToString(".") { it.name }.lowercase()}" +
-            ".${usage.arguments.joinToString(".") { it.name }.lowercase()}") to (usage.permission ?: permission
-    ?: defaultPermission)
+    private fun Command.getUsagePermission(usage: Usage) =
+            ((usage.permission ?: permission ?: defaultPermission).name
+                    ?: flyLib.plugin.name.lowercase() +
+                    ".command" +
+                    ".${fullCommand.joinToString(".") { it.name }.lowercase()}" +
+                    ".${usage.arguments.joinToString(".") { it.name }.lowercase()}") to
+                    (usage.permission ?: permission ?: defaultPermission)
 
     private val Command.fullCommand: List<Command>
         get() {
