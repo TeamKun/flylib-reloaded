@@ -11,10 +11,14 @@ import dev.kotx.flylib.command.Permission.Companion.EVERYONE
 import org.bukkit.plugin.java.*
 
 class TestPlugin : JavaPlugin() {
-    val flyLib = FlyLib.create(this, listOf(TestCommand()))
+    init {
+        flyLib {
+            command(TestCommand, ChildCommand)
+        }
+    }
 }
 
-class TestCommand : Command("test") {
+object TestCommand : Command("test") {
     init {
         description("Hello flylib!")
         permission(EVERYONE)
@@ -25,7 +29,7 @@ class TestCommand : Command("test") {
             }
         }
 
-        children(ChildCommand())
+        children(ChildCommand)
     }
 
     override fun CommandContext.execute() {
@@ -33,7 +37,7 @@ class TestCommand : Command("test") {
     }
 }
 
-class ChildCommand : Command("children") {
+object ChildCommand : Command("children") {
     override fun CommandContext.execute() {
         sender.sendMessage("Hello children $args")
     }
