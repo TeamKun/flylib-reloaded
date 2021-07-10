@@ -8,13 +8,13 @@ package dev.kotx.flylib
 import dev.kotx.flylib.command.Command
 import dev.kotx.flylib.command.CommandHandlerImpl
 import dev.kotx.flylib.command.Permission
+import org.bukkit.Bukkit
 import org.bukkit.event.Event
 import org.bukkit.event.EventPriority
 import org.bukkit.event.HandlerList
 import org.bukkit.event.Listener
 import org.bukkit.event.server.PluginDisableEvent
 import org.bukkit.event.server.PluginEnableEvent
-import org.bukkit.event.server.ServerLoadEvent
 import org.bukkit.plugin.RegisteredListener
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.dsl.module
@@ -47,9 +47,7 @@ internal class FlyLibImpl(override val plugin: JavaPlugin, commands: List<Comman
                 disable()
         }
 
-        register<ServerLoadEvent> {
-            load()
-        }
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin) { load() }
     }
 
     private fun enable() {
