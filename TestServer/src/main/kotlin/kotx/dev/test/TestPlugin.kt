@@ -5,10 +5,11 @@
 
 package kotx.dev.test
 
-import dev.kotx.flylib.*
-import dev.kotx.flylib.command.*
+import dev.kotx.flylib.command.Command
+import dev.kotx.flylib.command.CommandContext
 import dev.kotx.flylib.command.Permission.Companion.EVERYONE
-import org.bukkit.plugin.java.*
+import dev.kotx.flylib.flyLib
+import org.bukkit.plugin.java.JavaPlugin
 
 class TestPlugin : JavaPlugin() {
     init {
