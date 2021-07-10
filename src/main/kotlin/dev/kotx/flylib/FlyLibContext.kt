@@ -5,12 +5,14 @@
 
 package dev.kotx.flylib
 
-import org.koin.core.*
-import org.koin.core.context.*
-import org.koin.core.error.*
-import org.koin.dsl.*
+import org.koin.core.Koin
+import org.koin.core.KoinApplication
+import org.koin.core.context.KoinContext
+import org.koin.core.error.KoinAppAlreadyStartedException
+import org.koin.dsl.KoinAppDeclaration
+import org.koin.dsl.koinApplication
 
-object FlyLibContext: KoinContext {
+object FlyLibContext : KoinContext {
     private var koin: Koin? = null
 
     override fun get(): Koin = koin ?: error("KoinApplication has not been started")

@@ -5,12 +5,13 @@
 
 package dev.kotx.flylib.menu
 
-import dev.kotx.flylib.*
-import org.bukkit.*
-import org.bukkit.entity.*
-import org.bukkit.event.inventory.*
-import org.bukkit.inventory.*
-import java.awt.*
+import dev.kotx.flylib.FlyLibComponent
+import org.bukkit.Bukkit
+import org.bukkit.entity.Player
+import org.bukkit.event.inventory.InventoryType
+import org.bukkit.inventory.Inventory
+import org.bukkit.inventory.ItemStack
+import java.awt.TextComponent
 
 class BasicMenu(
     val title: String,

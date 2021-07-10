@@ -5,8 +5,8 @@
 
 package dev.kotx.flylib.util
 
-import net.kyori.adventure.text.*
-import net.kyori.adventure.text.format.*
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.Style
 
 fun String.component(style: Style = Style.empty()) = Component.text(this, style)
 

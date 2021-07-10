@@ -5,7 +5,7 @@
 
 package dev.kotx.flylib.command
 
-import dev.kotx.flylib.*
+import dev.kotx.flylib.FlyLib
 
 interface CommandHandler {
     val flyLib: FlyLib

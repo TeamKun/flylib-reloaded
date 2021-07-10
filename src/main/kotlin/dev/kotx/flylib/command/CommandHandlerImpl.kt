@@ -5,15 +5,18 @@
 
 package dev.kotx.flylib.command
 
-import com.mojang.brigadier.builder.*
-import com.mojang.brigadier.tree.*
-import dev.kotx.flylib.*
-import net.minecraft.server.v1_16_R3.*
-import org.bukkit.*
-import org.bukkit.command.*
-import org.bukkit.craftbukkit.v1_16_R3.*
-import org.bukkit.craftbukkit.v1_16_R3.command.*
-import java.lang.invoke.*
+import com.mojang.brigadier.builder.ArgumentBuilder
+import com.mojang.brigadier.builder.LiteralArgumentBuilder
+import com.mojang.brigadier.builder.RequiredArgumentBuilder
+import com.mojang.brigadier.tree.LiteralCommandNode
+import dev.kotx.flylib.FlyLibImpl
+import net.minecraft.server.v1_16_R3.CommandListenerWrapper
+import net.minecraft.server.v1_16_R3.MinecraftServer
+import org.bukkit.Bukkit
+import org.bukkit.command.SimpleCommandMap
+import org.bukkit.craftbukkit.v1_16_R3.CraftServer
+import org.bukkit.craftbukkit.v1_16_R3.command.VanillaCommandWrapper
+import java.lang.invoke.MethodHandles
 
 typealias BukkitPermission = org.bukkit.permissions.Permission
 

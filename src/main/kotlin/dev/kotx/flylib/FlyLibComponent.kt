@@ -5,9 +5,9 @@
 
 package dev.kotx.flylib
 
-import org.koin.core.*
-import org.koin.core.component.*
+import org.koin.core.Koin
+import org.koin.core.component.KoinComponent
 
-interface FlyLibComponent: KoinComponent {
+interface FlyLibComponent : KoinComponent {
     override fun getKoin(): Koin = FlyLibContext.get()
 }

@@ -5,10 +5,11 @@
 
 package dev.kotx.flylib.command.arguments
 
-import com.mojang.brigadier.arguments.*
+import com.mojang.brigadier.arguments.ArgumentType
 import com.mojang.brigadier.context.CommandContext
-import dev.kotx.flylib.command.*
-import net.minecraft.server.v1_16_R3.*
+import dev.kotx.flylib.command.Argument
+import dev.kotx.flylib.command.SuggestionAction
+import net.minecraft.server.v1_16_R3.CommandListenerWrapper
 
 class LiteralArgument(override val name: String) : Argument<String> {
     override val type: ArgumentType<*>? = null

@@ -5,7 +5,7 @@
 
 package dev.kotx.flylib.command
 
-import org.bukkit.permissions.*
+import org.bukkit.permissions.PermissionDefault
 
 class Permission(
     val name: String? = null,

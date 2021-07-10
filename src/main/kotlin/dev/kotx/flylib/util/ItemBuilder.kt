@@ -5,11 +5,12 @@
 
 package dev.kotx.flylib.util
 
-import net.kyori.adventure.text.*
-import org.bukkit.*
-import org.bukkit.enchantments.*
-import org.bukkit.inventory.*
-import org.bukkit.inventory.meta.*
+import net.kyori.adventure.text.Component
+import org.bukkit.Material
+import org.bukkit.enchantments.Enchantment
+import org.bukkit.inventory.ItemFlag
+import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.ItemMeta
 
 class ItemBuilder(
     private val material: Material

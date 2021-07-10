@@ -6,9 +6,11 @@
 package dev.kotx.flylib.command.arguments
 
 import com.mojang.brigadier.context.CommandContext
-import dev.kotx.flylib.command.*
-import net.minecraft.server.v1_16_R3.*
-import org.bukkit.*
+import dev.kotx.flylib.command.Argument
+import dev.kotx.flylib.command.SuggestionAction
+import net.minecraft.server.v1_16_R3.ArgumentPosition
+import net.minecraft.server.v1_16_R3.CommandListenerWrapper
+import org.bukkit.Location
 
 class LocationArgument(
     override val name: String,

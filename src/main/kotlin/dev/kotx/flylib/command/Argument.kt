@@ -5,9 +5,9 @@
 
 package dev.kotx.flylib.command
 
-import com.mojang.brigadier.arguments.*
+import com.mojang.brigadier.arguments.ArgumentType
 import com.mojang.brigadier.context.CommandContext
-import net.minecraft.server.v1_16_R3.*
+import net.minecraft.server.v1_16_R3.CommandListenerWrapper
 
 interface Argument<T> {
     val name: String

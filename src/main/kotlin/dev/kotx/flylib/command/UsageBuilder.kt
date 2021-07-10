@@ -5,7 +5,13 @@
 
 package dev.kotx.flylib.command
 
-import dev.kotx.flylib.command.arguments.*
+import dev.kotx.flylib.command.arguments.EntityArgument
+import dev.kotx.flylib.command.arguments.IntegerArgument
+import dev.kotx.flylib.command.arguments.LiteralArgument
+import dev.kotx.flylib.command.arguments.LocationArgument
+import dev.kotx.flylib.command.arguments.LongArgument
+import dev.kotx.flylib.command.arguments.TextArgument
+import dev.kotx.flylib.command.arguments.VectorArgument
 
 class UsageBuilder {
     private val arguments = mutableListOf<Argument<*>>()

@@ -5,8 +5,8 @@
 
 package dev.kotx.flylib.command
 
-import org.bukkit.command.*
-import org.bukkit.plugin.java.*
+import org.bukkit.command.CommandSender
+import org.bukkit.plugin.java.JavaPlugin
 
 class SuggestionBuilder(
     val plugin: JavaPlugin,

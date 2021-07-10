@@ -5,8 +5,8 @@
 
 package dev.kotx.flylib
 
-import dev.kotx.flylib.command.*
-import org.bukkit.plugin.java.*
+import dev.kotx.flylib.command.CommandHandler
+import org.bukkit.plugin.java.JavaPlugin
 
 interface FlyLib {
     val plugin: JavaPlugin

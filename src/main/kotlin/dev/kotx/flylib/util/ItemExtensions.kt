@@ -5,7 +5,7 @@
 
 package dev.kotx.flylib.util
 
-import org.bukkit.inventory.meta.*
+import org.bukkit.inventory.meta.BookMeta
 
 fun BookMeta.page(text: String): BookMeta {
     addPages(text.component())
