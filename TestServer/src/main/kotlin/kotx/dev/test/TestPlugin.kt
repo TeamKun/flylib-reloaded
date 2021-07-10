@@ -7,29 +7,34 @@ package kotx.dev.test
 
 import dev.kotx.flylib.*
 import dev.kotx.flylib.command.*
-import dev.kotx.flylib.command.arguments.*
+import dev.kotx.flylib.command.Permission.Companion.EVERYONE
 import org.bukkit.plugin.java.*
 
-class TestPlugin: JavaPlugin() {
+class TestPlugin : JavaPlugin() {
     val flyLib = FlyLib.create(this, listOf(TestCommand()))
 }
 
 class TestCommand : Command("test") {
     init {
-        permission = Permission.EVERYONE
+        description("Hello flylib!")
+        permission(EVERYONE)
+        usage {
+            textArgument("YOUR_TEXT")
+            executes {
+                it.sender.sendMessage("Hello argument ${it.args}")
+            }
+        }
 
-        aliases.add("hoge")
+        children(ChildCommand())
+    }
 
-        usages.add(
-            Usage(
-                listOf(LiteralArgument("hello")),
-            ),
-        )
+    override fun CommandContext.execute() {
+        sender.sendMessage("Hello test $args")
+    }
+}
 
-        usages.add(
-            Usage(
-                listOf(TextArgument("text"), IntegerArgument("number")),
-            )
-        )
+class ChildCommand : Command("children") {
+    override fun CommandContext.execute() {
+        sender.sendMessage("Hello children $args")
     }
 }
