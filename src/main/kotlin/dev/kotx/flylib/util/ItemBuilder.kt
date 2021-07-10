@@ -52,7 +52,6 @@ class ItemBuilder(
         return this
     }
 
-
     fun flag(vararg flag: ItemFlag): ItemBuilder {
         this.flags.addAll(flag)
         return this
