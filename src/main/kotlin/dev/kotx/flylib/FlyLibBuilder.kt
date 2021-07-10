@@ -46,6 +46,10 @@ class FlyLibBuilder(
     internal fun build(): FlyLib = FlyLibImpl(plugin, commands, defaultPermission)
 }
 
+/**
+ * An interface that takes FlyLibBuilder as an argument.
+ * In Java, it can be used for SAM conversion.
+ */
 fun interface FlyLibAction {
     fun FlyLibBuilder.initialize()
 }
