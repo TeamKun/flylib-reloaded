@@ -89,16 +89,17 @@ tasks {
                 eula.writeText(eula.readText(Charsets.UTF_8).replace("eula=false", "eula=true"), Charsets.UTF_8)
                 val serverProperties = File(paperDir, "server.properties")
                 serverProperties.writeText(
-                    serverProperties.readText(Charsets.UTF_8)
-                        .replace("online-mode=true", "online-mode=false")
-                        .replace("difficulty=easy", "difficulty=peaceful")
-                        .replace("spawn-protection=16", "spawn-protection=0")
-                        .replace("gamemode=survival", "gamemode=creative")
-                        .replace("level-name=world", "level-name=dev_world")
-                        .replace("level-type=default", "level-type=flat")
-                        .replace("motd=A Minecraft Server", "motd=Kotx Development Server")
-                        .replace("max-tick-time=60000", "max-tick-time=-1")
-                        .replace("view-distance=10", "view-distance=16"), Charsets.UTF_8
+                        serverProperties.readText(Charsets.UTF_8)
+                                .replace("online-mode=true", "online-mode=false")
+                                .replace("difficulty=easy", "difficulty=peaceful")
+                                .replace("spawn-protection=16", "spawn-protection=0")
+                                .replace("gamemode=survival", "gamemode=creative")
+                                .replace("level-name=world", "level-name=dev_world")
+                                .replace("level-type=default", "level-type=flat")
+                                .replace("motd=A Minecraft Server", "motd=Kotx Development Server")
+                                .replace("max-tick-time=60000", "max-tick-time=-1")
+                                .replace("view-distance=10", "view-distance=16"),
+                        Charsets.UTF_8
                 )
                 val runBat = File(paperDir, "run.bat")
                 if (!runBat.exists()) {
