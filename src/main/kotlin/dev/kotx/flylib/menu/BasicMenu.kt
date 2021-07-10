@@ -89,6 +89,9 @@ class BasicMenu(
     }
 }
 
+/**
+ * A builder who creates a Basic Menu.
+ */
 class BasicMenuBuilder {
     private var title = "Chest"
     private var size = 27
