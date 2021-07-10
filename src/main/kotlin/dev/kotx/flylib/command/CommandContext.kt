@@ -28,7 +28,7 @@ class CommandContext(
          */
         val world: World?,
         /**
-         * Command input message. The leading `` is deleted.
+         * Command input message.
          */
         val message: String,
         depth: Int
