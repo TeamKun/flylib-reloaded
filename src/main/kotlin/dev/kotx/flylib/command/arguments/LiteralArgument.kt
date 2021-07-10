@@ -12,7 +12,7 @@ import net.minecraft.server.v1_16_R3.*
 
 class LiteralArgument(override val name: String) : Argument<String> {
     override val type: ArgumentType<*>? = null
-    override val suggestion: (SuggestionBuilder.() -> Unit)? = null
+    override val suggestion: SuggestionAction? = null
 
     override fun parse(context: CommandContext<CommandListenerWrapper>, key: String) = key
 }

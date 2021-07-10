@@ -14,7 +14,7 @@ class IntegerArgument(
     override val name: String,
     min: Int = Int.MIN_VALUE,
     max: Int = Int.MAX_VALUE,
-    override val suggestion: (SuggestionBuilder.() -> Unit)? = null
+    override val suggestion: SuggestionAction? = null
 ) : Argument<Int> {
     override val type: ArgumentType<*>? = IntegerArgumentType.integer(min, max)
 

@@ -13,7 +13,7 @@ import net.minecraft.server.v1_16_R3.*
 class TextArgument(
     override val name: String,
     type: Type = Type.WORD,
-    override val suggestion: (SuggestionBuilder.() -> Unit)? = null
+    override val suggestion: SuggestionAction? = null
 ) : Argument<String> {
     override val type = when (type) {
         Type.WORD -> StringArgumentType.word()
