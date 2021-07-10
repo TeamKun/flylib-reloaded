@@ -22,7 +22,7 @@ internal class CommandHandlerImpl(
     override val flyLib: FlyLibImpl,
     private val commands: List<Command>,
     private val defaultPermission: Permission
-    ) : CommandHandler {
+) : CommandHandler {
     private val depthMap = mutableMapOf<Command, Int>()
     internal fun enable() {
         val commandDispatcher = ((Bukkit.getServer() as CraftServer).server as MinecraftServer).commandDispatcher
@@ -57,17 +57,18 @@ internal class CommandHandlerImpl(
             .findVarHandle(SimpleCommandMap::class.java, "knownCommands", MutableMap::class.java)
             .get(Bukkit.getCommandMap()) as MutableMap<String, org.bukkit.command.Command>
 
+        fun remove(name: String) {
+            root.removeCommand(name)
+            root.removeCommand("minecraft:$name")
+            commandNodes.remove(name)
+            commandNodes.remove("minecraft:$name")
+        }
+
         commands.forEach { cmd ->
-            root.removeCommand(cmd.name)
-            root.removeCommand("minecraft:${cmd.name}")
-            commandNodes.remove(cmd.name)
-            commandNodes.remove("minecraft:${cmd.name}")
+            remove(cmd.name)
 
             cmd.aliases.forEach {
-                root.removeCommand(it)
-                root.removeCommand("minecraft:$it")
-                commandNodes.remove(it)
-                commandNodes.remove("minecraft:$it")
+                remove(it)
             }
 
             flyLib.plugin.server.pluginManager.removePermission(cmd.getCommandPermission().first)
@@ -79,12 +80,18 @@ internal class CommandHandlerImpl(
     }
 
     internal fun load() {
+        fun registerPermission(name: String, command: Command) {
+            val commandMap = flyLib.plugin.server.commandMap
+
+            commandMap.getCommand(name)?.permission = command.getCommandPermission().first
+            commandMap.getCommand("minecraft:$name")?.permission = command.getCommandPermission().first
+        }
+
         commands.forEach { cmd ->
-            flyLib.plugin.server.commandMap.getCommand(cmd.name)?.permission = cmd.getCommandPermission().first
-            flyLib.plugin.server.commandMap.getCommand("minecraft:${cmd.name}")?.permission = cmd.getCommandPermission().first
+            registerPermission(cmd.name, cmd)
+
             cmd.aliases.forEach {
-                flyLib.plugin.server.commandMap.getCommand(it)?.permission = cmd.getCommandPermission().first
-                flyLib.plugin.server.commandMap.getCommand("minecraft:$it")?.permission = cmd.getCommandPermission().first
+                registerPermission(it, cmd)
             }
         }
     }
