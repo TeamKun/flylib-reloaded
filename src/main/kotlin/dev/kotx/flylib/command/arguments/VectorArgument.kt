@@ -12,6 +12,9 @@ import net.minecraft.server.v1_16_R3.ArgumentVec3
 import net.minecraft.server.v1_16_R3.CommandListenerWrapper
 import org.bukkit.util.Vector
 
+/**
+ * Direction argument.
+ */
 class VectorArgument(
         override val name: String,
         override val suggestion: SuggestionAction? = null,
