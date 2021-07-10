@@ -16,7 +16,12 @@ class CommandContext(
     val sender: CommandSender,
     val world: World?,
     val message: String,
+    depth: Int
 ) {
     val player = sender as? Player
-    val args = message.replaceFirst("^/".toRegex(), "").split(" ")
+    val args = message.replaceFirst("^/".toRegex(), "").split(" ").drop(depth)
+}
+
+fun interface ContextAction {
+    fun CommandContext.execute()
 }
