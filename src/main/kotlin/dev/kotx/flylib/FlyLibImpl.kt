@@ -38,13 +38,11 @@ internal class FlyLibImpl(override val plugin: JavaPlugin, commands: List<Comman
         }
 
         register<PluginEnableEvent> {
-            if (it.plugin == plugin)
-                enable()
+            if (it.plugin == plugin) enable()
         }
 
         register<PluginDisableEvent> {
-            if (it.plugin == plugin)
-                disable()
+            if (it.plugin == plugin) disable()
         }
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin) { load() }

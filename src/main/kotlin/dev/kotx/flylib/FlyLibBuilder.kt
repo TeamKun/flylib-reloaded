@@ -9,12 +9,18 @@ import dev.kotx.flylib.command.Command
 import dev.kotx.flylib.command.Permission
 import org.bukkit.plugin.java.JavaPlugin
 
+/**
+ * A builder that creates Fly Lib.
+ */
 class FlyLibBuilder(
-        val plugin: JavaPlugin
+        private val plugin: JavaPlugin
 ) {
     private val commands = mutableListOf<Command>()
     private var defaultPermission = Permission.OP
 
+    /**
+     * Add a command.
+     */
     fun command(vararg command: Command): FlyLibBuilder {
         command.forEach {
             it.children.setParent(it)
@@ -24,12 +30,15 @@ class FlyLibBuilder(
         return this
     }
 
+    /**
+     * Specifies the default permissions that will be assigned if the command permissions are not specified.
+     */
     fun defaultPermission(permission: Permission): FlyLibBuilder {
         defaultPermission = permission
         return this
     }
 
-    fun List<Command>.setParent(parent: Command): Unit = forEach {
+    private fun List<Command>.setParent(parent: Command): Unit = forEach {
         it.parent = parent
         it.children.setParent(it)
     }
