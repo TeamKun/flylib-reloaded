@@ -18,7 +18,11 @@ import java.lang.invoke.*
 typealias BukkitPermission = org.bukkit.permissions.Permission
 
 @Suppress("UNCHECKED_CAST")
-internal class CommandHandlerImpl(override val flyLib: FlyLibImpl, private val commands: List<Command>) : CommandHandler {
+internal class CommandHandlerImpl(
+    override val flyLib: FlyLibImpl,
+    private val commands: List<Command>,
+    private val defaultPermission: Permission
+    ) : CommandHandler {
     private val depthMap = mutableMapOf<Command, Int>()
     internal fun enable() {
         val commandDispatcher = ((Bukkit.getServer() as CraftServer).server as MinecraftServer).commandDispatcher
@@ -174,16 +178,16 @@ internal class CommandHandlerImpl(override val flyLib: FlyLibImpl, private val c
         return commandArgument.build()
     }
 
-    private fun Command.getCommandPermission() = ((permission ?: Permission.OP).name
+    private fun Command.getCommandPermission() = ((permission ?: defaultPermission).name
         ?: flyLib.plugin.name.lowercase() +
         ".command" +
-        ".${fullCommand.joinToString(".") { it.name }.lowercase()}") to (permission ?: Permission.OP)
+        ".${fullCommand.joinToString(".") { it.name }.lowercase()}") to (permission ?: defaultPermission)
 
-    private fun Command.getUsagePermission(usage: Usage) = ((usage.permission ?: permission ?: Permission.OP).name
+    private fun Command.getUsagePermission(usage: Usage) = ((usage.permission ?: permission ?: defaultPermission).name
         ?: flyLib.plugin.name.lowercase() +
         ".command" +
         ".${fullCommand.joinToString(".") { it.name }.lowercase()}" +
-        ".${usage.arguments.joinToString(".") { it.name }.lowercase()}") to (usage.permission ?: permission ?: Permission.OP)
+        ".${usage.arguments.joinToString(".") { it.name }.lowercase()}") to (usage.permission ?: permission ?: defaultPermission)
 
     private val Command.fullCommand: List<Command>
         get() {
