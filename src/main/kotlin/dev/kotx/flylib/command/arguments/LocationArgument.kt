@@ -12,6 +12,9 @@ import net.minecraft.server.v1_16_R3.ArgumentPosition
 import net.minecraft.server.v1_16_R3.CommandListenerWrapper
 import org.bukkit.Location
 
+/**
+ * An argument that represents a location.
+ */
 class LocationArgument(
         override val name: String,
         override val suggestion: SuggestionAction? = null
