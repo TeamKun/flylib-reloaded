@@ -62,6 +62,10 @@ class CommandContext(
     val args = message.replaceFirst("^/".toRegex(), "").split(" ").drop(depth)
 }
 
+/**
+ * A wrapper for a function that is called when Usage is executed
+ * You can use SAM conversation in Java
+ */
 fun interface ContextAction {
     fun CommandContext.execute()
 }
