@@ -98,6 +98,9 @@ class ItemBuilder(
         return this
     }
 
+    /**
+     * Build items
+     */
     fun build() = ItemStack(material).apply {
         this.amount = this@ItemBuilder.amount
         this.itemFlags.addAll(this@ItemBuilder.flags)
