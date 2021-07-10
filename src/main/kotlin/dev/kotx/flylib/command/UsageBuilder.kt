@@ -158,6 +158,9 @@ class UsageBuilder {
     internal fun build() = Usage(arguments, description, permission, action)
 }
 
+/**
+ * Usage Builder actions
+ */
 fun interface UsageAction {
     fun UsageBuilder.initialize()
 }
