@@ -163,8 +163,14 @@ class BasicMenuBuilder {
     fun build() = BasicMenu(title, size, items)
 }
 
+/**
+ * BasicMenu builder actions
+ */
 fun interface BasicMenuAction {
     fun BasicMenuBuilder.initialize()
 }
 
+/**
+ * items which using BasicMenu.
+ */
 class MenuItem(val index: Int, val item: ItemStack)
