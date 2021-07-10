@@ -10,6 +10,7 @@ import org.bukkit.event.*
 import org.bukkit.event.server.*
 import org.bukkit.plugin.*
 import org.bukkit.plugin.java.*
+import org.koin.dsl.*
 import org.slf4j.*
 
 internal class FlyLibImpl(override val plugin: JavaPlugin, commands: List<Command>, defaultPermission: Permission) : FlyLib {
@@ -18,6 +19,17 @@ internal class FlyLibImpl(override val plugin: JavaPlugin, commands: List<Comman
 
     init {
         logger.info("Loading FlyLib...")
+
+        if (FlyLibContext.getOrNull() != null)
+            FlyLibContext.stop()
+
+        FlyLibContext.startKoin {
+            modules(module {
+                single { plugin }
+                single { logger }
+                single { commandHandler }
+            })
+        }
 
         register<PluginEnableEvent> {
             if (it.plugin == plugin)
@@ -37,14 +49,16 @@ internal class FlyLibImpl(override val plugin: JavaPlugin, commands: List<Comman
     private fun enable() {
         commandHandler.enable()
         println()
-        println("""
+        println(
+            """
               ______ _
              |  ____| |
              | |__  | |      FlyLib Reloaded v0.3.0
              |  __| | |      by Kotx
              | |    | |____
              |_|    |______|
-        """.trimIndent())
+        """.trimIndent()
+        )
         println()
     }
 
