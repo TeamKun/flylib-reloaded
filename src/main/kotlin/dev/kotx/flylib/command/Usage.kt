@@ -5,11 +5,9 @@
 
 package dev.kotx.flylib.command
 
-import org.bukkit.permissions.*
-
 class Usage(
     val arguments: List<Argument<*>>,
     val description: String? = null,
     val permission: Permission? = null,
-    val action: (CommandContext.() -> Unit)? = null
+    val action: ContextAction? = null
 )
