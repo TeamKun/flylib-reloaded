@@ -19,8 +19,7 @@ object FlyLibContext : KoinContext {
     override fun getOrNull(): Koin? = koin
 
     override fun register(koinApplication: KoinApplication) {
-        if (koin != null)
-            throw KoinAppAlreadyStartedException("A koin application has already been started")
+        if (koin != null) throw KoinAppAlreadyStartedException("A koin application has already been started")
 
         koin = koinApplication.koin
     }
