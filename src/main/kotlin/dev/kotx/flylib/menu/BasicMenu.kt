@@ -24,7 +24,6 @@ class BasicMenu(
         player.openInventory(inventory)!!
 
         players[player] = inventory
-
     }
 
     fun close() {
@@ -38,6 +37,20 @@ class BasicMenu(
     fun close(player: Player) {
         players.remove(player)
         player.closeInventory()
+    }
+
+    fun update(builder: BasicMenuAction) {
+        val menu = BasicMenuBuilder().apply { builder.apply { initialize() } }.build()
+        val playerList = players.keys.toList()
+        players.clear()
+
+        playerList.forEach { menu.display(it) }
+    }
+
+    companion object {
+        fun create(builder: BasicMenuAction) = BasicMenuBuilder().apply { builder.apply { initialize() } }.build()
+
+        fun display(player: Player, builder: BasicMenuAction) = create(builder).display(player)
     }
 }
 
@@ -61,6 +74,12 @@ class BasicMenuBuilder {
         this.size = type.defaultSize
         return this
     }
+
+    fun build() = BasicMenu(title, size, items)
+}
+
+fun interface BasicMenuAction {
+    fun BasicMenuBuilder.initialize()
 }
 
 class MenuItem(index: Int, item: ItemStack)
