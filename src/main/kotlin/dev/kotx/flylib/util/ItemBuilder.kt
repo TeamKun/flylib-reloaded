@@ -5,6 +5,7 @@
 
 package dev.kotx.flylib.util
 
+import net.kyori.adventure.text.*
 import org.bukkit.*
 import org.bukkit.enchantments.*
 import org.bukkit.inventory.*
@@ -14,7 +15,10 @@ class ItemBuilder(
     private val material: Material
 ) {
     private var amount = 1
+    private var name: Component? = null
+    private var lores = mutableListOf<Component>()
     private var meta: MetaBuilder? = null
+
     private val flags = mutableListOf<ItemFlag>()
     private val enchants = mutableMapOf<Enchantment, Int>()
 
@@ -23,10 +27,31 @@ class ItemBuilder(
         return this
     }
 
+    fun name(name: String): ItemBuilder {
+        this.name = name.component()
+        return this
+    }
+
+    fun name(builder: ComponentBuilder.() -> Unit): ItemBuilder {
+        this.name = ComponentBuilder().apply(builder).build()
+        return this
+    }
+
+    fun lore(vararg lore: String): ItemBuilder {
+        this.lores.addAll(lore.map { it.component() })
+        return this
+    }
+
+    fun lore(vararg lore: Component): ItemBuilder {
+        this.lores.addAll(lore)
+        return this
+    }
+
     fun meta(metaBuilder: MetaBuilder): ItemBuilder {
         this.meta = metaBuilder
         return this
     }
+
 
     fun flag(vararg flag: ItemFlag): ItemBuilder {
         this.flags.addAll(flag)
@@ -44,10 +69,15 @@ class ItemBuilder(
     }
 
     fun build() = ItemStack(material).apply {
-        amount = this@ItemBuilder.amount
-        itemMeta = itemMeta.apply { meta?.apply { initialize() } }
-        flags.addAll(this@ItemBuilder.flags)
-        addEnchantments(enchants)
+        this.amount = this@ItemBuilder.amount
+        this.itemFlags.addAll(this@ItemBuilder.flags)
+        this.addEnchantments(enchants)
+
+        itemMeta = itemMeta.apply {
+            displayName(name)
+            lore(lores)
+            meta?.apply { initialize() }
+        }
     }
 }
 
