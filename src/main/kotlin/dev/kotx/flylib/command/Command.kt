@@ -6,29 +6,54 @@
 package dev.kotx.flylib.command
 
 abstract class Command(
-    val name: String
+    internal val name: String
 ) {
     @JvmField
-    var description: String? = null
+    internal var description: String? = null
 
     @JvmField
-    var permission: Permission? = null
+    internal var permission: Permission? = null
 
     @JvmField
-    val aliases: MutableList<String> = mutableListOf()
+    internal val aliases: MutableList<String> = mutableListOf()
 
     @JvmField
-    val usages: MutableList<Usage> = mutableListOf()
+    internal val usages: MutableList<Usage> = mutableListOf()
 
     @JvmField
-    val examples: MutableList<String> = mutableListOf()
+    internal val examples: MutableList<String> = mutableListOf()
 
     @JvmField
-    val children: MutableList<Command> = mutableListOf()
+    internal val children: MutableList<Command> = mutableListOf()
 
     internal var parent: Command? = null
 
-    fun CommandContext.execute() {
+    open fun CommandContext.execute() {
         //sendHelp
+    }
+
+    protected fun description(description: String) {
+        this.description = description
+    }
+
+    protected fun permission(permission: Permission) {
+        this.permission = permission
+    }
+
+    protected fun usage(builder: UsageAction) {
+        val usage = UsageBuilder().apply { builder.apply { initialize() } }.build()
+        usages.add(usage)
+    }
+
+    protected fun alias(vararg alias: String) {
+        this.aliases.addAll(alias)
+    }
+
+    protected fun example(vararg example: String) {
+        this.examples.addAll(example)
+    }
+
+    protected fun children(vararg children: Command) {
+        this.children.addAll(children)
     }
 }
