@@ -12,9 +12,9 @@ import org.bukkit.plugin.*
 import org.bukkit.plugin.java.*
 import org.slf4j.*
 
-internal class FlyLibImpl(override val plugin: JavaPlugin, commands: List<Command>) : FlyLib {
+internal class FlyLibImpl(override val plugin: JavaPlugin, commands: List<Command>, defaultPermission: Permission) : FlyLib {
     private val logger = LoggerFactory.getLogger("FlyLib Reloaded")
-    override val commandHandler = CommandHandlerImpl(this, commands)
+    override val commandHandler = CommandHandlerImpl(this, commands, defaultPermission)
 
     init {
         logger.info("Loading FlyLib...")
