@@ -91,6 +91,9 @@ abstract class Command(
     /**
      * Set privileges required to execute commands.
      * There is no need to register permissions in plugin.yml, they will be automatically registered and removed as plugins are loaded and unloaded.
+     * Also, if no permissions are specified (null), the default permissions that can be specified in Fly Lib's builder will be assigned.
+     *
+     * @see FlyLibBuilder.defaultPermission
      */
     protected fun permission(permission: Permission) {
         this.permission = permission
