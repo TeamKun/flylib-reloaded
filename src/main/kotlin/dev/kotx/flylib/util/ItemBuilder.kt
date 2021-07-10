@@ -111,6 +111,10 @@ class ItemBuilder(
     }
 }
 
+fun interface ItemBuilderAction {
+    fun ItemBuilder.initialize()
+}
+
 fun interface MetaBuilder {
     fun ItemMeta.initialize()
 }

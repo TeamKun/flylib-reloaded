@@ -6,7 +6,11 @@
 package dev.kotx.flylib.menu
 
 import dev.kotx.flylib.FlyLibComponent
+import dev.kotx.flylib.util.ItemBuilder
+import dev.kotx.flylib.util.ItemBuilderAction
+import net.kyori.adventure.text.TextComponent
 import org.bukkit.Bukkit
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -16,8 +20,6 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.component.inject
-import java.awt.MenuItem
-import java.awt.TextComponent
 
 /**
  * A Inventory menu.
@@ -112,8 +114,46 @@ class BasicMenuBuilder {
      * Specifies the type of menu.
      */
     fun type(type: InventoryType): BasicMenuBuilder {
-        this.title = (type.defaultTitle() as TextComponent).text
+        this.title = (type.defaultTitle() as TextComponent).content()
         this.size = type.defaultSize
+        return this
+    }
+
+    /**
+     * Add MenuItem at last.
+     */
+    fun item(stack: ItemStack): BasicMenuBuilder {
+        val range = 0 until size
+        val index = range.first { s -> items.none { it.index == s } }
+        item(index, stack)
+        return this
+    }
+
+    /**
+     * Add MenuItem at specified index.
+     */
+    fun item(index: Int, stack: ItemStack): BasicMenuBuilder {
+        items.add(MenuItem(index, stack))
+        return this
+    }
+
+    /**
+     * Add MenuItem using ItemBuilder at last.
+     */
+    fun item(material: Material, builder: ItemBuilderAction): BasicMenuBuilder {
+        val stack = ItemBuilder(material).apply { builder.apply { initialize() } }.build()
+        item(stack)
+
+        return this
+    }
+
+    /**
+     * Add MenuItem using ItemBuilder at specified index.
+     */
+    fun item(index: Int, material: Material, builder: ItemBuilderAction): BasicMenuBuilder {
+        val stack = ItemBuilder(material).apply { builder.apply { initialize() } }.build()
+        item(index, stack)
+
         return this
     }
 
@@ -124,4 +164,4 @@ fun interface BasicMenuAction {
     fun BasicMenuBuilder.initialize()
 }
 
-class MenuItem(index: Int, item: ItemStack)
+class MenuItem(val index: Int, val item: ItemStack)
