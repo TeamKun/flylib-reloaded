@@ -8,11 +8,29 @@ package dev.kotx.flylib.command
 import org.bukkit.command.CommandSender
 import org.bukkit.plugin.java.JavaPlugin
 
+/**
+ * A builder that creates a list of suggestions.
+ */
 class SuggestionBuilder(
+        /**
+         * Your plugin.
+         */
         val plugin: JavaPlugin,
+        /**
+         * The command you are trying to add a suggestion to.
+         */
         val command: Command,
+        /**
+         * The target for which the proposal is displayed.
+         */
         val sender: CommandSender,
+        /**
+         * The content as of the time it is currently entered.
+         */
         val message: String,
+        /**
+         * Argument by input when the proposal is displayed.
+         */
         val args: List<String>
 ) {
     private val suggestions = mutableListOf<Suggestion>()
