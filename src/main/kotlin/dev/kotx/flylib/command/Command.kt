@@ -1,138 +1,164 @@
+/*
+ * Copyright (c) 2021 kotx__.
+ * Twitter: https://twitter.com/kotx__
+ */
+
 package dev.kotx.flylib.command
 
-import dev.kotx.flylib.*
-import dev.kotx.flylib.command.internal.*
-import dev.kotx.flylib.utils.*
-import org.bukkit.command.*
-import org.bukkit.entity.*
-import org.bukkit.plugin.java.*
-import org.koin.core.component.*
-
+/**
+ * An Command used for FlyLib
+ */
 abstract class Command(
-    val name: String
-) : FlyLibComponent {
-    internal val plugin by inject<JavaPlugin>()
-    val flyLib: FlyLib by inject()
-    open var description: String = CommandDefault.getDescription()
+        internal val name: String
+) {
+    /**
+     * Command description
+     * Used for the default help message.
+     */
+    @JvmField
+    internal var description: String? = null
 
-    open val aliases = mutableListOf<String>()
+    /**
+     * Privileges required to execute commands.
+     * There is no need to register permissions in plugin.yml, they will be automatically registered and removed as plugins are loaded and unloaded.
+     */
+    @JvmField
+    internal var permission: Permission? = null
 
-    open val usages = mutableListOf<Usage>()
+    /**
+     * Another name for the command.
+     * You can use this alias to invoke the exact same command.
+     */
+    @JvmField
+    internal val aliases: MutableList<String> = mutableListOf()
 
-    open val examples = mutableListOf<String>()
+    /**
+     * Command definition and usage.
+     * If you want to add arguments to the command, add them here.
+     * The default help message will use this usage for the message.
+     *
+     * ## Java Example
+     * ```java
+     * public PrintNumberCommand() {
+     *      super("printnumber");
+     *      usage(builder -> builder
+     *              .description("Print your number.")
+     *              .integerArgument("number")
+     *              .executes(context -> context.send("Number: " + context.args[0]))
+     *      );
+     * }
+     * ```
+     *
+     * ## Kotlin Example
+     * ```kotlin
+     * init {
+     *      usage {
+     *          description("Print your number.")
+     *          integerArgument("number")
+     *          executes {
+     *              send("Number: ${args.first()}")
+     *          }
+     *      }
+     * }
+     * ```
+     */
+    @JvmField
+    internal val usages: MutableList<Usage> = mutableListOf()
 
-    open var permission: Permission = CommandDefault.getPermission()
+    /**
+     * Command usage example. Used for the default help message.
+     */
+    @JvmField
+    internal val examples: MutableList<String> = mutableListOf()
 
-    open var playerOnly: Boolean = CommandDefault.isPlayerOnly()
+    /**
+     * A child command. It is automatically registered as a command.
+     */
+    @JvmField
+    internal val children: MutableList<Command> = mutableListOf()
 
-    open val children = mutableListOf<Command>()
+    internal var parent: Command? = null
 
-    var parent: Command? = null
-    fun validate(sender: CommandSender): Boolean {
-        if (!sender.hasPermission(getPermissionNameForCommand(plugin, this))) return false
-        val validSender = !playerOnly || playerOnly && sender is Player
-        if (!validSender) return false
-        return true
-    }
-
+    /**
+     * The block that executes the command. The default is to display help for that command.
+     */
     open fun CommandContext.execute() {
-        sendHelp()
+        //sendHelp
     }
 
-    protected fun CommandContext.sendHelp() {
-        CommandDefault.getHelp().apply { execute() }
+    /**
+     * Set command description
+     * Used for the default help message.
+     */
+    protected fun description(description: String) {
+        this.description = description
     }
 
-    fun usage(action: Usage.Builder.Action) {
-        usages.add(Usage.Builder().apply { action.apply { initialize() } }.build())
+    /**
+     * Set privileges required to execute commands.
+     * There is no need to register permissions in plugin.yml, they will be automatically registered and removed as plugins are loaded and unloaded.
+     * Also, if no permissions are specified (null), the default permissions that can be specified in Fly Lib's builder will be assigned.
+     *
+     * @see FlyLibBuilder.defaultPermission
+     */
+    protected fun permission(permission: Permission) {
+        this.permission = permission
     }
 
-    fun example(vararg example: String) {
-        examples.addAll(example)
+    /**
+     * Add another name for the command.
+     * You can use this alias to invoke the exact same command.
+     */
+    protected fun alias(vararg alias: String) {
+        this.aliases.addAll(alias)
     }
 
-    fun alias(vararg alias: String) {
-        aliases.addAll(alias)
+    /**
+     * Add command definition and usage.
+     * If you want to add arguments to the command, add them here.
+     * The default help message will use this usage for the message.
+     *
+     * ## Java Example
+     * ```java
+     * public PrintNumberCommand() {
+     *      super("printnumber");
+     *      usage(builder -> builder
+     *              .description("Print your number.")
+     *              .integerArgument("number")
+     *              .executes(context -> context.send("Number: " + context.args[0]))
+     *      );
+     * }
+     * ```
+     *
+     * ## Kotlin Example
+     * ```kotlin
+     * init {
+     *      usage {
+     *          description("Print your number.")
+     *          integerArgument("number")
+     *          executes {
+     *              send("Number: ${args.first()}")
+     *          }
+     *      }
+     * }
+     * ```
+     */
+    protected fun usage(builder: UsageAction) {
+        val usage = UsageBuilder().apply { builder.apply { initialize() } }.build()
+        usages.add(usage)
     }
 
-    fun child(vararg child: Command) {
-        children.addAll(child)
+    /**
+     * Add command usage example. Used for the default help message.
+     */
+    protected fun example(vararg example: String) {
+        this.examples.addAll(example)
     }
 
-    class Builder(
-        private val name: String
-    ) {
-        private var description: String? = null
-        private var permission: Permission? = null
-        private var playerOnly: Boolean? = null
-        private var action: CommandContext.Action? = null
-        private val aliases = mutableListOf<String>()
-        private val usages = mutableListOf<Usage>()
-        private val examples = mutableListOf<String>()
-        private val children = mutableListOf<Command>()
-        fun description(description: String): Builder {
-            this.description = description
-            return this
-        }
-
-        fun permission(permission: Permission): Builder {
-            this.permission = permission
-            return this
-        }
-
-        fun playerOnly(playerOnly: Boolean): Builder {
-            this.playerOnly = playerOnly
-            return this
-        }
-
-        fun alias(vararg alias: String): Builder {
-            aliases.addAll(alias)
-            return this
-        }
-
-        fun usage(usage: Usage): Builder {
-            this.usages.add(usage)
-            return this
-        }
-
-        fun usage(action: Usage.Builder.Action): Builder {
-            this.usages.add(Usage.Builder().apply { action.apply { initialize() } }.build())
-            return this
-        }
-
-        fun example(vararg example: String): Builder {
-            this.examples.addAll(example)
-            return this
-        }
-
-        fun child(vararg child: Command): Builder {
-            this.children.addAll(child)
-            return this
-        }
-
-        fun executes(action: CommandContext.Action): Builder {
-            this.action = action
-            return this
-        }
-
-        fun build() = object : Command(name) {
-            init {
-                this@Builder.description?.also { this.description = it }
-                this@Builder.permission?.also { this.permission = it }
-                this@Builder.playerOnly?.also { this.playerOnly = it }
-                aliases.addAll(this@Builder.aliases)
-                usages.addAll(this@Builder.usages)
-                examples.addAll(this@Builder.examples)
-                children.addAll(this@Builder.children)
-            }
-
-            override fun CommandContext.execute() {
-                this@Builder.action?.apply { execute() } ?: sendHelp()
-            }
-        }
-
-        fun interface Action {
-            fun Builder.initialize()
-        }
+    /**
+     * Add child command. It is automatically registered as a command.
+     */
+    protected fun children(vararg children: Command) {
+        this.children.addAll(children)
     }
 }

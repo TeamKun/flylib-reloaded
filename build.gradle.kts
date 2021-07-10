@@ -12,7 +12,7 @@ plugins {
 
 val projectName = "flylib-reloaded"
 val projectGroup = "dev.kotx"
-val projectVersion = "0.2.43"
+val projectVersion = "0.3.0"
 
 group = projectGroup
 version = projectVersion
@@ -25,11 +25,9 @@ repositories {
 
 dependencies {
     api(kotlin("stdlib-jdk8"))
+    api("ch.qos.logback", "logback-classic", "1.2.3")
     api("io.insert-koin:koin-core:2.2.2")
     api("io.insert-koin:koin-core-ext:2.2.2")
-    api("ch.qos.logback", "logback-classic", "1.2.3")
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.10")
     implementation("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
     implementation(fileTree("./libs"))
 }

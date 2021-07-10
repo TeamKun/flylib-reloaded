@@ -5,91 +5,70 @@
 
 package dev.kotx.flylib.command
 
-import dev.kotx.flylib.utils.*
-import org.bukkit.*
-import org.bukkit.command.*
-import org.bukkit.entity.*
-import org.bukkit.plugin.java.*
+import org.bukkit.World
+import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
+import org.bukkit.plugin.java.JavaPlugin
 
+/**
+ * Command context.
+ * It is given as an argument when the command is executed and when Usage is executed.
+ * In Kotlin it is given as a receiver.
+ */
 class CommandContext(
-    val command: Command,
-    val plugin: JavaPlugin,
-    val sender: CommandSender,
-    val message: String,
-    val args: Array<String>,
-    val typedArgs: Array<Any?>
+        /**
+         * Your plugin.
+         */
+        val plugin: JavaPlugin,
+        /**
+         * Executed command.
+         */
+        val command: Command,
+        /**
+         * Executed command sender. (It doesn't matter if you are a player or not.)
+         */
+        val sender: CommandSender,
+        /**
+         * The world where the command was executed
+         */
+        val world: World?,
+        /**
+         * Command input message.
+         */
+        val message: String,
+        depth: Int
 ) {
+    /**
+     * Executed command sender. (Limited to the player, but null if executed by someone other than the player.)
+     */
+    val player = sender as? Player
 
-    val player: Player? = sender as? Player
-    val server: Server? = player?.server
-    val world: World? = player?.world
+    /**
+     * Command arguments. The remaining arguments except the beginning of the command are assigned.
+     *
+     * ## Example
+     * ### Basic command
+     * /command <number>
+     *     args: <number>
+     *
+     * ### Nested command
+     * /parent children <arg1> <arg2>
+     *     args: <arg1>, <arg2>
+     *
+     * ### Usage argument
+     * /command <literal> <text> <number> <entity>
+     *     args: <literal>, <text>, <number>, <entity>
+     */
+    val args = message.replaceFirst("^/".toRegex(), "").split(" ").drop(depth)
+}
 
-    val options = getOptions()
-    val argsWithoutOptions = withoutOptionList()
-
-    @JvmName("getOptions1")
-    private fun getOptions(): Map<String, List<String>> {
-        val singleHyphenRegex = "-([a-zA-Z0-9]+)".toRegex()
-        val doubleHyphenRegex = "--([a-zA-Z0-9]+)".toRegex()
-
-        val groups = mutableMapOf<String, List<String>>()
-        val groupCache = mutableListOf<String>()
-        args.reversed().forEach { it ->
-
-            when {
-                it.matches(singleHyphenRegex) -> {
-                    singleHyphenRegex.find(it)!!.groupValues[1].map(Char::toString).forEach {
-                        groups[it] = emptyList()
-                    }
-
-                    groupCache.clear()
-                }
-
-                it.matches(doubleHyphenRegex) -> {
-                    groups[doubleHyphenRegex.find(it)!!.groupValues[1]] = groupCache.toList().reversed()
-                    groupCache.clear()
-                }
-
-                else -> groupCache.add(it)
-            }
-        }
-
-        return groups
-    }
-
-    private fun withoutOptionList(): List<String> {
-        val messages = mutableListOf<String>()
-        args.forEach {
-            if (it.startsWith("-"))
-                return messages
-            else
-                messages.add(it)
-        }
-
-        return messages
-    }
-
-    fun send(block: TextComponentAction) {
-        sender.sendPluginMessage(plugin, block)
-    }
-
-    fun send(text: String) {
-        sender.sendPluginMessage(plugin, text)
-    }
-
-    fun fail(text: String) {
-        sender.fail(plugin, text)
-    }
-
-    fun warn(text: String) {
-        sender.warn(plugin, text)
-    }
-
-    fun success(text: String) {
-        sender.success(plugin, text)
-    }
-
-    fun interface Action {
-        fun CommandContext.execute()
-    }
+/**
+ * A wrapper for a function that is called when Usage is executed
+ * You can use SAM conversation in Java
+ */
+fun interface ContextAction {
+    /**
+     * An method which replacing kotlin apply block.
+     */
+    fun CommandContext.execute()
 }
