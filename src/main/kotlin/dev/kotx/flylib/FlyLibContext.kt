@@ -12,7 +12,7 @@ import org.koin.core.error.KoinAppAlreadyStartedException
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.koinApplication
 
-object FlyLibContext : KoinContext {
+internal object FlyLibContext : KoinContext {
     private var koin: Koin? = null
 
     override fun get(): Koin = koin ?: error("KoinApplication has not been started")
