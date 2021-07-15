@@ -15,6 +15,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.Inventory
@@ -75,6 +76,18 @@ class BasicMenu(
     }
 
     @EventHandler
+    fun onInventoryClick(event: InventoryClickEvent) {
+        val inventory = players[event.whoClicked] ?: return
+        if (event.inventory != inventory) return
+
+        val item = items.find { it.index == event.slot } ?: return
+
+        event.isCancelled = true
+
+        item.onClick.apply { handle(event) }
+    }
+
+    @EventHandler
     fun onInventoryClose(event: InventoryCloseEvent) {
         val playerList = players.filter { it.value == event.inventory }.keys.toList()
         playerList.forEach {
@@ -131,27 +144,30 @@ class BasicMenuBuilder {
     /**
      * Add MenuItem at last.
      */
-    fun item(stack: ItemStack): BasicMenuBuilder {
+    @JvmOverloads
+    fun item(stack: ItemStack, action: BasicMenuClickAction = BasicMenuClickAction {}): BasicMenuBuilder {
         val range = 0 until size
         val index = range.first { s -> items.none { it.index == s } }
-        item(index, stack)
+        item(index, stack, action)
         return this
     }
 
     /**
      * Add MenuItem at specified index.
      */
-    fun item(index: Int, stack: ItemStack): BasicMenuBuilder {
-        items.add(MenuItem(index, stack))
+    @JvmOverloads
+    fun item(index: Int, stack: ItemStack, action: BasicMenuClickAction = BasicMenuClickAction {}): BasicMenuBuilder {
+        items.add(MenuItem(index, stack, action))
         return this
     }
 
     /**
      * Add MenuItem using ItemBuilder at last.
      */
-    fun item(material: Material, builder: ItemBuilderAction): BasicMenuBuilder {
+    @JvmOverloads
+    fun item(material: Material, builder: ItemBuilderAction, action: BasicMenuClickAction = BasicMenuClickAction {}): BasicMenuBuilder {
         val stack = ItemBuilder(material).apply { builder.apply { initialize() } }.build()
-        item(stack)
+        item(stack, action)
 
         return this
     }
@@ -159,9 +175,10 @@ class BasicMenuBuilder {
     /**
      * Add MenuItem using ItemBuilder at specified index.
      */
-    fun item(index: Int, material: Material, builder: ItemBuilderAction): BasicMenuBuilder {
+    @JvmOverloads
+    fun item(index: Int, material: Material, builder: ItemBuilderAction, action: BasicMenuClickAction = BasicMenuClickAction {}): BasicMenuBuilder {
         val stack = ItemBuilder(material).apply { builder.apply { initialize() } }.build()
-        item(index, stack)
+        item(index, stack, action)
 
         return this
     }
@@ -180,6 +197,13 @@ fun interface BasicMenuAction {
 }
 
 /**
+ * OnClick handler actions
+ */
+fun interface BasicMenuClickAction {
+    fun BasicMenu.handle(event: InventoryClickEvent)
+}
+
+/**
  * items which using BasicMenu.
  */
-class MenuItem(val index: Int, val item: ItemStack)
+class MenuItem(val index: Int, val item: ItemStack, val onClick: BasicMenuClickAction)
