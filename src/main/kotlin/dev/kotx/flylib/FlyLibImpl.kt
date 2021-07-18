@@ -44,23 +44,19 @@ internal class FlyLibImpl(override val plugin: JavaPlugin, commands: List<Comman
         register<PluginDisableEvent> {
             if (it.plugin == plugin) disable()
         }
-
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin) { load() }
     }
 
     private fun enable() {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin) { load() }
         commandHandler.enable()
         println()
-        println(
-                """
-              ______ _
-             |  ____| |
-             | |__  | |      FlyLib Reloaded v0.3.0
-             |  __| | |      by Kotx
-             | |    | |____
-             |_|    |______|
-        """.trimIndent()
-        )
+        println("""
+             _____ _  __   __
+            |  ___| | \ \ / /
+            | |_  | |  \ V /   FlyLib Reloaded v0.3.0 by Kotx 
+            |  _| | |___| |    inject successfully.
+            |_|   |_____|_|  
+        """.trimIndent())
         println()
     }
 
