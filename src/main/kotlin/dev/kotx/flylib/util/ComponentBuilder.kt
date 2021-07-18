@@ -26,6 +26,14 @@ class ComponentBuilder {
     }
 
     /**
+     * Add text.
+     */
+    fun append(component: Component): ComponentBuilder {
+        component.append(component)
+        return this
+    }
+
+    /**
      * Adds text with a specified color.
      */
     fun append(text: String, color: Color): ComponentBuilder {
@@ -47,6 +55,14 @@ class ComponentBuilder {
     fun append(text: String, color: Color, vararg decorations: TextDecoration): ComponentBuilder {
         component.append(text.component(Style.style(*decorations, TextColor.color(color.rgb))))
         return this
+    }
+
+    /**
+     * Adds line break.
+     */
+    fun appendln(): ComponentBuilder {
+        component.append("\n".component())
+         return this
     }
 
     /**
@@ -159,5 +175,37 @@ class ComponentBuilder {
         component.append(this)
     }
 
+    /**
+     * Adds colored text
+     */
+    infix fun String.color(color: Color) {
+        append(this, color)
+    }
+
+    /**
+     * Adds colored text with line break
+     */
+    infix fun String.boldColor(color: Color) {
+        bold(this, color)
+    }
+
+    /**
+     * Adds colored bold text
+     */
+    infix fun String.colorln(color: Color) {
+        appendln(this, color)
+    }
+
+    /**
+     * Adds colored bold text wit hline break
+     */
+    infix fun String.boldColorln(color: Color) {
+        boldln(this, color)
+    }
+
     internal fun build() = component.build()
+}
+
+fun interface ComponentBuilderAction {
+    fun ComponentBuilder.initialize()
 }
