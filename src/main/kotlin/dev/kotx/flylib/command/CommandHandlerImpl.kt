@@ -10,6 +10,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.builder.RequiredArgumentBuilder
 import com.mojang.brigadier.tree.LiteralCommandNode
 import dev.kotx.flylib.FlyLibImpl
+import dev.kotx.flylib.util.fullCommand
 import net.minecraft.server.v1_16_R3.CommandListenerWrapper
 import net.minecraft.server.v1_16_R3.MinecraftServer
 import org.bukkit.Bukkit
@@ -204,19 +205,6 @@ internal class CommandHandlerImpl(
                     ".${fullCommand.joinToString(".") { it.name }.lowercase()}" +
                     ".${usage.arguments.joinToString(".") { it.name }.lowercase()}") to
                     (usage.permission ?: permission ?: defaultPermission)
-
-    private val Command.fullCommand: List<Command>
-        get() {
-            val commands = mutableListOf<Command>()
-            var current: Command? = this
-
-            do {
-                commands.add(current!!)
-                current = current.parent
-            } while (current != null)
-
-            return commands.reversed()
-        }
 
     fun List<Command>.handle(d: Int) {
         val children = flatMap {
