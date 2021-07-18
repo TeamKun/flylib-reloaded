@@ -5,11 +5,17 @@
 
 package dev.kotx.flylib.command
 
+import dev.kotx.flylib.command.arguments.LiteralArgument
+import dev.kotx.flylib.util.component
+import dev.kotx.flylib.util.fullCommand
+import dev.kotx.flylib.util.joint
+import java.awt.Color
+
 /**
  * An Command used for FlyLib
  */
 abstract class Command(
-        internal val name: String
+    internal val name: String,
 ) {
     /**
      * Command description
@@ -83,7 +89,92 @@ abstract class Command(
      * The block that executes the command. The default is to display help for that command.
      */
     open fun CommandContext.execute() {
-        //sendHelp
+        val fullName = command.fullCommand.joinToString(" ") { it.name }
+        send {
+            appendln("--------------------------------------------------", Color.DARK_GRAY)
+            append("/", Color(0, 80, 200))
+            append(fullName, Color(0, 123, 255))
+
+            if (command.description != null) {
+                append(" - ", Color.GRAY)
+                append(command.description!!, Color.WHITE)
+            }
+
+            appendln()
+
+            if (command.aliases.isNotEmpty()) {
+                appendln()
+                append("Aliases", Color.RED)
+                append(":", Color.GRAY)
+                appendln()
+
+                command.aliases.joint("\n".component(Color.DARK_GRAY)) { "    $it".component() }.forEach { +it }
+
+                appendln()
+            }
+
+            if (command.usages.isNotEmpty()) {
+                appendln()
+                append("Usages", Color.RED)
+                append(":", Color.GRAY)
+                appendln()
+
+                command.usages.forEach {
+                    append("    /", Color(0, 80, 200))
+                    append(fullName, Color(0, 123, 255))
+                    append(" ")
+
+                    it.arguments.joint(" ".component()) {
+                        if (it is LiteralArgument) {
+                            it.name.component(Color.ORANGE)
+                        } else {
+                            "<".component(Color.GRAY)
+                                .append(it.name.component(Color.ORANGE))
+                                .append(">".component(Color.GRAY))
+                        }
+                    }.forEach {
+                        +it
+                    }
+
+                    if (description != null) append(" - ", Color.GRAY).append(command.description!!)
+
+                    appendln()
+                }
+            }
+
+            if (command.examples.isNotEmpty()) {
+                appendln()
+                append("Examples", Color.RED)
+                append(":", Color.GRAY)
+                appendln()
+
+                command.examples.forEach {
+                    append("    /", Color(0, 80, 200))
+                    append(fullName, Color(0, 123, 255))
+                    append(
+                        it.replaceFirst("^/".toRegex(), "")
+                            .replaceFirst("^${fullName}".toRegex(), "")
+                            .replaceFirst("^${command.name}".toRegex(), "")
+                    )
+                    appendln()
+                }
+            }
+
+            if (command.children.isNotEmpty()) {
+                appendln()
+                append("Children", Color.RED)
+                append(":", Color.GRAY)
+                appendln()
+
+                command.children.forEach {
+                    append("    ")
+                    append(it.name, Color.ORANGE)
+                    appendln()
+                }
+            }
+
+            appendln("--------------------------------------------------", Color.DARK_GRAY)
+        }
     }
 
     /**
