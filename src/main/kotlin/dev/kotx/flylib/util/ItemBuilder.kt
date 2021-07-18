@@ -45,8 +45,8 @@ class ItemBuilder(
     /**
      * Sets custom item name with component builder.
      */
-    fun name(builder: ComponentBuilder.() -> Unit): ItemBuilder {
-        this.name = ComponentBuilder().apply(builder).build()
+    fun name(builder: ComponentBuilderAction): ItemBuilder {
+        this.name = ComponentBuilder().apply { builder.apply { initialize() } }.build()
         return this
     }
 
