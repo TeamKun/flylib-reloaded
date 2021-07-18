@@ -23,18 +23,19 @@ object TestCommand : Command("test") {
     init {
         description("Hello flylib!")
         permission(EVERYONE)
+        alias("hoge")
         usage {
-            textArgument("YOUR_TEXT")
-            executes {
-                it.sender.sendMessage("Hello argument ${it.args}")
-            }
+            description("some description")
+            integerArgument("number")
+            entityArgument("entity")
         }
-
+        usage {
+            description("second usage")
+            locationArgument("position")
+        }
+        example("/test 1 kotlinx")
+        example("test ~ ~ ~")
         children(ChildCommand)
-    }
-
-    override fun CommandContext.execute() {
-        sender.sendMessage("Hello test $args")
     }
 }
 
