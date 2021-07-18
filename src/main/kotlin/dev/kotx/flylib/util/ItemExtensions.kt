@@ -18,8 +18,8 @@ fun BookMeta.page(text: String): BookMeta {
 /**
  * Adds page using component builder
  */
-fun BookMeta.page(block: ComponentBuilder.() -> Unit): BookMeta {
-    addPages(ComponentBuilder().apply(block).build())
+fun BookMeta.page(block: ComponentBuilderAction): BookMeta {
+    addPages(ComponentBuilder().apply { block.apply { initialize() } }.build())
     return this
 }
 
