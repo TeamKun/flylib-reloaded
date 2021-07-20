@@ -90,7 +90,7 @@ abstract class Command(
      */
     open fun CommandContext.execute() {
         val fullName = command.fullCommand.joinToString(" ") { it.name }
-        send {
+        message {
             appendln("--------------------------------------------------", Color.DARK_GRAY)
             append("/", Color(0, 80, 200))
             append(fullName, Color(0, 123, 255))
