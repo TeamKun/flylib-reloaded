@@ -5,10 +5,15 @@
 
 package dev.kotx.flylib.command
 
-import dev.kotx.flylib.util.ComponentBuilder
 import dev.kotx.flylib.util.ComponentBuilderAction
+import dev.kotx.flylib.util.fail
 import dev.kotx.flylib.util.message
 import dev.kotx.flylib.util.pluginMessage
+import dev.kotx.flylib.util.pluginMessageFail
+import dev.kotx.flylib.util.pluginMessageSuccess
+import dev.kotx.flylib.util.pluginMessageWarn
+import dev.kotx.flylib.util.success
+import dev.kotx.flylib.util.warn
 import net.kyori.adventure.text.Component
 import org.bukkit.Server
 import org.bukkit.World
@@ -75,91 +80,72 @@ class CommandContext(
     /**
      * send string message
      */
-    fun message(text: String) = sender.sendMessage(text)
+    fun message(text: String) = sender.message(text)
 
     /**
      * send string colored message
      */
-    fun message(text: String, color: Color) = sender.message { append(text, color) }
+    fun message(text: String, color: Color) = sender.message(text, color)
 
     /**
      * send component
      */
-    fun message(component: Component) = sender.sendMessage(component)
+    fun message(component: Component) = sender.message(component)
 
     /**
      * send component via builder
      */
-    fun message(builder: ComponentBuilderAction) =
-        sender.sendMessage(ComponentBuilder().apply { builder.apply { initialize() } }.build())
+    fun message(builder: ComponentBuilderAction) = sender.message(builder)
 
     /**
      * send green string
      */
-    fun success(text: String) = sender.message { append(text, Color.GREEN) }
+    fun success(text: String) = sender.success(text)
 
     /**
      * send yellow string
      */
-    fun warn(text: String) = sender.message { append(text, Color.YELLOW) }
+    fun warn(text: String) = sender.warn(text)
 
     /**
      * send red string
      */
-    fun fail(text: String) = sender.message { append(text, Color.RED) }
+    fun fail(text: String) = sender.fail(text)
 
     /**
      * send string with plugin name
      */
-    fun pluginMessage(text: String) = sender.pluginMessage(plugin, text, Color.WHITE)
+    fun pluginMessage(text: String) = sender.pluginMessage(plugin, text)
 
     /**
      * send colored string with plugin name
      */
-    fun pluginMessage(text: String, color: Color) = sender.message {
-        append("[", Color.LIGHT_GRAY)
-        append(plugin.name, Color.ORANGE)
-        append("]", Color.LIGHT_GRAY)
-        append(" ")
-        append(text, color)
-    }
+    fun pluginMessage(text: String, color: Color) = sender.pluginMessage(plugin, text, color)
 
     /**
      * send component with plugin name
      */
-    fun pluginMessage(component: Component) = sender.message {
-        append("[", Color.LIGHT_GRAY)
-        append(plugin.name, Color.ORANGE)
-        append("]", Color.LIGHT_GRAY)
-        append(" ")
-        append(component)
-    }
+    fun pluginMessage(component: Component) = sender.pluginMessage(plugin, component)
 
     /**
      * send component via builder with plugin name
      */
-    fun pluginMessage(builder: ComponentBuilderAction) = sender.message {
-        append("[", Color.LIGHT_GRAY)
-        append(plugin.name, Color.ORANGE)
-        append("]", Color.LIGHT_GRAY)
-        append(" ")
-        append(ComponentBuilder().apply { builder.apply { initialize() } }.build())
-    }
+    fun pluginMessage(builder: ComponentBuilderAction) = sender.pluginMessage(plugin, builder)
 
     /**
      * send green string with plugin name
      */
-    fun pluginMessageSuccess(text: String) = sender.pluginMessage(plugin, text, Color.GREEN)
+    fun pluginMessageSuccess(text: String) = sender.pluginMessageSuccess(plugin, text)
 
     /**
      * send yellow string with plugin name
      */
-    fun pluginMessageWarn(text: String) = sender.pluginMessage(plugin, text, Color.YELLOW)
+    fun pluginMessageWarn(text: String) = sender.pluginMessageWarn(plugin, text)
 
     /**
      * send red string with plugin name
      */
-    fun pluginMessageFail(text: String) = sender.pluginMessage(plugin, text, Color.RED)
+    fun pluginMessageFail(text: String) = sender.pluginMessageFail(plugin, text)
 }
 
 /**

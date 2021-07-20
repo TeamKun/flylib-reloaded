@@ -28,8 +28,7 @@ fun CommandSender.message(component: Component) = sendMessage(component)
 /**
  * send component via builder
  */
-fun CommandSender.message(builder: ComponentBuilderAction) =
-    sendMessage(ComponentBuilder().apply { builder.apply { initialize() } }.build())
+fun CommandSender.message(builder: ComponentBuilderAction) = message(ComponentBuilder().apply { builder.apply { initialize() } }.build())
 
 /**
  * send green string
@@ -81,7 +80,7 @@ fun CommandSender.pluginMessage(plugin: JavaPlugin, builder: ComponentBuilderAct
     append(plugin.name, Color.ORANGE)
     append("]", Color.LIGHT_GRAY)
     append(" ")
-    append(ComponentBuilder().apply { builder.apply { initialize() } }.build())
+    apply { builder.apply { initialize() } }
 }
 
 /**
