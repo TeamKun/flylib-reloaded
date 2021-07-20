@@ -94,7 +94,7 @@ class UsageBuilder {
      * An argument that takes a Long value.
      */
     fun longArgument(name: String, suggestion: SuggestionAction? = null): UsageBuilder {
-        this.arguments.add(IntegerArgument(name, suggestion = suggestion))
+        this.arguments.add(LongArgument(name, suggestion = suggestion))
         return this
     }
 
@@ -115,7 +115,7 @@ class UsageBuilder {
      * An argument that takes a String value.
      */
     fun textArgument(name: String, suggestion: SuggestionAction? = null): UsageBuilder {
-        this.arguments.add(IntegerArgument(name, suggestion = suggestion))
+        this.arguments.add(TextArgument(name, suggestion = suggestion))
         return this
     }
 

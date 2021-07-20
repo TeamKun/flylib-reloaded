@@ -100,6 +100,12 @@ abstract class Command(
                 append(command.description!!, Color.WHITE)
             }
 
+            command.children.forEach {
+                append("    ")
+                append(it.name, Color.ORANGE)
+                appendln()
+            }
+
             appendln()
 
             if (command.aliases.isNotEmpty()) {
@@ -156,19 +162,6 @@ abstract class Command(
                             .replaceFirst("^${fullName}".toRegex(), "")
                             .replaceFirst("^${command.name}".toRegex(), "")
                     )
-                    appendln()
-                }
-            }
-
-            if (command.children.isNotEmpty()) {
-                appendln()
-                append("Children", Color.RED)
-                append(":", Color.GRAY)
-                appendln()
-
-                command.children.forEach {
-                    append("    ")
-                    append(it.name, Color.ORANGE)
                     appendln()
                 }
             }

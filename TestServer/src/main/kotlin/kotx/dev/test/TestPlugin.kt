@@ -31,7 +31,7 @@ object TestCommand : Command("test") {
         }
         usage {
             description("second usage")
-            locationArgument("position")
+            locationArgument("location")
         }
         example("/test 1 kotlinx")
         example("test ~ ~ ~")
@@ -40,6 +40,13 @@ object TestCommand : Command("test") {
 }
 
 object ChildCommand : Command("children") {
+    init {
+        usage {
+            description("children usage")
+            locationArgument("location")
+        }
+    }
+
     override fun CommandContext.execute() {
         sender.sendMessage("Hello children $args")
     }
