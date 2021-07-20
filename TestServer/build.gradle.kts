@@ -17,11 +17,15 @@ repositories {
     maven("https://papermc.io/repo/repository/maven-public/")
 }
 
-dependencies {
-    implementation("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
+configurations {
+    val embed = register("embed")
+    implementation.get().extendsFrom(embed.get())
+}
 
-    implementation(kotlin("stdlib-jdk8"))
-    implementation(parent!!)
+dependencies {
+    compileOnly("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
+    configurations.getByName("embed")(kotlin("stdlib-jdk8"))
+    configurations.getByName("embed")(parent!!)
 }
 
 tasks {
@@ -52,7 +56,7 @@ tasks {
     }
 
     jar {
-        from(configurations.compileClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
+        from(configurations.getByName("embed").map { if (it.isDirectory) it else zipTree(it) })
     }
 
     create<Copy>("buildPlugin") {
