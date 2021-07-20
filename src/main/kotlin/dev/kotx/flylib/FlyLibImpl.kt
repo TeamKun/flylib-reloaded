@@ -18,14 +18,12 @@ import org.bukkit.event.server.PluginEnableEvent
 import org.bukkit.plugin.RegisteredListener
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.dsl.module
-import org.slf4j.LoggerFactory
 
 internal class FlyLibImpl(override val plugin: JavaPlugin, commands: List<Command>, defaultPermission: Permission) : FlyLib {
-    private val logger = LoggerFactory.getLogger("FlyLib Reloaded")
     override val commandHandler = CommandHandlerImpl(this, commands, defaultPermission)
 
     init {
-        logger.info("Loading FlyLib...")
+        println("Loading FlyLib...")
 
         if (FlyLibContext.getOrNull() != null) FlyLibContext.stop()
 
@@ -61,9 +59,9 @@ internal class FlyLibImpl(override val plugin: JavaPlugin, commands: List<Comman
     }
 
     private fun disable() {
-        logger.info("Unloading FlyLib...")
+        println("Unloading FlyLib...")
         commandHandler.disable()
-        logger.info("FlyLib unloaded successfully.")
+        println("FlyLib unloaded successfully.")
     }
 
     private fun load() {
