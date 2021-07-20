@@ -14,6 +14,7 @@ import dev.kotx.flylib.util.fullCommand
 import net.minecraft.server.v1_16_R3.CommandListenerWrapper
 import net.minecraft.server.v1_16_R3.MinecraftServer
 import org.bukkit.Bukkit
+import org.bukkit.Server
 import org.bukkit.command.SimpleCommandMap
 import org.bukkit.craftbukkit.v1_16_R3.CraftServer
 import org.bukkit.craftbukkit.v1_16_R3.command.VanillaCommandWrapper
@@ -23,16 +24,16 @@ private typealias BukkitPermission = org.bukkit.permissions.Permission
 
 @Suppress("UNCHECKED_CAST")
 internal class CommandHandlerImpl(
-        override val flyLib: FlyLibImpl,
-        private val commands: List<Command>,
-        private val defaultPermission: Permission
+    override val flyLib: FlyLibImpl,
+    private val commands: List<Command>,
+    private val defaultPermission: Permission
 ) : CommandHandler {
     private val depthMap = mutableMapOf<Command, Int>()
     internal fun enable() {
         val commandDispatcher = ((Bukkit.getServer() as CraftServer).server as MinecraftServer).commandDispatcher
         val commandNodes = MethodHandles.privateLookupIn(SimpleCommandMap::class.java, MethodHandles.lookup())
-                .findVarHandle(SimpleCommandMap::class.java, "knownCommands", MutableMap::class.java)
-                .get(Bukkit.getCommandMap()) as MutableMap<String, org.bukkit.command.Command>
+            .findVarHandle(SimpleCommandMap::class.java, "knownCommands", MutableMap::class.java)
+            .get(Bukkit.getCommandMap()) as MutableMap<String, org.bukkit.command.Command>
 
         commands.handle(1)
 
@@ -59,8 +60,8 @@ internal class CommandHandlerImpl(
     internal fun disable() {
         val root = ((Bukkit.getServer() as CraftServer).server as MinecraftServer).commandDispatcher.a().root
         val commandNodes = MethodHandles.privateLookupIn(SimpleCommandMap::class.java, MethodHandles.lookup())
-                .findVarHandle(SimpleCommandMap::class.java, "knownCommands", MutableMap::class.java)
-                .get(Bukkit.getCommandMap()) as MutableMap<String, org.bukkit.command.Command>
+            .findVarHandle(SimpleCommandMap::class.java, "knownCommands", MutableMap::class.java)
+            .get(Bukkit.getCommandMap()) as MutableMap<String, org.bukkit.command.Command>
 
         fun remove(name: String) {
             root.removeCommand(name)
@@ -109,12 +110,13 @@ internal class CommandHandlerImpl(
 
             executes { ctx ->
                 val context = CommandContext(
-                        flyLib.plugin,
-                        command,
-                        ctx.source.bukkitSender,
-                        ctx.source.bukkitWorld,
-                        ctx.input,
-                        depthMap[command]!!
+                    flyLib.plugin,
+                    command,
+                    ctx.source.bukkitSender,
+                    ctx.source.bukkitWorld,
+                    ctx.source.server.server as Server,
+                    ctx.input,
+                    depthMap[command]!!
                 )
 
                 command.apply { context.execute() }
@@ -138,12 +140,13 @@ internal class CommandHandlerImpl(
 
                     executes { ctx ->
                         val context = CommandContext(
-                                flyLib.plugin,
-                                command,
-                                ctx.source.bukkitSender,
-                                ctx.source.bukkitWorld,
-                                ctx.input,
-                                depthMap[command]!!
+                            flyLib.plugin,
+                            command,
+                            ctx.source.bukkitSender,
+                            ctx.source.bukkitWorld,
+                            ctx.source.server.server as Server,
+                            ctx.input,
+                            depthMap[command]!!
                         )
 
                         usage.action?.apply { context.execute() } ?: command.apply { context.execute() }
@@ -154,11 +157,11 @@ internal class CommandHandlerImpl(
                     if (this is RequiredArgumentBuilder<CommandListenerWrapper, *> && argument.suggestion != null)
                         suggests { context, builder ->
                             val suggestions = SuggestionBuilder(
-                                    flyLib.plugin,
-                                    command,
-                                    context.source.bukkitSender,
-                                    context.input,
-                                    emptyList()
+                                flyLib.plugin,
+                                command,
+                                context.source.bukkitSender,
+                                context.input,
+                                emptyList()
                             )
 
                             argument.suggestion!!.apply { suggestions.initialize() }
@@ -192,19 +195,19 @@ internal class CommandHandlerImpl(
     }
 
     private fun Command.getCommandPermission() =
-            ((permission ?: defaultPermission).name
-                    ?: flyLib.plugin.name.lowercase() +
-                    ".command" +
-                    ".${fullCommand.joinToString(".") { it.name }.lowercase()}") to
-                    (permission ?: defaultPermission)
+        ((permission ?: defaultPermission).name
+            ?: flyLib.plugin.name.lowercase() +
+            ".command" +
+            ".${fullCommand.joinToString(".") { it.name }.lowercase()}") to
+                (permission ?: defaultPermission)
 
     private fun Command.getUsagePermission(usage: Usage) =
-            ((usage.permission ?: permission ?: defaultPermission).name
-                    ?: flyLib.plugin.name.lowercase() +
-                    ".command" +
-                    ".${fullCommand.joinToString(".") { it.name }.lowercase()}" +
-                    ".${usage.arguments.joinToString(".") { it.name }.lowercase()}") to
-                    (usage.permission ?: permission ?: defaultPermission)
+        ((usage.permission ?: permission ?: defaultPermission).name
+            ?: flyLib.plugin.name.lowercase() +
+            ".command" +
+            ".${fullCommand.joinToString(".") { it.name }.lowercase()}" +
+            ".${usage.arguments.joinToString(".") { it.name }.lowercase()}") to
+                (usage.permission ?: permission ?: defaultPermission)
 
     fun List<Command>.handle(d: Int) {
         val children = flatMap {

@@ -7,7 +7,10 @@ package dev.kotx.flylib.command
 
 import dev.kotx.flylib.util.ComponentBuilder
 import dev.kotx.flylib.util.ComponentBuilderAction
+import dev.kotx.flylib.util.message
+import dev.kotx.flylib.util.pluginMessage
 import net.kyori.adventure.text.Component
+import org.bukkit.Server
 import org.bukkit.World
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -20,27 +23,31 @@ import java.awt.Color
  * In Kotlin it is given as a receiver.
  */
 class CommandContext(
-        /**
-         * Your plugin.
-         */
-        val plugin: JavaPlugin,
-        /**
-         * Executed command.
-         */
-        val command: Command,
-        /**
-         * Executed command sender. (It doesn't matter if you are a player or not.)
-         */
-        val sender: CommandSender,
-        /**
-         * The world where the command was executed
-         */
-        val world: World?,
-        /**
-         * Command input message.
-         */
-        val message: String,
-        depth: Int
+    /**
+     * Your plugin.
+     */
+    val plugin: JavaPlugin,
+    /**
+     * Executed command.
+     */
+    val command: Command,
+    /**
+     * Executed command sender. (It doesn't matter if you are a player or not.)
+     */
+    val sender: CommandSender,
+    /**
+     * The world where the command was executed
+     */
+    val world: World?,
+    /**
+     * The server on which the plugin was run
+     */
+    val server: Server,
+    /**
+     * Command input message.
+     */
+    val message: String,
+    depth: Int
 ) {
     /**
      * Executed command sender. (Limited to the player, but null if executed by someone other than the player.)
@@ -66,124 +73,93 @@ class CommandContext(
     val args = message.replaceFirst("^/".toRegex(), "").split(" ").drop(depth)
 
     /**
-     * Send message to command sender.
+     * send string message
      */
-    fun send(text: String) {
-        sender.sendMessage(text)
-    }
+    fun message(text: String) = sender.sendMessage(text)
 
     /**
-     * send message to command sender
+     * send string colored message
      */
-    fun send(component: Component) {
-        sender.sendMessage(component)
-    }
+    fun message(text: String, color: Color) = sender.message { append(text, color) }
 
     /**
-     * send message to command sender with ComponentBuilder
+     * send component
      */
-    fun send(builder: ComponentBuilderAction) {
+    fun message(component: Component) = sender.sendMessage(component)
+
+    /**
+     * send component via builder
+     */
+    fun message(builder: ComponentBuilderAction) =
         sender.sendMessage(ComponentBuilder().apply { builder.apply { initialize() } }.build())
+
+    /**
+     * send green string
+     */
+    fun success(text: String) = sender.message { append(text, Color.GREEN) }
+
+    /**
+     * send yellow string
+     */
+    fun warn(text: String) = sender.message { append(text, Color.YELLOW) }
+
+    /**
+     * send red string
+     */
+    fun fail(text: String) = sender.message { append(text, Color.RED) }
+
+    /**
+     * send string with plugin name
+     */
+    fun pluginMessage(text: String) = sender.pluginMessage(plugin, text, Color.WHITE)
+
+    /**
+     * send colored string with plugin name
+     */
+    fun pluginMessage(text: String, color: Color) = sender.message {
+        append("[", Color.LIGHT_GRAY)
+        append(plugin.name, Color.ORANGE)
+        append("]", Color.LIGHT_GRAY)
+        append(" ")
+        append(text, color)
     }
 
     /**
-     * send green colored message.
+     * send component with plugin name
      */
-    fun success(text: String) {
-        send { append(text, Color.GREEN) }
+    fun pluginMessage(component: Component) = sender.message {
+        append("[", Color.LIGHT_GRAY)
+        append(plugin.name, Color.ORANGE)
+        append("]", Color.LIGHT_GRAY)
+        append(" ")
+        append(component)
     }
 
     /**
-     * send yellow colored message.
+     * send component via builder with plugin name
      */
-    fun warn(text: String) {
-        send { append(text, Color.YELLOW) }
+    fun pluginMessage(builder: ComponentBuilderAction) = sender.message {
+        append("[", Color.LIGHT_GRAY)
+        append(plugin.name, Color.ORANGE)
+        append("]", Color.LIGHT_GRAY)
+        append(" ")
+        append(ComponentBuilder().apply { builder.apply { initialize() } }.build())
     }
 
     /**
-     * send red colored message.
+     * send green string with plugin name
      */
-    fun fail(text: String) {
-        send { append(text, Color.RED) }
-    }
+    fun pluginMessageSuccess(text: String) = sender.pluginMessage(plugin, text, Color.GREEN)
 
     /**
-     * send message with plugin name.
+     * send yellow string with plugin name
      */
-    fun pluginSend(text: String) {
-        send {
-            append("[", Color.LIGHT_GRAY)
-            append(plugin.name, Color.ORANGE)
-            append("]", Color.LIGHT_GRAY)
-            append(" ")
-            append(text)
-        }
-    }
+    fun pluginMessageWarn(text: String) = sender.pluginMessage(plugin, text, Color.YELLOW)
 
     /**
-     * send message with plugin name.
+     * send red string with plugin name
      */
-    fun pluginSend(component: Component) {
-        send {
-            append("[", Color.LIGHT_GRAY)
-            append(plugin.name, Color.ORANGE)
-            append("]", Color.LIGHT_GRAY)
-            append(" ")
-            append(component)
-        }
-    }
-
-    /**
-     * send message with plugin name using ComponentBuilder
-     */
-    fun pluginSend(builder: ComponentBuilderAction) {
-        send {
-            append("[", Color.LIGHT_GRAY)
-            append(plugin.name, Color.ORANGE)
-            append("]", Color.LIGHT_GRAY)
-            append(" ")
-            append(ComponentBuilder().apply { builder.apply { initialize() } }.build())
-        }
-    }
-
-    /**
-     * send green colored message with plugin name.
-     */
-    fun pluginSendSuccess(text: String) {
-        send {
-            append("[", Color.LIGHT_GRAY)
-            append(plugin.name, Color.ORANGE)
-            append("]", Color.LIGHT_GRAY)
-            append(" ")
-            append(text, Color.GREEN)
-        }
-    }
-
-    /**
-     * send yellow colored message with plugin name.
-     */
-    fun pluginSendWarn(text: String) {
-        send {
-            append("[", Color.LIGHT_GRAY)
-            append(plugin.name, Color.ORANGE)
-            append("]", Color.LIGHT_GRAY)
-            append(" ")
-            append(text, Color.YELLOW)
-        }
-    }
-
-    /**
-     * send red colored message with plugin name.
-     */
-    fun pluginSendError(text: String) {
-        send {
-            append("[", Color.LIGHT_GRAY)
-            append(plugin.name, Color.ORANGE)
-            append("]", Color.LIGHT_GRAY)
-            append(" ")
-            append(text, Color.RED)
-        }
-    }
+    fun pluginMessageFail(text: String) = sender.pluginMessage(plugin, text, Color.RED)
 }
 
 /**
