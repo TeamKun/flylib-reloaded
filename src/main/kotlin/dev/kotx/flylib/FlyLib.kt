@@ -22,7 +22,7 @@ interface FlyLib {
          */
         @JvmStatic
         fun create(plugin: JavaPlugin, builder: FlyLibAction): FlyLib =
-                FlyLibBuilder(plugin).apply { builder.apply { initialize() } }.build()
+            FlyLibBuilder(plugin).apply { builder.apply { initialize() } }.build()
     }
 }
 

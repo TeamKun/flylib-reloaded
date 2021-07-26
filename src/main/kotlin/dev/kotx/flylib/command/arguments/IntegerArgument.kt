@@ -16,12 +16,13 @@ import net.minecraft.server.v1_16_R3.CommandListenerWrapper
  * Int argument.
  */
 class IntegerArgument(
-        override val name: String,
-        min: Int = Int.MIN_VALUE,
-        max: Int = Int.MAX_VALUE,
-        override val suggestion: SuggestionAction? = null
+    override val name: String,
+    min: Int = Int.MIN_VALUE,
+    max: Int = Int.MAX_VALUE,
+    override val suggestion: SuggestionAction? = null
 ) : Argument<Int> {
     override val type: ArgumentType<*>? = IntegerArgumentType.integer(min, max)
 
-    override fun parse(context: CommandContext<CommandListenerWrapper>, key: String): Int = IntegerArgumentType.getInteger(context, key)
+    override fun parse(context: CommandContext<CommandListenerWrapper>, key: String): Int =
+        IntegerArgumentType.getInteger(context, key)
 }

@@ -28,7 +28,8 @@ fun CommandSender.message(component: Component) = sendMessage(component)
 /**
  * send component via builder
  */
-fun CommandSender.message(builder: ComponentBuilderAction) = message(ComponentBuilder().apply { builder.apply { initialize() } }.build())
+fun CommandSender.message(builder: ComponentBuilderAction) =
+    message(ComponentBuilder().apply { builder.apply { initialize() } }.build())
 
 /**
  * send green string

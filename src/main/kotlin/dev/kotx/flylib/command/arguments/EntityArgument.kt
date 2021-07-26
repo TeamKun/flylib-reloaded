@@ -16,10 +16,11 @@ import org.bukkit.entity.Entity
  * Argument to select an entity.
  */
 class EntityArgument(
-        override val name: String,
-        override val suggestion: SuggestionAction?
+    override val name: String,
+    override val suggestion: SuggestionAction?
 ) : Argument<List<Entity>> {
-    override val type = ArgumentEntity.multipleEntities()
+    override val type: ArgumentEntity = ArgumentEntity.multipleEntities()
 
-    override fun parse(context: CommandContext<CommandListenerWrapper>, key: String) = ArgumentEntity.c(context, key).map { it.bukkitEntity }
+    override fun parse(context: CommandContext<CommandListenerWrapper>, key: String) =
+        ArgumentEntity.c(context, key).map { it.bukkitEntity }
 }

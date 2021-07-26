@@ -13,7 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin
  * A builder that creates Fly Lib.
  */
 class FlyLibBuilder(
-        private val plugin: JavaPlugin
+    private val plugin: JavaPlugin
 ) {
     private val commands = mutableListOf<Command>()
     private var defaultPermission = Permission.OP

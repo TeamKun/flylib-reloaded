@@ -62,7 +62,7 @@ class ComponentBuilder {
      */
     fun appendln(): ComponentBuilder {
         component.append("\n".component())
-         return this
+        return this
     }
 
     /**
@@ -157,7 +157,15 @@ class ComponentBuilder {
      * Adds decorated colored text with line breaks.
      */
     fun boldln(text: String, color: Color, vararg decorations: TextDecoration): ComponentBuilder {
-        component.append("$text\n".component(Style.style(*decorations, TextDecoration.BOLD, TextColor.color(color.rgb))))
+        component.append(
+            "$text\n".component(
+                Style.style(
+                    *decorations,
+                    TextDecoration.BOLD,
+                    TextColor.color(color.rgb)
+                )
+            )
+        )
         return this
     }
 

@@ -59,10 +59,10 @@ class UsageBuilder {
      */
     @JvmOverloads
     fun integerArgument(
-            name: String,
-            min: Int = Int.MIN_VALUE,
-            max: Int = Int.MAX_VALUE,
-            suggestion: SuggestionAction? = null
+        name: String,
+        min: Int = Int.MIN_VALUE,
+        max: Int = Int.MAX_VALUE,
+        suggestion: SuggestionAction? = null
     ): UsageBuilder {
         this.arguments.add(IntegerArgument(name, min, max, suggestion))
         return this
@@ -81,10 +81,10 @@ class UsageBuilder {
      */
     @JvmOverloads
     fun longArgument(
-            name: String,
-            min: Long = Long.MIN_VALUE,
-            max: Long = Long.MAX_VALUE,
-            suggestion: SuggestionAction? = null
+        name: String,
+        min: Long = Long.MIN_VALUE,
+        max: Long = Long.MAX_VALUE,
+        suggestion: SuggestionAction? = null
     ): UsageBuilder {
         this.arguments.add(LongArgument(name, min, max, suggestion))
         return this
@@ -103,9 +103,9 @@ class UsageBuilder {
      */
     @JvmOverloads
     fun textArgument(
-            name: String,
-            type: TextArgument.Type = TextArgument.Type.WORD,
-            suggestion: SuggestionAction? = null
+        name: String,
+        type: TextArgument.Type = TextArgument.Type.WORD,
+        suggestion: SuggestionAction? = null
     ): UsageBuilder {
         this.arguments.add(TextArgument(name, type, suggestion))
         return this

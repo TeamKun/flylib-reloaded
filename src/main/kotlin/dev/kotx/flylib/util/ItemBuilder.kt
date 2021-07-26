@@ -16,7 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta
  * Item builder to create custom itemStack
  */
 class ItemBuilder(
-        private val material: Material
+    private val material: Material
 ) {
     private var amount = 1
     private var name: Component? = null

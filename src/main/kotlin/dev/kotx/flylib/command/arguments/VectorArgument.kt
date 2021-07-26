@@ -16,16 +16,16 @@ import org.bukkit.util.Vector
  * Direction argument.
  */
 class VectorArgument(
-        override val name: String,
-        override val suggestion: SuggestionAction? = null,
+    override val name: String,
+    override val suggestion: SuggestionAction? = null,
 ) : Argument<Vector> {
-    override val type = ArgumentVec3.a()
+    override val type: ArgumentVec3 = ArgumentVec3.a()
     override fun parse(context: CommandContext<CommandListenerWrapper>, key: String): Vector {
         val vec = ArgumentVec3.a(context, key)
         return Vector(
-                vec.x,
-                vec.y,
-                vec.z
+            vec.x,
+            vec.y,
+            vec.z
         )
     }
 }

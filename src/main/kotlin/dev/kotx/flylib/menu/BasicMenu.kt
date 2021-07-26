@@ -27,9 +27,9 @@ import org.koin.core.component.inject
  * A Inventory menu.
  */
 class BasicMenu(
-        val title: String,
-        val size: Int,
-        val items: List<MenuItem>
+    val title: String,
+    val size: Int,
+    val items: List<MenuItem>
 ) : FlyLibComponent, Listener {
     private val plugin: JavaPlugin by inject()
     private val players = mutableMapOf<Player, Inventory>()
@@ -48,7 +48,7 @@ class BasicMenu(
             inventory.setItem(it.index, it.item)
         }
 
-        player.openInventory(inventory)!!
+        player.openInventory(inventory) ?: return
 
         players[player] = inventory
     }
@@ -165,7 +165,11 @@ class BasicMenuBuilder {
      * Add MenuItem using ItemBuilder at last.
      */
     @JvmOverloads
-    fun item(material: Material, builder: ItemBuilderAction, action: BasicMenuClickAction = BasicMenuClickAction {}): BasicMenuBuilder {
+    fun item(
+        material: Material,
+        builder: ItemBuilderAction,
+        action: BasicMenuClickAction = BasicMenuClickAction {}
+    ): BasicMenuBuilder {
         val stack = ItemBuilder(material).apply { builder.apply { initialize() } }.build()
         item(stack, action)
 
@@ -176,7 +180,12 @@ class BasicMenuBuilder {
      * Add MenuItem using ItemBuilder at specified index.
      */
     @JvmOverloads
-    fun item(index: Int, material: Material, builder: ItemBuilderAction, action: BasicMenuClickAction = BasicMenuClickAction {}): BasicMenuBuilder {
+    fun item(
+        index: Int,
+        material: Material,
+        builder: ItemBuilderAction,
+        action: BasicMenuClickAction = BasicMenuClickAction {}
+    ): BasicMenuBuilder {
         val stack = ItemBuilder(material).apply { builder.apply { initialize() } }.build()
         item(index, stack, action)
 

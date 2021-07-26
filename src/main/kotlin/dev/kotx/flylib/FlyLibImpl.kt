@@ -19,7 +19,8 @@ import org.bukkit.plugin.RegisteredListener
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.dsl.module
 
-internal class FlyLibImpl(override val plugin: JavaPlugin, commands: List<Command>, defaultPermission: Permission) : FlyLib {
+internal class FlyLibImpl(override val plugin: JavaPlugin, commands: List<Command>, defaultPermission: Permission) :
+    FlyLib {
     override val commandHandler = CommandHandlerImpl(this, commands, defaultPermission)
 
     init {
@@ -48,13 +49,15 @@ internal class FlyLibImpl(override val plugin: JavaPlugin, commands: List<Comman
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin) { load() }
         commandHandler.enable()
         println()
-        println("""
+        println(
+            """
              _____ _  __   __
             |  ___| | \ \ / /
             | |_  | |  \ V /   FlyLib Reloaded v0.3.0 by Kotx 
             |  _| | |___| |    inject successfully.
             |_|   |_____|_|  
-        """.trimIndent())
+        """.trimIndent()
+        )
         println()
     }
 
@@ -69,13 +72,13 @@ internal class FlyLibImpl(override val plugin: JavaPlugin, commands: List<Comman
     }
 
     private inline fun <reified T : Event> register(crossinline action: (T) -> Unit) {
-        val handlerList = T::class.java.methods.find { it.name == "getHandlerList" }!!.invoke(null) as HandlerList
+        val handlerList = (T::class.java.methods.find { it.name == "getHandlerList" } ?: return).invoke(null) as HandlerList
         val listener = RegisteredListener(
-                object : Listener {},
-                { _, event -> action(event as T) },
-                EventPriority.NORMAL,
-                plugin,
-                false
+            object : Listener {},
+            { _, event -> action(event as T) },
+            EventPriority.NORMAL,
+            plugin,
+            false
         )
 
         handlerList.register(listener)

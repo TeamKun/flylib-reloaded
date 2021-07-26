@@ -211,7 +211,7 @@ internal class CommandHandlerImpl(
             ".${usage.arguments.joinToString(".") { it.name }.lowercase()}") to
                 (usage.permission ?: permission ?: defaultPermission)
 
-    fun List<Command>.handle(d: Int) {
+    private fun List<Command>.handle(d: Int) {
         val children = flatMap {
             depthMap[it] = d
             it.children

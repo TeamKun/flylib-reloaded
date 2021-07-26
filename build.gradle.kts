@@ -10,9 +10,9 @@ plugins {
     signing
 }
 
-val projectName = "flylib-reloaded"
-val projectGroup = "dev.kotx"
-val projectVersion = "0.3.7"
+val projectName: String = "flylib-reloaded"
+val projectGroup: String = "dev.kotx"
+val projectVersion: String = "0.3.8"
 
 group = projectGroup
 version = projectVersion
@@ -38,14 +38,14 @@ java {
 
 tasks {
     compileJava {
-        sourceCompatibility = "15"
-        targetCompatibility = "15"
+        sourceCompatibility = "11"
+        targetCompatibility = "11"
         options.isFork = true
     }
 
     compileKotlin {
         kotlinOptions {
-            jvmTarget = "15"
+            jvmTarget = "11"
         }
     }
 
@@ -54,7 +54,7 @@ tasks {
     }
 }
 
-val packageJavadoc by tasks.registering(Jar::class) {
+val packageJavadoc: TaskProvider<Jar> by tasks.registering(Jar::class) {
     from(tasks.javadoc.get().destinationDir)
     archiveClassifier.set("javadoc")
     archiveExtension.set("jar")
@@ -62,7 +62,7 @@ val packageJavadoc by tasks.registering(Jar::class) {
     dependsOn(tasks.javadoc)
 }
 
-val packageSources by tasks.registering(Jar::class) {
+val packageSources: TaskProvider<Jar> by tasks.registering(Jar::class) {
     from(sourceSets.main.get().allSource)
     archiveClassifier.set("sources")
     archiveExtension.set("jar")
@@ -82,7 +82,7 @@ publishing {
 
             pom {
                 name.set(projectName)
-                description.set("a utility library for Minecraft Paper that provides commands, menus, Kotlin extensions, and more.")
+                description.set("A utility library for Minecraft Paper that provides commands, menus, Kotlin extensions, and more.")
                 url.set("https://github.com/TeamKun/flylib-reloaded")
 
                 licenses {

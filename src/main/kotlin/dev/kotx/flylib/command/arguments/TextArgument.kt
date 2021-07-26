@@ -15,17 +15,18 @@ import net.minecraft.server.v1_16_R3.CommandListenerWrapper
  * Text argument.
  */
 class TextArgument(
-        override val name: String,
-        type: Type = Type.WORD,
-        override val suggestion: SuggestionAction? = null
+    override val name: String,
+    type: Type = Type.WORD,
+    override val suggestion: SuggestionAction? = null
 ) : Argument<String> {
-    override val type = when (type) {
+    override val type: StringArgumentType = when (type) {
         Type.WORD -> StringArgumentType.word()
         Type.PHRASE_QUOTED -> StringArgumentType.string()
         Type.PHRASE -> StringArgumentType.greedyString()
     }
 
-    override fun parse(context: CommandContext<CommandListenerWrapper>, key: String) = StringArgumentType.getString(context, key)
+    override fun parse(context: CommandContext<CommandListenerWrapper>, key: String): String =
+        StringArgumentType.getString(context, key)
 
     /**
      * The type of text.

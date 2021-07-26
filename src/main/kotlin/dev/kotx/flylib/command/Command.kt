@@ -97,7 +97,7 @@ abstract class Command(
 
             if (command.description != null) {
                 append(" - ", Color.GRAY)
-                append(command.description!!, Color.WHITE)
+                append(command.description ?: return@message, Color.WHITE)
             }
 
             command.children.forEach {
@@ -125,7 +125,7 @@ abstract class Command(
                 append(":", Color.GRAY)
                 appendln()
 
-                command.usages.forEach {
+                command.usages.forEach { it ->
                     append("    /", Color(0, 80, 200))
                     append(fullName, Color(0, 123, 255))
                     append(" ")
@@ -142,7 +142,7 @@ abstract class Command(
                         +it
                     }
 
-                    if (description != null) append(" - ", Color.GRAY).append(command.description!!)
+                    if (description != null) append(" - ", Color.GRAY).append(command.description ?: return@forEach)
 
                     appendln()
                 }
@@ -182,8 +182,6 @@ abstract class Command(
      * Set privileges required to execute commands.
      * There is no need to register permissions in plugin.yml, they will be automatically registered and removed as plugins are loaded and unloaded.
      * Also, if no permissions are specified (null), the default permissions that can be specified in Fly Lib's builder will be assigned.
-     *
-     * @see FlyLibBuilder.defaultPermission
      */
     protected fun permission(permission: Permission) {
         this.permission = permission

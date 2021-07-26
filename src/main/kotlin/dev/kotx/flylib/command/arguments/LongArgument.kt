@@ -16,12 +16,13 @@ import net.minecraft.server.v1_16_R3.CommandListenerWrapper
  * A long argument
  */
 class LongArgument(
-        override val name: String,
-        min: Long = Long.MIN_VALUE,
-        max: Long = Long.MAX_VALUE,
-        override val suggestion: SuggestionAction? = null
+    override val name: String,
+    min: Long = Long.MIN_VALUE,
+    max: Long = Long.MAX_VALUE,
+    override val suggestion: SuggestionAction? = null
 ) : Argument<Long> {
     override val type: ArgumentType<*>? = LongArgumentType.longArg(min, max)
 
-    override fun parse(context: CommandContext<CommandListenerWrapper>, key: String) = LongArgumentType.getLong(context, key)
+    override fun parse(context: CommandContext<CommandListenerWrapper>, key: String) =
+        LongArgumentType.getLong(context, key)
 }
