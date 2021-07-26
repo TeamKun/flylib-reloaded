@@ -160,8 +160,10 @@ internal class CommandHandlerImpl(
                                 flyLib.plugin,
                                 command,
                                 context.source.bukkitSender,
+                                context.source.bukkitWorld,
+                                context.source.server.server as Server,
                                 context.input,
-                                emptyList()
+                                depthMap[command]!!
                             )
 
                             argument.suggestion!!.apply { suggestions.initialize() }

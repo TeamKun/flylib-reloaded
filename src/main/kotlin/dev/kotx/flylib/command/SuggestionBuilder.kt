@@ -5,35 +5,46 @@
 
 package dev.kotx.flylib.command
 
+import org.bukkit.Server
+import org.bukkit.World
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 
 /**
  * A builder that creates a list of suggestions.
  */
 class SuggestionBuilder(
-        /**
-         * Your plugin.
-         */
-        val plugin: JavaPlugin,
-        /**
-         * The command you are trying to add a suggestion to.
-         */
-        val command: Command,
-        /**
-         * The target for which the proposal is displayed.
-         */
-        val sender: CommandSender,
-        /**
-         * The content as of the time it is currently entered.
-         */
-        val message: String,
-        /**
-         * Argument by input when the proposal is displayed.
-         */
-        val args: List<String>
+    /**
+     * Your plugin.
+     */
+    val plugin: JavaPlugin,
+    /**
+     * Executed command.
+     */
+    val command: Command,
+    /**
+     * Executed command sender. (It doesn't matter if you are a player or not.)
+     */
+    val sender: CommandSender,
+    /**
+     * The world where the command was executed
+     */
+    val world: World?,
+    /**
+     * The server on which the plugin was run
+     */
+    val server: Server,
+    /**
+     * Command input message.
+     */
+    val message: String,
+    depth: Int
 ) {
     private val suggestions = mutableListOf<Suggestion>()
+
+    val player = sender as? Player
+    val args = message.replaceFirst("^/".toRegex(), "").split(" ").drop(depth)
 
     /**
      * Suggest content.
