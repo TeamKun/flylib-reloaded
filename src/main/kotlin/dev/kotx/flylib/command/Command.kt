@@ -97,12 +97,15 @@ abstract class Command(
 
             if (command.description != null) {
                 append(" - ", Color.GRAY)
-                append(command.description ?: return@message, Color.WHITE)
+                append(command.description!!, Color.WHITE)
             }
 
             command.children.forEach {
                 append("    ")
                 append(it.name, Color.ORANGE)
+                if (it.description != null)
+                    append(" - ", Color.GRAY)
+                    append(it.description!!, Color.WHITE)
                 appendln()
             }
 
