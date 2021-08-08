@@ -29,9 +29,12 @@ abstractVersion() {
   fi
 }
 
-PROJECT_VERSION=$(cat < build.gradle.kts | awk 'match($0, /val projectVersion = "(.+)"/, groups) { print groups[1] }')
+PROJECT_VERSION=$(cat < build.gradle.kts | awk 'match($0, /val projectVersion: String = "(.+)"/, groups) { print groups[1] }')
 REMOTE_VERSION=$(curl --silent "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/latest" | grep "\"tag_name\":" | sed -E "s/.*\"([^\"]+)\".*/\1/")
 CAN_RELEASE=$(abstractVersion $PROJECT_VERSION $REMOTE_VERSION)
+
+echo "github version: $REMOTE_VERSION"
+echo "local version: $PROJECT_VERSION"
 
 if [ -z $REMOTE_VERSION ]; then
   echo "RELEASE_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
