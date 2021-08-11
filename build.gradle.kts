@@ -12,7 +12,7 @@ plugins {
 
 val projectName: String = "flylib-reloaded"
 val projectGroup: String = "dev.kotx"
-val projectVersion: String = "0.3.9"
+val projectVersion: String = "0.3.10"
 
 group = projectGroup
 version = projectVersion
@@ -25,8 +25,8 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    implementation("io.insert-koin:koin-core:2.2.2")
-    implementation("io.insert-koin:koin-core-ext:2.2.2")
+    implementation("io.insert-koin:koin-core:3.1.2")
+    implementation("io.insert-koin:koin-core-ext:3.0.2")
     compileOnly("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
     compileOnly(fileTree("./libs"))
 }
