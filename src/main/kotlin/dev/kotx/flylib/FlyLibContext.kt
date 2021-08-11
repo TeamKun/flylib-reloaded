@@ -9,29 +9,60 @@ import org.koin.core.Koin
 import org.koin.core.KoinApplication
 import org.koin.core.context.KoinContext
 import org.koin.core.error.KoinAppAlreadyStartedException
+import org.koin.core.module.Module
 import org.koin.dsl.KoinAppDeclaration
-import org.koin.dsl.koinApplication
 
 internal object FlyLibContext : KoinContext {
-    private var koin: Koin? = null
 
-    override fun get(): Koin = koin ?: error("KoinApplication has not been started")
-    override fun getOrNull(): Koin? = koin
+    private var _koin: Koin? = null
+    private var _koinApplication: KoinApplication? = null
 
-    override fun register(koinApplication: KoinApplication) {
-        if (koin != null) throw KoinAppAlreadyStartedException("A koin application has already been started")
+    override fun get(): Koin = _koin ?: error("KoinApplication has not been started")
 
-        koin = koinApplication.koin
+    override fun getOrNull(): Koin? = _koin
+
+    fun getKoinApplicationOrNull(): KoinApplication? = _koinApplication
+
+    private fun register(koinApplication: KoinApplication) {
+        if (_koin != null) {
+            throw KoinAppAlreadyStartedException("A Koin Application has already been started")
+        }
+        _koinApplication = koinApplication
+        _koin = koinApplication.koin
     }
 
-    override fun stop() {
-        koin?.close()
-        koin = null
+    override fun stopKoin() = synchronized(this) {
+        _koin?.close()
+        _koin = null
     }
 
-    internal fun startKoin(appDeclaration: KoinAppDeclaration): KoinApplication = synchronized(this) {
-        val koinApplication = koinApplication(appDeclaration)
+
+    override fun startKoin(koinApplication: KoinApplication): KoinApplication = synchronized(this) {
         register(koinApplication)
-        koinApplication.createEagerInstances()
+        return koinApplication
+    }
+
+    override fun startKoin(appDeclaration: KoinAppDeclaration): KoinApplication = synchronized(this) {
+        val koinApplication = KoinApplication.init()
+        register(koinApplication)
+        appDeclaration(koinApplication)
+        return koinApplication
+    }
+
+
+    override fun loadKoinModules(module: Module) = synchronized(this) {
+        get().loadModules(listOf(module))
+    }
+
+    override fun loadKoinModules(modules: List<Module>) = synchronized(this) {
+        get().loadModules(modules)
+    }
+
+    override fun unloadKoinModules(module: Module) = synchronized(this) {
+        get().unloadModules(listOf(module))
+    }
+
+    override fun unloadKoinModules(modules: List<Module>) = synchronized(this) {
+        get().unloadModules(modules)
     }
 }

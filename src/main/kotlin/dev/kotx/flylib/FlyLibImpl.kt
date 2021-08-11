@@ -26,7 +26,7 @@ internal class FlyLibImpl(override val plugin: JavaPlugin, commands: List<Comman
     init {
         println("Loading FlyLib...")
 
-        if (FlyLibContext.getOrNull() != null) FlyLibContext.stop()
+        if (FlyLibContext.getOrNull() != null) FlyLibContext.stopKoin()
 
         FlyLibContext.startKoin {
             modules(module {
