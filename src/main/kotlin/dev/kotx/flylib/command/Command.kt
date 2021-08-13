@@ -89,6 +89,10 @@ abstract class Command(
      * The block that executes the command. The default is to display help for that command.
      */
     open fun CommandContext.execute() {
+        sendHelp()
+    }
+
+    protected fun CommandContext.sendHelp() {
         val fullName = command.fullCommand.joinToString(" ") { it.name }
         message {
             appendln("--------------------------------------------------", Color.DARK_GRAY)
@@ -105,7 +109,7 @@ abstract class Command(
                 append(it.name, Color.ORANGE)
                 if (it.description != null)
                     append(" - ", Color.GRAY)
-                    append(it.description!!, Color.WHITE)
+                append(it.description!!, Color.WHITE)
                 appendln()
             }
 
