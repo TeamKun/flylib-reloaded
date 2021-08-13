@@ -53,7 +53,7 @@ internal class FlyLibImpl(override val plugin: JavaPlugin, commands: List<Comman
             """
              _____ _  __   __
             |  ___| | \ \ / /
-            | |_  | |  \ V /   FlyLib Reloaded v0.3.0 by Kotx 
+            | |_  | |  \ V /   FlyLib Reloaded v0.3.12 by Kotx 
             |  _| | |___| |    inject successfully.
             |_|   |_____|_|  
         """.trimIndent()
