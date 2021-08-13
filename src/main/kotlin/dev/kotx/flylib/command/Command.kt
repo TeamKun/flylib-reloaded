@@ -104,6 +104,8 @@ abstract class Command(
                 append(command.description!!, Color.WHITE)
             }
 
+            appendln()
+
             command.children.forEach {
                 append("    ")
                 append(it.name, Color.ORANGE)
