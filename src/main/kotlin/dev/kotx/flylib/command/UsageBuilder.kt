@@ -5,13 +5,7 @@
 
 package dev.kotx.flylib.command
 
-import dev.kotx.flylib.command.arguments.EntityArgument
-import dev.kotx.flylib.command.arguments.IntegerArgument
-import dev.kotx.flylib.command.arguments.LiteralArgument
-import dev.kotx.flylib.command.arguments.LocationArgument
-import dev.kotx.flylib.command.arguments.LongArgument
-import dev.kotx.flylib.command.arguments.TextArgument
-import dev.kotx.flylib.command.arguments.VectorArgument
+import dev.kotx.flylib.command.arguments.*
 
 /**
  * Builder for creating arguments and definitions.
@@ -91,9 +85,53 @@ class UsageBuilder {
     }
 
     /**
-     * An argument that takes a Long value.
+     * An argument that takes a long value.
      */
     fun longArgument(name: String, suggestion: SuggestionAction? = null): UsageBuilder {
+        this.arguments.add(LongArgument(name, suggestion = suggestion))
+        return this
+    }
+
+    /**
+     * An argument that takes a double value. You can specify the lowest and highest values.
+     */
+    @JvmOverloads
+    fun doubleArgument(
+        name: String,
+        min: Double = Double.MIN_VALUE,
+        max: Double = Double.MAX_VALUE,
+        suggestion: SuggestionAction? = null
+    ): UsageBuilder {
+        this.arguments.add(DoubleArgument(name, min, max, suggestion))
+        return this
+    }
+
+    /**
+     * An argument that takes a double value.
+     */
+    fun doubleArgument(name: String, suggestion: SuggestionAction? = null): UsageBuilder {
+        this.arguments.add(DoubleArgument(name, suggestion = suggestion))
+        return this
+    }
+
+    /**
+     * An argument that takes a float value. You can specify the lowest and highest values.
+     */
+    @JvmOverloads
+    fun floatArgument(
+        name: String,
+        min: Float = Float.MIN_VALUE,
+        max: Float = Float.MAX_VALUE,
+        suggestion: SuggestionAction? = null
+    ): UsageBuilder {
+        this.arguments.add(FloatArgument(name, min, max, suggestion))
+        return this
+    }
+
+    /**
+     * An argument that takes a float value.
+     */
+    fun floatArgument(name: String, suggestion: SuggestionAction? = null): UsageBuilder {
         this.arguments.add(LongArgument(name, suggestion = suggestion))
         return this
     }
