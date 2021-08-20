@@ -77,6 +77,8 @@ class CommandContext(
      */
     val args = message.replaceFirst("^/".toRegex(), "").split(" ").drop(depth)
 
+    val typedArgs = emptyArray<Any?>()
+
     /**
      * send string message
      */

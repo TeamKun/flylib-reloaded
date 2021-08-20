@@ -38,14 +38,14 @@ java {
 
 tasks {
     compileJava {
-        sourceCompatibility = "11"
-        targetCompatibility = "11"
+        sourceCompatibility = "1.8"
+        targetCompatibility = "1.8"
         options.isFork = true
     }
 
     compileKotlin {
         kotlinOptions {
-            jvmTarget = "11"
+            jvmTarget = "1.8"
         }
     }
 

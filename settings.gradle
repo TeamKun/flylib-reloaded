@@ -4,5 +4,5 @@
  */
 
 rootProject.name = 'FlyLibReloaded'
-include 'TestServer'
 
+include "test_plugin"

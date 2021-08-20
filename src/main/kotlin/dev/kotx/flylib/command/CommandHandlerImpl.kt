@@ -15,10 +15,9 @@ import net.minecraft.server.v1_16_R3.CommandListenerWrapper
 import net.minecraft.server.v1_16_R3.MinecraftServer
 import org.bukkit.Bukkit
 import org.bukkit.Server
-import org.bukkit.command.SimpleCommandMap
 import org.bukkit.craftbukkit.v1_16_R3.CraftServer
+import org.bukkit.craftbukkit.v1_16_R3.command.CraftCommandMap
 import org.bukkit.craftbukkit.v1_16_R3.command.VanillaCommandWrapper
-import java.lang.invoke.MethodHandles
 
 private typealias BukkitPermission = org.bukkit.permissions.Permission
 
@@ -31,9 +30,8 @@ internal class CommandHandlerImpl(
     private val depthMap = mutableMapOf<Command, Int>()
     internal fun enable() {
         val commandDispatcher = ((Bukkit.getServer() as CraftServer).server as MinecraftServer).commandDispatcher
-        val commandNodes = MethodHandles.privateLookupIn(SimpleCommandMap::class.java, MethodHandles.lookup())
-            .findVarHandle(SimpleCommandMap::class.java, "knownCommands", MutableMap::class.java)
-            .get(Bukkit.getCommandMap()) as MutableMap<String, org.bukkit.command.Command>
+
+        val commandNodes = (Bukkit.getCommandMap() as CraftCommandMap).knownCommands
 
         commands.handle(1)
 
@@ -59,9 +57,7 @@ internal class CommandHandlerImpl(
 
     internal fun disable() {
         val root = ((Bukkit.getServer() as CraftServer).server as MinecraftServer).commandDispatcher.a().root
-        val commandNodes = MethodHandles.privateLookupIn(SimpleCommandMap::class.java, MethodHandles.lookup())
-            .findVarHandle(SimpleCommandMap::class.java, "knownCommands", MutableMap::class.java)
-            .get(Bukkit.getCommandMap()) as MutableMap<String, org.bukkit.command.Command>
+        val commandNodes = (Bukkit.getCommandMap() as CraftCommandMap).knownCommands
 
         fun remove(name: String) {
             root.removeCommand(name)
@@ -119,7 +115,12 @@ internal class CommandHandlerImpl(
                     depthMap[command]!!
                 )
 
-                command.apply { context.execute() }
+                try {
+                    command.apply { context.execute() }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    return@executes 0
+                }
 
                 1
             }
@@ -149,7 +150,12 @@ internal class CommandHandlerImpl(
                             depthMap[command]!!
                         )
 
-                        usage.action?.apply { context.execute() } ?: command.apply { context.execute() }
+                        try {
+                            usage.action?.apply { context.execute() } ?: command.apply { context.execute() }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            return@executes 0
+                        }
 
                         1
                     }
@@ -198,17 +204,17 @@ internal class CommandHandlerImpl(
 
     private fun Command.getCommandPermission() =
         ((permission ?: defaultPermission).name
-            ?: flyLib.plugin.name.lowercase() +
-            ".command" +
-            ".${fullCommand.joinToString(".") { it.name }.lowercase()}") to
+            ?: (flyLib.plugin.name.lowercase() +
+                    ".command" +
+                    ".${fullCommand.joinToString(".") { it.name }.lowercase()}")) to
                 (permission ?: defaultPermission)
 
     private fun Command.getUsagePermission(usage: Usage) =
         ((usage.permission ?: permission ?: defaultPermission).name
-            ?: flyLib.plugin.name.lowercase() +
-            ".command" +
-            ".${fullCommand.joinToString(".") { it.name }.lowercase()}" +
-            ".${usage.arguments.joinToString(".") { it.name }.lowercase()}") to
+            ?: (flyLib.plugin.name.lowercase() +
+                    ".command" +
+                    ".${fullCommand.joinToString(".") { it.name }.lowercase()}" +
+                    ".${usage.arguments.joinToString(".") { it.name }.lowercase()}")) to
                 (usage.permission ?: permission ?: defaultPermission)
 
     private fun List<Command>.handle(d: Int) {
