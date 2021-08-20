@@ -2,7 +2,7 @@
 /.idea
 /build
 /server
-/TestServer/build
-/TestServer/server
+/test_plugin/build
+/test_plugin/server
 .credential
 gradle.properties
