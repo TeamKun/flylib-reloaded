@@ -39,7 +39,8 @@ class SuggestionBuilder(
      * Command input message.
      */
     val message: String,
-    depth: Int
+    depth: Int,
+    val typedArgs: List<Any?>
 ) {
     private val suggestions = mutableListOf<Suggestion>()
 

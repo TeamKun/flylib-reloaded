@@ -147,7 +147,8 @@ internal class CommandHandlerImpl(
                             ctx.source.bukkitWorld,
                             ctx.source.server.server as Server,
                             ctx.input,
-                            depthMap[command]!!
+                            depthMap[command]!!,
+                            usage.arguments.map { it.parse(ctx, it.name) }
                         )
 
                         try {
@@ -169,7 +170,8 @@ internal class CommandHandlerImpl(
                                 context.source.bukkitWorld,
                                 context.source.server.server as Server,
                                 context.input,
-                                depthMap[command]!!
+                                depthMap[command]!!,
+                                usage.arguments.map { it.parse(context, it.name) }
                             )
 
                             argument.suggestion!!.apply { suggestions.initialize() }

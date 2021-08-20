@@ -5,15 +5,7 @@
 
 package dev.kotx.flylib.command
 
-import dev.kotx.flylib.util.ComponentBuilderAction
-import dev.kotx.flylib.util.fail
-import dev.kotx.flylib.util.message
-import dev.kotx.flylib.util.pluginMessage
-import dev.kotx.flylib.util.pluginMessageFail
-import dev.kotx.flylib.util.pluginMessageSuccess
-import dev.kotx.flylib.util.pluginMessageWarn
-import dev.kotx.flylib.util.success
-import dev.kotx.flylib.util.warn
+import dev.kotx.flylib.util.*
 import net.kyori.adventure.text.Component
 import org.bukkit.Server
 import org.bukkit.World
@@ -52,7 +44,8 @@ class CommandContext(
      * Command input message.
      */
     val message: String,
-    depth: Int
+    depth: Int,
+    val typedArgs: List<Any?> = emptyList()
 ) {
     /**
      * Executed command sender. (Limited to the player, but null if executed by someone other than the player.)
@@ -75,9 +68,8 @@ class CommandContext(
      * /command <literal> <text> <number> <entity>
      *     args: <literal>, <text>, <number>, <entity>
      */
-    val args = message.replaceFirst("^/".toRegex(), "").split(" ").drop(depth)
 
-    val typedArgs = emptyArray<Any?>()
+    val args = message.replaceFirst("^/".toRegex(), "").split(" ").drop(depth)
 
     /**
      * send string message
