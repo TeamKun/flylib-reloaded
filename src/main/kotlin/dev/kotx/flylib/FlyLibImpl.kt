@@ -19,7 +19,12 @@ import org.bukkit.plugin.RegisteredListener
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.dsl.module
 
-internal class FlyLibImpl(override val plugin: JavaPlugin, commands: List<Command>, defaultPermission: Permission) :
+internal class FlyLibImpl(
+    override val plugin: JavaPlugin,
+    commands: List<Command>,
+    defaultPermission: Permission,
+    private val listenerActions: MutableMap<HandlerList, RegisteredListener>
+) :
     FlyLib {
     override val commandHandler = CommandHandlerImpl(this, commands, defaultPermission)
 
@@ -36,11 +41,11 @@ internal class FlyLibImpl(override val plugin: JavaPlugin, commands: List<Comman
             })
         }
 
-        register<PluginEnableEvent> {
+        listen(PluginEnableEvent::class.java) {
             if (it.plugin == plugin) enable()
         }
 
-        register<PluginDisableEvent> {
+        listen(PluginDisableEvent::class.java) {
             if (it.plugin == plugin) disable()
         }
     }
@@ -48,6 +53,9 @@ internal class FlyLibImpl(override val plugin: JavaPlugin, commands: List<Comman
     private fun enable() {
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin) { load() }
         commandHandler.enable()
+        listenerActions.forEach {
+            it.key.register(it.value)
+        }
         println()
         println(
             """
@@ -64,6 +72,9 @@ internal class FlyLibImpl(override val plugin: JavaPlugin, commands: List<Comman
     private fun disable() {
         println("Unloading FlyLib...")
         commandHandler.disable()
+        listenerActions.forEach {
+            it.key.unregister(it.value)
+        }
         println("FlyLib unloaded successfully.")
     }
 
@@ -71,12 +82,18 @@ internal class FlyLibImpl(override val plugin: JavaPlugin, commands: List<Comman
         commandHandler.load()
     }
 
-    private inline fun <reified T : Event> register(crossinline action: (T) -> Unit) {
-        val handlerList = (T::class.java.methods.find { it.name == "getHandlerList" } ?: return).invoke(null) as HandlerList
+    override fun <T : Event> listen(clazz: Class<T>, action: ListenerAction<T>) {
+        listen(clazz, EventPriority.NORMAL, action)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : Event> listen(clazz: Class<T>, priority: EventPriority, action: ListenerAction<T>) {
+        val handlerList =
+            (clazz.methods.find { it.name == "getHandlerList" } ?: return).invoke(null) as HandlerList
         val listener = RegisteredListener(
             object : Listener {},
-            { _, event -> action(event as T) },
-            EventPriority.NORMAL,
+            { _, event -> action.execute(event as T) },
+            priority,
             plugin,
             false
         )
