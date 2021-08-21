@@ -102,7 +102,7 @@ class UsageBuilder {
         max: Double = Double.MAX_VALUE,
         suggestion: SuggestionAction? = null
     ): UsageBuilder {
-        this.arguments.add(DoubleArgument(name, min, max, suggestion))
+        this.arguments.add(DoubleArgument(name, suggestion, min, max))
         return this
     }
 
