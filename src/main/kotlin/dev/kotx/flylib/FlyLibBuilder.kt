@@ -7,6 +7,11 @@ package dev.kotx.flylib
 
 import dev.kotx.flylib.command.Command
 import dev.kotx.flylib.command.Permission
+import org.bukkit.event.Event
+import org.bukkit.event.EventPriority
+import org.bukkit.event.HandlerList
+import org.bukkit.event.Listener
+import org.bukkit.plugin.RegisteredListener
 import org.bukkit.plugin.java.JavaPlugin
 
 /**
@@ -16,6 +21,7 @@ class FlyLibBuilder(
     private val plugin: JavaPlugin
 ) {
     private val commands = mutableListOf<Command>()
+    private val listenerActions = mutableMapOf<HandlerList, RegisteredListener>()
     private var defaultPermission = Permission.OP
 
     /**
@@ -38,12 +44,32 @@ class FlyLibBuilder(
         return this
     }
 
+    /**
+     * Listens to the specified event with the specified priority. The event Listen is registered when the calling plugin is enabled, not when this method is called, and is unregistered when the calling plugin is disabled.
+     */
+    @Suppress("UNCHECKED_CAST")
+    @JvmOverloads
+    fun <T : Event> listen(clazz: Class<T>, priority: EventPriority = EventPriority.NORMAL, action: ListenerAction<T>): FlyLibBuilder {
+        val handlerList = clazz.methods.find { it.name == "getHandlerList" }?.invoke(null) as? HandlerList ?: return this
+        val listener = RegisteredListener(
+            object : Listener {},
+            { _, event -> action.execute(event as T) },
+            priority,
+            plugin,
+            false
+        )
+
+        listenerActions[handlerList] = listener
+
+        return this
+    }
+
     private fun List<Command>.setParent(parent: Command): Unit = forEach {
         it.parent = parent
         it.children.setParent(it)
     }
 
-    internal fun build(): FlyLib = FlyLibImpl(plugin, commands, defaultPermission)
+    internal fun build(): FlyLib = FlyLibImpl(plugin, commands, defaultPermission, listenerActions)
 }
 
 /**
@@ -55,4 +81,15 @@ fun interface FlyLibAction {
      * An method which replacing kotlin apply block.
      */
     fun FlyLibBuilder.initialize()
+}
+
+/**
+ * A handler that handles events.
+ * Java does SAM conversion.
+ */
+fun interface ListenerAction<T : Event> {
+    /**
+     * An method which replacing kotlin apply block.
+     */
+    fun execute(event: T)
 }
