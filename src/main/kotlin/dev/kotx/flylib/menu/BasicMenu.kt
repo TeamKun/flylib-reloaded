@@ -57,7 +57,7 @@ class BasicMenu(
      * Close the menus of all players displaying this menu.
      */
     fun close() {
-        players.forEach { (player, inventory) ->
+        players.forEach { (player, _) ->
             player.closeInventory()
         }
 
@@ -76,7 +76,7 @@ class BasicMenu(
     }
 
     @EventHandler
-    fun onInventoryClick(event: InventoryClickEvent) {
+    private fun onInventoryClick(event: InventoryClickEvent) {
         val inventory = players[event.whoClicked] ?: return
         if (event.inventory != inventory) return
 
@@ -88,7 +88,7 @@ class BasicMenu(
     }
 
     @EventHandler
-    fun onInventoryClose(event: InventoryCloseEvent) {
+    private fun onInventoryClose(event: InventoryCloseEvent) {
         val playerList = players.filter { it.value == event.inventory }.keys.toList()
         playerList.forEach {
             players.remove(it)
