@@ -6,6 +6,8 @@
 package dev.kotx.flylib
 
 import dev.kotx.flylib.command.CommandHandler
+import org.bukkit.event.Event
+import org.bukkit.event.EventPriority
 import org.bukkit.plugin.java.JavaPlugin
 
 /**
@@ -13,8 +15,25 @@ import org.bukkit.plugin.java.JavaPlugin
  * Use FlyLibBuilder.
  */
 interface FlyLib {
+    /**
+     * The original plugin that called FlyLib
+     */
     val plugin: JavaPlugin
+
+    /**
+     * Class that manages commands
+     */
     val commandHandler: CommandHandler
+
+    /**
+     * Listens to the specified event with Event Priority.NORMAL
+     */
+    fun <T : Event> listen(clazz: Class<T>, action: ListenerAction<T>)
+
+    /**
+     * Listens to the specified event with the specified priority.
+     */
+    fun <T : Event> listen(clazz: Class<T>, priority: EventPriority, action: ListenerAction<T>)
 
     companion object {
         /**
