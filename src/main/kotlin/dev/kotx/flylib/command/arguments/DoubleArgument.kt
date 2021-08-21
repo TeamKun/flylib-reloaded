@@ -9,9 +9,9 @@ import net.minecraft.server.v1_16_R3.CommandListenerWrapper
 
 class DoubleArgument(
     override val name: String,
+    override val suggestion: SuggestionAction?,
     min: Double = Double.MIN_VALUE,
     max: Double = Double.MAX_VALUE,
-    override val suggestion: SuggestionAction?,
 ) : Argument<Double> {
     override val type: ArgumentType<*>? = DoubleArgumentType.doubleArg(min, max)
     override fun parse(context: CommandContext<CommandListenerWrapper>, key: String): Double =
