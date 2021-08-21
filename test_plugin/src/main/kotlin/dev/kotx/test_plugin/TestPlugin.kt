@@ -26,7 +26,7 @@ class TestPlugin : JavaPlugin() {
 class TestCommand : Command("test") {
     init {
         usage {
-            textArgument("content")
+            integerArgument("number")
         }
     }
 
