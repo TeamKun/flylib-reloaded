@@ -11,6 +11,7 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder
 import com.mojang.brigadier.tree.LiteralCommandNode
 import dev.kotx.flylib.FlyLibImpl
 import dev.kotx.flylib.util.fullCommand
+import dev.kotx.flylib.util.message
 import net.minecraft.server.v1_16_R3.CommandListenerWrapper
 import net.minecraft.server.v1_16_R3.MinecraftServer
 import org.bukkit.Bukkit
@@ -18,6 +19,8 @@ import org.bukkit.Server
 import org.bukkit.craftbukkit.v1_16_R3.CraftServer
 import org.bukkit.craftbukkit.v1_16_R3.command.CraftCommandMap
 import org.bukkit.craftbukkit.v1_16_R3.command.VanillaCommandWrapper
+import org.bukkit.entity.Player
+import java.awt.Color
 
 private typealias BukkitPermission = org.bukkit.permissions.Permission
 
@@ -118,7 +121,38 @@ internal class CommandHandlerImpl(
                 try {
                     command.apply { context.execute() }
                 } catch (e: Exception) {
+                    println("The following error occurred when executing the ${command.name} command.")
+                    println("Context:")
+                    println("\tSender     | ${context.sender.name}")
+                    println("\tWorld      | ${context.world?.name}")
+                    println("\tInput      | ${ctx.input}")
+                    println("\tArguments  | ${context.args}")
+                    println("\tTyped Args | ${context.typedArgs}")
+                    println()
+                    println("Stacktrace:")
                     e.printStackTrace()
+                    println()
+
+                    if (ctx.source.bukkitSender.isOp&& ctx.source.bukkitSender is Player) ctx.source.bukkitSender.message {
+                        boldln("The following error occurred when executing the ${command.name} command.", Color.RED)
+                        boldln("Context:", Color.CYAN)
+                        bold("    Sender: ")
+                        appendln(context.sender.name)
+                        bold("    World: ")
+                        appendln(context.world?.name ?: "null")
+                        bold("    Input: ")
+                        appendln(ctx.input)
+                        bold("    Arguments: ")
+                        appendln(context.args.joinToString())
+                        bold("    Typed Args: ")
+                        appendln(context.typedArgs.joinToString { it.toString() })
+                        appendln()
+                        boldln("Stacktrace:", Color.CYAN)
+                        e.stackTraceToString().replace("\t", "    ").lines().forEach {
+                            appendln(it)
+                        }
+                    }
+
                     return@executes 0
                 }
 
@@ -154,7 +188,52 @@ internal class CommandHandlerImpl(
                         try {
                             usage.action?.apply { context.execute() } ?: command.apply { context.execute() }
                         } catch (e: Exception) {
+                            println("The following error occurred when executing the ${command.name} command.")
+                            println("Usage:")
+                            println("\tDescription    | ${usage.description}")
+                            println("\tPermission     | name: ${usage.permission?.name}, default: ${usage.permission?.defaultPermission}")
+                            println("\tExpected Args  | ${usage.arguments.joinToString { "${it.name}(${it.type?.javaClass?.name})" }}")
+                            println()
+                            println("Context:")
+                            println("\tSender         | ${context.sender.name}")
+                            println("\tWorld          | ${context.world?.name}")
+                            println("\tInput          | ${ctx.input}")
+                            println("\tArguments      | ${context.args}")
+                            println("\tTyped Args     | ${context.typedArgs}")
+                            println()
+                            println("Stacktrace:")
                             e.printStackTrace()
+                            println()
+
+                            if (ctx.source.bukkitSender.isOp && ctx.source.bukkitSender is Player) ctx.source.bukkitSender.message {
+                                boldln("The following error occurred when executing the ${command.name} command.", Color.RED)
+                                boldln("Usage: ", Color.CYAN)
+                                bold("    Description: ")
+                                appendln(usage.description ?: "null")
+                                bold("    Permission: name: ")
+                                append(usage.permission?.name ?: "null")
+                                bold(", default: ")
+                                appendln(usage.permission?.defaultPermission?.name ?: "null")
+                                bold("    Expected Args: ")
+                                appendln(usage.arguments.joinToString { "${it.name}(${it.type?.javaClass?.name})" })
+                                appendln()
+                                boldln("Context:", Color.CYAN)
+                                bold("    Sender: ")
+                                appendln(context.sender.name)
+                                bold("    World: ")
+                                appendln(context.world?.name ?: "null")
+                                bold("    Input: ")
+                                appendln(ctx.input)
+                                bold("    Arguments: ")
+                                appendln(context.args.joinToString())
+                                bold("    Typed Args: ")
+                                appendln(context.typedArgs.joinToString { it.toString() })
+                                appendln()
+                                boldln("Stacktrace:", Color.CYAN)
+                                e.stackTraceToString().replace("\t", "    ").lines().forEach {
+                                    appendln(it)
+                                }
+                            }
                             return@executes 0
                         }
 
