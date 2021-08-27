@@ -159,9 +159,10 @@ class CommandContext(
             command.children.forEach {
                 append("    ")
                 append(it.name, Color.ORANGE)
-                if (it.description != null)
+                if (it.description != null) {
                     append(" - ", Color.GRAY)
-                append(it.description!!, Color.WHITE)
+                    append(it.description!!, Color.WHITE)
+                }
                 appendln()
             }
 
