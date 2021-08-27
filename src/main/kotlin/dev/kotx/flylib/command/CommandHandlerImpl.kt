@@ -133,7 +133,7 @@ internal class CommandHandlerImpl(
                     e.printStackTrace()
                     println()
 
-                    if (ctx.source.bukkitSender.isOp&& ctx.source.bukkitSender is Player) ctx.source.bukkitSender.message {
+                    if (ctx.source.bukkitSender.isOp && ctx.source.bukkitSender is Player) ctx.source.bukkitSender.message {
                         boldln("The following error occurred when executing the ${command.name} command.", Color.RED)
                         boldln("Context:", Color.CYAN)
                         bold("    Sender: ")
@@ -182,7 +182,13 @@ internal class CommandHandlerImpl(
                             ctx.source.server.server as Server,
                             ctx.input,
                             depthMap[command]!!,
-                            usage.arguments.map { it.parse(ctx, it.name) }
+                            usage.arguments.map {
+                                try {
+                                    it.parse(ctx, it.name)
+                                } catch (e: Exception) {
+                                    null
+                                }
+                            }
                         )
 
                         try {
@@ -206,7 +212,10 @@ internal class CommandHandlerImpl(
                             println()
 
                             if (ctx.source.bukkitSender.isOp && ctx.source.bukkitSender is Player) ctx.source.bukkitSender.message {
-                                boldln("The following error occurred when executing the ${command.name} command.", Color.RED)
+                                boldln(
+                                    "The following error occurred when executing the ${command.name} command.",
+                                    Color.RED
+                                )
                                 boldln("Usage: ", Color.CYAN)
                                 bold("    Description: ")
                                 appendln(usage.description ?: "null")
@@ -250,7 +259,13 @@ internal class CommandHandlerImpl(
                                 context.source.server.server as Server,
                                 context.input,
                                 depthMap[command]!!,
-                                usage.arguments.map { it.parse(context, it.name) }
+                                usage.arguments.map {
+                                    try {
+                                        it.parse(context, it.name)
+                                    } catch (e: Exception) {
+                                        null
+                                    }
+                                }
                             )
 
                             argument.suggestion!!.apply { suggestions.initialize() }
