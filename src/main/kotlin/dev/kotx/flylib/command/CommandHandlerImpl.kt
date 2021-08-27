@@ -162,7 +162,7 @@ internal class CommandHandlerImpl(
 
         command.usages.forEach { usage ->
             var usageArgument: ArgumentBuilder<CommandListenerWrapper, *>? = null
-            usage.arguments.reversed().forEach { argument ->
+            usage.arguments.reversed().forEachIndexed { i, argument ->
                 val argumentBuilder: ArgumentBuilder<CommandListenerWrapper, *> = if (argument.type == null)
                     LiteralArgumentBuilder.literal(argument.name)
                 else
@@ -173,7 +173,7 @@ internal class CommandHandlerImpl(
                         it.bukkitSender.hasPermission(command.getUsagePermission(usage).first)
                     }
 
-                    executes { ctx ->
+                    if (i == 0) executes { ctx ->
                         val context = CommandContext(
                             flyLib.plugin,
                             command,
@@ -247,6 +247,26 @@ internal class CommandHandlerImpl(
                         }
 
                         1
+                    } else executes { ctx ->
+                        val context = CommandContext(
+                            flyLib.plugin,
+                            command,
+                            ctx.source.bukkitSender,
+                            ctx.source.bukkitWorld,
+                            ctx.source.server.server as Server,
+                            ctx.input,
+                            depthMap[command]!!,
+                            usage.arguments.map {
+                                try {
+                                    it.parse(ctx, it.name)
+                                } catch (e: Exception) {
+                                    null
+                                }
+                            }
+                        )
+
+                        context.sendHelp()
+                        1
                     }
 
                     if (this is RequiredArgumentBuilder<CommandListenerWrapper, *> && argument.suggestion != null)
@@ -286,6 +306,8 @@ internal class CommandHandlerImpl(
 
                 usageArgument = argumentBuilder
             }
+
+
 
             if (usageArgument != null)
                 commandArgument.then(usageArgument)
