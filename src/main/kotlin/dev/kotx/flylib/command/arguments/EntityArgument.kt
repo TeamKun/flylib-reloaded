@@ -13,7 +13,12 @@ import net.minecraft.server.v1_16_R3.CommandListenerWrapper
 import org.bukkit.entity.Entity
 
 /**
- * Argument to select an entity.
+ *  An argument that takes a player name or entity selector as input.
+ *  If a player name that does not exist or an invalid selector is entered, an error will be displayed on the client side, and even if you try to execute it, it will not be accepted.
+ *  Expected input: `PlayerName` `@a`, `@r`, `@e[distance=..5]`
+ *
+ *  Check the following for the specifications of other arguments.
+ *  @see Argument
  */
 class EntityArgument(
     override val name: String,
