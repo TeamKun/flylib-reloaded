@@ -5,7 +5,15 @@
 
 package dev.kotx.flylib.command
 
-import dev.kotx.flylib.command.arguments.*
+import dev.kotx.flylib.command.arguments.DoubleArgument
+import dev.kotx.flylib.command.arguments.EntityArgument
+import dev.kotx.flylib.command.arguments.FloatArgument
+import dev.kotx.flylib.command.arguments.IntegerArgument
+import dev.kotx.flylib.command.arguments.LiteralArgument
+import dev.kotx.flylib.command.arguments.LocationArgument
+import dev.kotx.flylib.command.arguments.LongArgument
+import dev.kotx.flylib.command.arguments.TextArgument
+import dev.kotx.flylib.command.arguments.VectorArgument
 
 /**
  * Builder for creating arguments and definitions.
@@ -14,7 +22,7 @@ class UsageBuilder {
     private val arguments = mutableListOf<Argument<*>>()
     private var description: String? = null
     private var permission: Permission? = null
-    private var action: ((CommandContext) -> Unit)? = null
+    private var action: ContextAction? = null
 
     /**
      * Description of arguments and definitions.
@@ -35,7 +43,7 @@ class UsageBuilder {
     /**
      * What is done.
      */
-    fun executes(action: (CommandContext) -> Unit = {}): UsageBuilder {
+    fun executes(action: ContextAction): UsageBuilder {
         this.action = action
         return this
     }
