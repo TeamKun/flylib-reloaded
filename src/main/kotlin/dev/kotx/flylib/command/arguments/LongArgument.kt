@@ -13,7 +13,13 @@ import dev.kotx.flylib.command.SuggestionAction
 import net.minecraft.server.v1_16_R3.CommandListenerWrapper
 
 /**
- * A long argument
+ *  Long value argument. You can specify the maximum and minimum values.
+ *  If you enter it in the wrong coordinate format, an error will be displayed on the client side and even if you try to execute it, it will not be accepted.
+ *  Expected input: `2` `-12` `0`
+ *
+ *  Check the following for the specifications of other arguments.
+ *
+ *  @see Argument
  */
 class LongArgument(
     override val name: String,
