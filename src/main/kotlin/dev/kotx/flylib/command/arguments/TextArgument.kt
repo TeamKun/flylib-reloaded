@@ -12,7 +12,14 @@ import dev.kotx.flylib.command.SuggestionAction
 import net.minecraft.server.v1_16_R3.CommandListenerWrapper
 
 /**
- * Text argument.
+ *  String argument type. You can specify string type.
+ *  If it is not the specified type, an error will be displayed on the client side and the attempt to execute will not be accepted.
+ *  String Type: WORD -> `hello` `world`
+ *  String Type: PHRASE_QUOTED -> `hello` `world` `"This is quoted string"`
+ *  String Type: PHRASE -> `hello string` `word` `"Quoted string"`
+ *
+ *  Check the following for the specifications of other arguments.
+ *  @see Argument
  */
 class TextArgument(
     override val name: String,
@@ -29,7 +36,7 @@ class TextArgument(
         StringArgumentType.getString(context, key)
 
     /**
-     * The type of text.
+     * The type of argument input.
      */
     enum class Type {
         /**

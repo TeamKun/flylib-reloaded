@@ -13,7 +13,13 @@ import net.minecraft.server.v1_16_R3.CommandListenerWrapper
 import org.bukkit.util.Vector
 
 /**
- * Direction argument.
+ *  An argument that takes direction as an input value. You can also use "~" and "^".
+ *  If it falls below the minimum value or exceeds the maximum value, an error will be displayed on the client side, and even if you try to execute it, it will not be accepted.
+ *  Expected input : `123 456 789` `~ ~10 ~` `111 ~5 ^10`
+ *
+ *  Check the following for the specifications of other arguments.
+ *
+ *  @see Argument
  */
 class VectorArgument(
     override val name: String,
