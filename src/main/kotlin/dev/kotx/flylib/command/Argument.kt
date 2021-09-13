@@ -10,7 +10,8 @@ import com.mojang.brigadier.context.CommandContext
 import net.minecraft.server.v1_16_R3.CommandListenerWrapper
 
 /**
- * Usage argument.
+ *  Command arguments. It can be used as a child element of Usage.
+ *  There is a type in the argument, type analysis is automatically performed when the client inputs, and if it cannot be parsed, the command execution is refused.
  */
 interface Argument<T> {
     val name: String
