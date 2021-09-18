@@ -44,11 +44,37 @@ class SuggestionBuilder(
 ) {
     private val suggestions = mutableListOf<Suggestion>()
 
+    /**
+     * The player who is about to execute the command.
+     */
     val player = sender as? Player
+
+    /**
+     * Command arguments. The remaining arguments except the beginning of the command are assigned.
+     * These are all returned as strings.
+     * If you need parsed values, see typedArgs.
+     *
+     * ## Example
+     * ### Basic command
+     * /command <number>
+     *     args: <number>
+     *
+     * ### Nested command
+     * /parent children <arg1> <arg2>
+     *     args: <arg1>, <arg2>
+     *
+     * ### Usage argument
+     * /command <literal> <text> <number> <entity>
+     *     args: <literal>, <text>, <number>, <entity>
+     *
+     * @see typedArgs
+     */
     val args = message.replaceFirst("^/".toRegex(), "").split(" ").drop(depth)
 
     /**
      * Suggest content.
+     *
+     * Tooltips: The string displayed when the mouse hovers over a suggestion.
      */
     @JvmOverloads
     fun suggest(content: String, tooltip: String? = null): SuggestionBuilder {

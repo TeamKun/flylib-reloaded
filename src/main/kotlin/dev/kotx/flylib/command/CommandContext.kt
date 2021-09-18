@@ -157,6 +157,9 @@ class CommandContext(
      */
     fun pluginMessageFail(text: String) = sender.pluginMessageFail(plugin, text)
 
+    /**
+     * Display the information of the command in this context in the sender of this context. (It will also include usages and examples.)
+     */
     fun sendHelp() {
         val fullName = command.fullCommand.joinToString(" ") { it.name }
         message {
