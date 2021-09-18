@@ -6,7 +6,18 @@
 package dev.kotx.flylib.command
 
 import dev.kotx.flylib.command.arguments.LiteralArgument
-import dev.kotx.flylib.util.*
+import dev.kotx.flylib.util.ComponentBuilderAction
+import dev.kotx.flylib.util.component
+import dev.kotx.flylib.util.fail
+import dev.kotx.flylib.util.fullCommand
+import dev.kotx.flylib.util.joint
+import dev.kotx.flylib.util.message
+import dev.kotx.flylib.util.pluginMessage
+import dev.kotx.flylib.util.pluginMessageFail
+import dev.kotx.flylib.util.pluginMessageSuccess
+import dev.kotx.flylib.util.pluginMessageWarn
+import dev.kotx.flylib.util.success
+import dev.kotx.flylib.util.warn
 import net.kyori.adventure.text.Component
 import org.bukkit.Server
 import org.bukkit.World
@@ -16,21 +27,21 @@ import org.bukkit.plugin.java.JavaPlugin
 import java.awt.Color
 
 /**
- * Command context.
- * It is given as an argument when the command is executed and when Usage is executed.
- * In Kotlin it is given as a receiver.
+ *  The context when the command is executed.
+ *  It is passed as an argument or receiver when executing a command or completing a tab.
+ *  This class holds information when executing a command or completing a tab, which can be retrieved by the plug-in that registered the command, the command itself, the sender of the command, etc. It can also send a message to the executor of the command, display usage instructions, etc.
  */
 class CommandContext(
     /**
-     * Your plugin.
+     * The plugin you registered FlyLib
      */
     val plugin: JavaPlugin,
     /**
-     * Executed command.
+     * The command that has been executed or is about to be executed.
      */
     val command: Command,
     /**
-     * Executed command sender. (It doesn't matter if you are a player or not.)
+     * The executor of the command or the entity that is about to execute it (may not be the player).
      */
     val sender: CommandSender,
     /**
@@ -42,7 +53,7 @@ class CommandContext(
      */
     val server: Server,
     /**
-     * Command input message.
+     * Command input message. (includes slash)
      */
     val message: String,
     depth: Int,
@@ -55,6 +66,8 @@ class CommandContext(
 
     /**
      * Command arguments. The remaining arguments except the beginning of the command are assigned.
+     * These are all returned as strings.
+     * If you need parsed values, see typedArgs.
      *
      * ## Example
      * ### Basic command
@@ -68,6 +81,8 @@ class CommandContext(
      * ### Usage argument
      * /command <literal> <text> <number> <entity>
      *     args: <literal>, <text>, <number>, <entity>
+     *
+     * @see typedArgs
      */
 
     val args = message.replaceFirst("^/".toRegex(), "").split(" ").drop(depth)

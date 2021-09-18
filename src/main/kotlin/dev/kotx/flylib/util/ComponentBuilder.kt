@@ -214,6 +214,9 @@ class ComponentBuilder {
     internal fun build() = component.build()
 }
 
+/**
+ * ComponentBuilder's builder lambda function.
+ */
 fun interface ComponentBuilderAction {
     fun ComponentBuilder.initialize()
 }
