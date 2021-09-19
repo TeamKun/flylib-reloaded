@@ -13,7 +13,6 @@ version = "0.0.1"
 
 repositories {
     mavenCentral()
-    jcenter()
     maven("https://papermc.io/repo/repository/maven-public/")
 }
 

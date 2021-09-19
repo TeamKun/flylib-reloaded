@@ -5,6 +5,7 @@
 
 package dev.kotx.flylib.command
 
+import dev.kotx.flylib.command.arguments.BooleanArgument
 import dev.kotx.flylib.command.arguments.DoubleArgument
 import dev.kotx.flylib.command.arguments.EntityArgument
 import dev.kotx.flylib.command.arguments.FloatArgument
@@ -162,6 +163,30 @@ class UsageBuilder {
      */
     fun textArgument(name: String, suggestion: SuggestionAction? = null): UsageBuilder {
         this.arguments.add(TextArgument(name, suggestion = suggestion))
+        return this
+    }
+
+    /**
+     * String argument of the selection formula.
+     */
+    fun selectionArgument(name: String, selections: List<String>): UsageBuilder {
+        this.arguments.add(TextArgument(name) { suggestAll(selections) })
+        return this
+    }
+
+    /**
+     * String argument of the selection formula.
+     */
+    fun selectionArgument(name: String, vararg selections: String): UsageBuilder {
+        this.arguments.add(TextArgument(name) { suggestAll(listOf(*selections)) })
+        return this
+    }
+
+    /**
+     * An argument that takes a boolean value.
+     */
+    fun booleanArgument(name: String, suggestion: SuggestionAction? = null): UsageBuilder {
+        this.arguments.add(BooleanArgument(name, suggestion = suggestion))
         return this
     }
 

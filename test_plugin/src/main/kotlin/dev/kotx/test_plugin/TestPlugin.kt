@@ -6,35 +6,23 @@
 package dev.kotx.test_plugin
 
 import dev.kotx.flylib.command.Command
-import dev.kotx.flylib.command.CommandContext
 import dev.kotx.flylib.flyLib
 import org.bukkit.plugin.java.JavaPlugin
 
 class TestPlugin : JavaPlugin() {
     init {
         flyLib {
-            command(TestCommand())
+            command()
         }
     }
 }
 
-class TestCommand : Command("test") {
+class ExplodeCommand : Command("explode") {
     init {
         usage {
-            textArgument("key") {
-                suggest("hello")
-                suggest("world")
-            }
-
-            integerArgument("number")
-
-            executes {
-                it.message("やっほー")
-            }
+            entityArgument("targets")
+            integerArgument("power", min = 1, max = 10)
+            selectionArgument("mode", "")
         }
-    }
-
-    override fun CommandContext.execute() {
-        pluginMessage("Your content -> ${args.first()}")
     }
 }

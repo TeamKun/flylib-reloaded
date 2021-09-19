@@ -82,6 +82,11 @@ class SuggestionBuilder(
         return this
     }
 
+    fun suggestAll(contents: List<String>): SuggestionBuilder {
+        suggestions.addAll(contents.map { Suggestion(it, null) })
+        return this
+    }
+
     internal fun build() = suggestions.toList()
 }
 
