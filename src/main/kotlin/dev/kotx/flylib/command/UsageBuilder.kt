@@ -197,8 +197,13 @@ class UsageBuilder {
      * `@a[distance=5]` `AnPlayerName` `@r`
      */
     @JvmOverloads
-    fun entityArgument(name: String, suggestion: SuggestionAction? = null): UsageBuilder {
-        this.arguments.add(EntityArgument(name, suggestion))
+    fun entityArgument(
+        name: String,
+        enableSelector: Boolean = true,
+        enableEntities: Boolean = true,
+        suggestion: SuggestionAction? = null
+    ): UsageBuilder {
+        this.arguments.add(EntityArgument(name, enableSelector, enableEntities, suggestion))
         return this
     }
 
