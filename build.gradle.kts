@@ -12,7 +12,7 @@ plugins {
 
 val projectName: String = "flylib-reloaded"
 val projectGroup: String = "dev.kotx"
-val projectVersion: String = "0.4.0"
+val projectVersion: String = "0.4.1"
 
 group = projectGroup
 version = projectVersion
@@ -24,9 +24,9 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-    implementation("io.insert-koin:koin-core:3.1.2")
-    implementation("io.insert-koin:koin-core-ext:3.0.2")
+    api(kotlin("stdlib-jdk8"))
+    api("io.insert-koin:koin-core:3.1.2")
+    api("io.insert-koin:koin-core-ext:3.0.2")
     compileOnly("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
     compileOnly(fileTree("./libs"))
 }
@@ -72,9 +72,6 @@ publishing {
     publications {
         create<MavenPublication>("release") {
             from(components["kotlin"])
-
-            artifact(packageJavadoc)
-            artifact(packageSources)
 
             artifactId = projectName
             groupId = projectGroup
