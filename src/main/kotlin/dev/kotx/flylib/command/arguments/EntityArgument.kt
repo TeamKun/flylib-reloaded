@@ -17,14 +17,28 @@ import org.bukkit.entity.Entity
  *  If a player name that does not exist or an invalid selector is entered, an error will be displayed on the client side, and even if you try to execute it, it will not be accepted.
  *  Expected input: `PlayerName` `@a`, `@r`, `@e[distance=..5]`
  *
+ *  @param name Name of argument.
+ *  @param enableSelector Enables the use of selectors.
+ *  @param enableEntities Allows you to select an entity.
+ *  @param suggestion Lambda expression for tab completion of its arguments.
+ *
  *  Check the following for the specifications of other arguments.
  *  @see Argument
  */
 class EntityArgument(
     override val name: String,
+    enableSelector: Boolean = true,
+    enableEntities: Boolean = true,
     override val suggestion: SuggestionAction?
 ) : Argument<List<Entity>> {
-    override val type: ArgumentEntity = ArgumentEntity.multipleEntities()
+    override val type: ArgumentEntity = when {
+        enableSelector && enableEntities -> ArgumentEntity.multipleEntities()
+        enableSelector && !enableEntities -> ArgumentEntity.d()
+        !enableSelector && enableEntities -> ArgumentEntity::class.java.getMethod("a").invoke(null) as ArgumentEntity;
+        !enableSelector && !enableEntities -> ArgumentEntity.c()
+
+        else -> ArgumentEntity.multipleEntities()
+    }
 
     override fun parse(context: CommandContext<CommandListenerWrapper>, key: String) =
         ArgumentEntity.c(context, key).map { it.bukkitEntity }
