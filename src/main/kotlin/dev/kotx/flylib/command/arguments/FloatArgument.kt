@@ -12,6 +12,11 @@ import net.minecraft.server.v1_16_R3.CommandListenerWrapper
  *  If it falls below the minimum value or exceeds the maximum value, an error will be displayed on the client side, and even if you try to execute it, it will not be accepted.
  *  Expected input: `2` `6.3` `-12` `0` `0.0`
  *
+ *  @param name Name of argument.
+ *  @param min The lowest possible value for this argument.
+ *  @param max The highest possible value for this argument.
+ *  @param suggestion Lambda expression for tab completion of its arguments.
+ *
  *  Check the following for the specifications of other arguments.
  *  @see Argument
  */

@@ -16,6 +16,8 @@ import net.minecraft.server.v1_16_R3.CommandListenerWrapper
  *  If anything other than "name" is entered, an error will be displayed on the client side and even if you try to execute it, it will not be accepted.
  *  Expected input (if "name" specified "test"): `test`
  *
+ *  @param name Name of argument. This can be taken as an argument.
+ *
  *  Check the following for the specifications of other arguments.
  *  @see Argument
  */

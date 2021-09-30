@@ -17,6 +17,9 @@ import org.bukkit.util.Vector
  *  If it falls below the minimum value or exceeds the maximum value, an error will be displayed on the client side, and even if you try to execute it, it will not be accepted.
  *  Expected input : `123 456 789` `~ ~10 ~` `111 ~5 ^10`
  *
+ *  @param name Name of argument.
+ *  @param suggestion Lambda expression for tab completion of its arguments.
+ *
  *  Check the following for the specifications of other arguments.
  *
  *  @see Argument

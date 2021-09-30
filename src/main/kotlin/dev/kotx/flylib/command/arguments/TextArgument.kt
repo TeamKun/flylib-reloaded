@@ -18,6 +18,10 @@ import net.minecraft.server.v1_16_R3.CommandListenerWrapper
  *  String Type: PHRASE_QUOTED -> `hello` `world` `"This is quoted string"`
  *  String Type: PHRASE -> `hello string` `word` `"Quoted string"`
  *
+ *  @param name Name of argument.
+ *  @param type Text type.
+ *  @param suggestion Lambda expression for tab completion of its arguments.
+ *
  *  Check the following for the specifications of other arguments.
  *  @see Argument
  */

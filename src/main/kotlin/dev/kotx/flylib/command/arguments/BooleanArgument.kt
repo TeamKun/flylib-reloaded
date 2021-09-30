@@ -12,6 +12,9 @@ import net.minecraft.server.v1_16_R3.CommandListenerWrapper
  *  If the input value is neither true nor false (not a valid expression of a boolean), an error will be displayed on the client side, and even if you try to execute it, it will not be accepted.
  *  Expected input: `true` `false` `TRUE` 'False'
  *
+ *  @param name Name of argument.
+ *  @param suggestion Lambda expression for tab completion of its arguments.
+ *
  *  Check the following for the specifications of other arguments.
  *  @see Argument
  */
