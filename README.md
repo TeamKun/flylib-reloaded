@@ -4,7 +4,7 @@
 
 <div align="center">
     <img src="https://img.shields.io/github/workflow/status/TeamKun/flylib-reloaded/Build?style=flat-square" alt="Build Result">
-    <img src="https://img.shields.io/maven-central/v/dev.kotx/flylib-reloaded?color=blueviolet&label=version&style=flat-square" alt="mavencentral release version">
+    <img src="https://img.shields.io/maven-central/v/dev.kotx/flylib-reloaded?color=blueviolet&label=maven+version&style=flat-square" alt="mavencentral release version">
     <a href="https://opensource.org/licenses/mit-license.php"><img src="https://img.shields.io/static/v1?label=license&message=MIT&style=flat-square&color=blue" alt="License"></a>
     <a href="https://twitter.com/kotx__"><img src="https://img.shields.io/static/v1?label=developer&message=kotx__&style=flat-square&color=orange" alt="developer"></a>
     <a href="https://www.codacy.com/gh/TeamKun/flylib-reloaded/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=TeamKun/flylib-reloaded&amp;utm_campaign=Badge_Grade"><img alt="codacy quality" src="https://img.shields.io/codacy/grade/c836938f18e14bd88d9c56f6fd063dca?style=flat-square"/></a>
@@ -18,29 +18,76 @@ You can implement tab completion, type checking, help message generation, and su
 
 ❗ **There is no need to add any commands or permissions to plugin.yml. They will be automatically incorporated by FlyLib. permissions, aliases and other command informations are defined as variables in the command.**
 
-WAIT...
+### Wiki  
+- [Welcome](https://github.com/TeamKun/flylib-reloaded/wiki/welcome.md)
 
-<details>
-<summary>Kotlin</summary>
-<div>
+### Sample code
+
+**Kotlin:**  
+
 
 ```kotlin
-```
-</div>
-</details>
+class TestPlugin : JavaPlugin() {
+    init {
+        flyLib {
+            command(ExplodeCommand())
+            listen(BlockBreakEvent::class.java) { event ->
+                //block break event logic
+            }
+        }
+    }
+}
 
-<details>
-<summary>Java</summary>
-<div>
+class ExplodeCommand : Command("explode") {
+    init {
+        usage {
+            entityArgument("targets")
+            integerArgument("power", min = 1, max = 10)
+            selectionArgument("mode", "one", "two")
+
+            executes {
+                message("You executed explode command!")
+            }
+        }
+    }
+}
+```
+
+**Java:**
 
 ```java
+public class TestPlugin extends JavaPlugin {
+    @Override
+    public void onEnable() {
+        FlyLibKt.flyLib(this, flyLib -> {
+            flyLib.command(new ExplodeCommand());
+            flyLib.listen(BlockBreakEvent.class, event -> {
+                //block break event logic
+            });
+        });
+    }
+}
+
+class ExplodeCommand extends Command {
+    public ExplodeCommand() {
+        super("explode");
+        
+        usage(usage -> {
+            usage.entityArgument("targets");
+            usage.integerArgument("power", 1, 10);
+            usage.selectionArgument("mode", "one", "two");
+            
+            usage.executes(context -> {
+                context.message("You executed explode command!");
+            });
+        });
+    }
+}
 ```
-</div>
-</details>
 
 ## ⚙️ Installation
 
-Replace `<version>` with the version you want to use.
+Replace `[version]` with the version you want to use.
 
 <details>
 <summary>Gradle Kotlin DSL</summary>
@@ -56,7 +103,7 @@ plugins {
 ```
 ```kotlin
 dependencies {
-    implementation("dev.kotx:flylib-reloaded:<version>")
+    implementation("dev.kotx:flylib-reloaded:[version]")
 }
 ```
 
@@ -95,7 +142,7 @@ plugins {
 
 ```groovy
 dependencies {
-    implementation 'dev.kotx:flylib-reloaded:<version>'
+    implementation 'dev.kotx:flylib-reloaded:[version]'
 }
 ```
 
@@ -124,7 +171,15 @@ tasks.shadowJar.dependsOn tasks.relocateShadow
 <summary>Maven</summary>
 <div>
 
-wait...!
+Add the following dependencies and add them to the jar file with `maven-shade-plugin` etc. when building the plugin.
+
+```xml
+<dependency>
+    <group>dev.kotx</group>
+    <name>flylib-reloaded</name>
+    <version>[version]</version>
+</dependency>
+```
 
 </div>
 </details>
