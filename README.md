@@ -19,7 +19,7 @@ You can implement tab completion, type checking, help message generation, and su
 ❗ **There is no need to add any commands or permissions to plugin.yml. They will be automatically incorporated by FlyLib. permissions, aliases and other command informations are defined as variables in the command.**
 
 ### Wiki  
-- [Welcome](https://github.com/TeamKun/flylib-reloaded/wiki/welcome.md)
+- [Welcome](https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/welcome.md)
 
 ### Sample code
 
