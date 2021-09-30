@@ -77,6 +77,9 @@ publishing {
             groupId = projectGroup
             version = projectVersion
 
+            artifact(packageJavadoc)
+            artifact(packageSources)
+
             pom {
                 name.set(projectName)
                 description.set("A utility library for Minecraft Paper that provides commands, menus, Kotlin extensions, and more.")
