@@ -36,4 +36,4 @@ class SomePlugin extends JavaPlugin {
 
 以下に、FlyLibの機能とその使い方の詳細をまとめました。
 
-- [コマンドシステム](https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/commands/ja/commands.md)
+- [コマンドシステム](https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/ja/commands.md)

@@ -34,4 +34,4 @@ Also, since most of the menus and other functions used by FlyLib use the Koin co
 
 Below is a detailed list of FlyLib's features and how to use them.
 
-- [Commands](https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/commands/en/commands.md)
+- [Commands](https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/en/commands.md)
