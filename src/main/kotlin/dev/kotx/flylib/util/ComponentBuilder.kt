@@ -218,5 +218,8 @@ class ComponentBuilder {
  * ComponentBuilder's builder lambda function.
  */
 fun interface ComponentBuilderAction {
+    /**
+     * A lambda expression for the component builder.
+     */
     fun ComponentBuilder.initialize()
 }

@@ -49,8 +49,13 @@ class FlyLibBuilder(
      */
     @Suppress("UNCHECKED_CAST")
     @JvmOverloads
-    fun <T : Event> listen(clazz: Class<T>, priority: EventPriority = EventPriority.NORMAL, action: ListenerAction<T>): FlyLibBuilder {
-        val handlerList = clazz.methods.find { it.name == "getHandlerList" }?.invoke(null) as? HandlerList ?: return this
+    fun <T : Event> listen(
+        clazz: Class<T>,
+        priority: EventPriority = EventPriority.NORMAL,
+        action: ListenerAction<T>
+    ): FlyLibBuilder {
+        val handlerList =
+            clazz.methods.find { it.name == "getHandlerList" }?.invoke(null) as? HandlerList ?: return this
         val listener = RegisteredListener(
             object : Listener {},
             { _, event -> action.execute(event as T) },

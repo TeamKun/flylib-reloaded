@@ -10,22 +10,25 @@
     <a href="https://www.codacy.com/gh/TeamKun/flylib-reloaded/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=TeamKun/flylib-reloaded&amp;utm_campaign=Badge_Grade"><img alt="codacy quality" src="https://img.shields.io/codacy/grade/c836938f18e14bd88d9c56f6fd063dca?style=flat-square"/></a>
 </div>
 
-⚠️**This library is currently under development (beta version is `0.*.*`), and the API will be changed or removed without notice.**
+⚠️**This library is currently under development (beta version is `0.*.*`), and the API will be changed or removed
+without notice.**
 
 ## ⚡ Quickstart
 
-You can implement tab completion, type checking, help message generation, and subcommands with the following simple code.
+You can implement tab completion, type checking, help message generation, and subcommands with the following simple
+code.
 
-❗ **There is no need to add any commands or permissions to plugin.yml. They will be automatically incorporated by FlyLib. permissions, aliases and other command informations are defined as variables in the command.**
+❗ **There is no need to add any commands or permissions to plugin.yml. They will be automatically incorporated by
+FlyLib. permissions, aliases and other command informations are defined as variables in the command.**
 
-### Wiki  
+### Wiki
+
 - [Welcome (English)](https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/en/welcome.md)
 - [ようこそ (Japanese)](https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/ja/welcome.md)
 
 ### Sample code
 
-**Kotlin:**  
-
+**Kotlin:**
 
 ```kotlin
 class TestPlugin : JavaPlugin() {
@@ -102,6 +105,7 @@ plugins {
     id("com.github.johnrengelman.shadow") version "6.0.0"
 }
 ```
+
 ```kotlin
 dependencies {
     implementation("dev.kotx:flylib-reloaded:[version]")
@@ -109,9 +113,10 @@ dependencies {
 ```
 
 The following code is a configuration of shadowJar that combines all dependencies into one jar.  
-It relocates all classes under the project's groupId to avoid conflicts that can occur when multiple plugins using different versions of flylib are deployed to the server.  
+It relocates all classes under the project's groupId to avoid conflicts that can occur when multiple plugins using
+different versions of flylib are deployed to the server.
 
-By setting the following, the contents of the jar file will look like this  
+By setting the following, the contents of the jar file will look like this
 
 ```kotlin
 import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
@@ -148,9 +153,10 @@ dependencies {
 ```
 
 The following code is a configuration of shadowJar that combines all dependencies into one jar.  
-It relocates all classes under the project's groupId to avoid conflicts that can occur when multiple plugins using different versions of flylib are deployed to the server.
+It relocates all classes under the project's groupId to avoid conflicts that can occur when multiple plugins using
+different versions of flylib are deployed to the server.
 
-By setting the following, the contents of the jar file will look like this  
+By setting the following, the contents of the jar file will look like this
 
 ```groovy
 import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation

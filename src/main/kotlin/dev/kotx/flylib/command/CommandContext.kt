@@ -220,7 +220,9 @@ class CommandContext(
                         +it
                     }
 
-                    if (command.description != null) append(" - ", Color.GRAY).append(command.description ?: return@forEach)
+                    if (command.description != null) append(" - ", Color.GRAY).append(
+                        command.description ?: return@forEach
+                    )
 
                     appendln()
                 }

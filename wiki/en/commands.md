@@ -2,11 +2,12 @@
 
 ## Concept
 
-The concept of commands in FlyLib is basically the same as in Bukkit.
-There is a name, a description of the command, permissions, usage, etc.
-The difference between Bukkit and FlyLib is that FlyLib does not use resource files such as plugin.yml. The elements needed for all commands are defined on the class. As follows.
+The concept of commands in FlyLib is basically the same as in Bukkit. There is a name, a description of the command,
+permissions, usage, etc. The difference between Bukkit and FlyLib is that FlyLib does not use resource files such as
+plugin.yml. The elements needed for all commands are defined on the class. As follows.
 
 **Kotlin:**
+
 ```kotlin
 class SomeCommand: Command("some") {
     init {
@@ -19,6 +20,7 @@ class SomeCommand: Command("some") {
 ```
 
 **Java**
+
 ```java
 class SomeCommand extends Command {
     public SomeCommand() {
@@ -32,11 +34,14 @@ class SomeCommand extends Command {
 ```
 
 ## What is "usage"?
+
 ### Description of "usage"
 
-The concept of "Usage" in FlyLib is a bit more complicated than in Bukkit, because in FlyLib you define in advance what arguments the command will take, what it will do, what permissions it needs, what kind of tab completion you want the arguments to do, and other necessary information.
-On the other hand, if the input is not defined, or is of a different type than what is defined, an error will be displayed on the client side.
-For example, consider the command "explode", which takes the following arguments
+The concept of "Usage" in FlyLib is a bit more complicated than in Bukkit, because in FlyLib you define in advance what
+arguments the command will take, what it will do, what permissions it needs, what kind of tab completion you want the
+arguments to do, and other necessary information. On the other hand, if the input is not defined, or is of a different
+type than what is defined, an error will be displayed on the client side. For example, consider the command "explode",
+which takes the following arguments
 
 ```
 /explode <player> <power(integer)>
@@ -49,7 +54,9 @@ This command can only be executed with input like the following.
 /explode @a[distance=..5] 10
 ```
 
-If the following is entered, an error will be displayed to the client, and any execution defined in the Command will never be actually executed.
+If the following is entered, an error will be displayed to the client, and any execution defined in the Command will
+never be actually executed.
+
 ```
 /explode SomePlayer
 /explode SomePlayer powerrrrrrrr
