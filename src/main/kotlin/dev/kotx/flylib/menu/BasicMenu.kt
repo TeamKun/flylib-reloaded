@@ -209,6 +209,9 @@ fun interface BasicMenuAction {
  * OnClick handler actions
  */
 fun interface BasicMenuClickAction {
+    /**
+     * @param event handle event
+     */
     fun BasicMenu.handle(event: InventoryClickEvent)
 }
 
