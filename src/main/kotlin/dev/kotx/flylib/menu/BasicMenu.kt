@@ -192,7 +192,7 @@ class BasicMenuBuilder {
         return this
     }
 
-    fun build() = BasicMenu(title, size, items)
+    internal fun build() = BasicMenu(title, size, items)
 }
 
 /**
