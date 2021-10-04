@@ -82,6 +82,9 @@ class SuggestionBuilder(
         return this
     }
 
+    /**
+     * Suggest multiple content.
+     */
     fun suggestAll(contents: List<String>): SuggestionBuilder {
         suggestions.addAll(contents.map { Suggestion(it, null) })
         return this
