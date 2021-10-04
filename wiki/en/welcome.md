@@ -14,4 +14,4 @@ Features to be implemented:
 - Create, load, and update configurations in any format such as json, yml, etc..., with simple code.
 - Extensions to make it easier to use Bukkit's notation with Kotlin's rich features.
 
-If you want to start using this library, check out the following [Getting started](https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/getting-started.md)
+If you want to start using this library, check out the following [Getting started](https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/en/getting-started.md)
