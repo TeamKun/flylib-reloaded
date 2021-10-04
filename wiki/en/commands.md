@@ -33,8 +33,8 @@ class SomeCommand extends Command {
 ## What is "usage"?
 ### Description of "usage"
 
-The concept of Usage in FlyLib is a bit more complicated than in Bukkit, because in FlyLib you define in advance what arguments the command will take, what it will do, and what permissions it needs.
-On the other hand, if the input is not defined, or is of a different type than defined, an error will be displayed on the client side.
+The concept of Usage in FlyLib is a bit more complicated than in Bukkit, because in FlyLib you define in advance what arguments the command will take, what it will do, what permissions it needs, what kind of tab completion you want the arguments to do, and other necessary information.
+On the other hand, if the input is not defined, or is of a different type than what is defined, an error will be displayed on the client side.
 For example, consider the command "explode", which takes the following arguments
 
 ```
