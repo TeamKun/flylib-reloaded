@@ -6,7 +6,7 @@ Features now implemented:
 - An easy and powerful command system.
 - Menus that can be written in DSL format.
 - Many useful extensions (You can also use it from Java, but it is more convenient from Kotlin.)
-- 
+
 It is currently in beta, but we will focus on developing the following features, with the goal of providing stable functionality after the official release.
 
 Features to be implemented:
