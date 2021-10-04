@@ -12,6 +12,7 @@ class SomeCommand: Command("some") {
     init {
         description("This is some description of this command.")
         permission(Permission.OP)
+        example("/some", "/some <number>")
         //or permission(Permission("permission_name", PermissionDefault.TRUE))
     }
 }
@@ -22,9 +23,9 @@ class SomeCommand: Command("some") {
 class SomeCommand extends Command {
     public SomeCommand() {
         super("some");
-        
         description("This is some description of this command.");
         permission(Permission.OP);
+        example("/some", "/some <number>");
         //or permission(new Permission("permission_name", PermissionDefault.TRUE));
     }
 }
