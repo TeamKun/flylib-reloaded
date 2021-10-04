@@ -31,6 +31,7 @@ class SomeCommand extends Command {
 ```
 
 ## What is "usage"?
+### Description of "usage"
 
 The concept of Usage in FlyLib is a bit more complicated than in Bukkit, because in FlyLib you define in advance what arguments the command will take, what it will do, and what permissions it needs.
 On the other hand, if the input is not defined, or is of a different type than defined, an error will be displayed on the client side.
@@ -52,3 +53,5 @@ If the following is entered, an error will be displayed to the client, and any e
 /explode SomePlayer
 /explode SomePlayer powerrrrrrrr
 ```
+
+### How to specify Usage in concrete terms
