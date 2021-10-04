@@ -31,22 +31,27 @@ internal class FlyLibImpl(
     init {
         println("Loading FlyLib...")
 
-        if (FlyLibContext.getOrNull() != null) FlyLibContext.stopKoin()
-
-        FlyLibContext.startKoin {
-            modules(module {
-                single { plugin }
-                single { logger }
-                single { commandHandler }
-            })
-        }
-
         listen(PluginEnableEvent::class.java) {
-            if (it.plugin == plugin) enable()
+            if (it.plugin == plugin) {
+                if (FlyLibContext.getOrNull() != null) FlyLibContext.stopKoin()
+                FlyLibContext.startKoin {
+                    modules(module {
+                        single { plugin }
+                        single { logger }
+                        single { commandHandler }
+                    })
+                }
+
+                enable()
+            }
         }
 
         listen(PluginDisableEvent::class.java) {
-            if (it.plugin == plugin) disable()
+            if (it.plugin == plugin) {
+                if (FlyLibContext.getOrNull() != null) FlyLibContext.stopKoin()
+
+                disable()
+            }
         }
     }
 
