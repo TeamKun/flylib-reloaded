@@ -1,4 +1,4 @@
-# About commands
+# Command System
 
 ## Concept
 
@@ -77,7 +77,7 @@ never be actually executed.
 The way to specify "Usage" is similar to specifying the description, permission, or example of a command. In the
 constructor of the command, call the usage method. The argument of this method is a lambda expression that takes
 UsageBuilder as an argument. In both Java and Kotlin, you can manipulate this UsageBuilder to add arguments, execute "
-usage", set permissions, etc.
+Usage", set permissions, etc.
 
 **About permission:**
 
