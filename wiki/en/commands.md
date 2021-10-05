@@ -45,6 +45,17 @@ Unless you explicitly specify permissions on the child side, child commands inhe
 **⚠️Warnings:** The child commands do not need to be defined in the FlyLib builder. By defining them using the children
 method on the parent command, they are automatically handled as children.
 
+## About CommandContext
+
+The FlyLib command system has something called CommandContext. This is like a container that contains various
+information at the time the command is executed and the methods that can be applied to that information.  
+For example, it contains the CommandSender that was executed, the player that was executed (if it can be cast), the
+world that was executed (if it exists), and the coordinates. There is also the input of the command, the list of
+arguments parsed from the input to the command, and the list of arguments casted to the type if possible.  
+The methods include utility methods to send colored messages to the CommandSender that executed the command.
+
+If you want to take some action on the command input, we recommend using the Command Context passed at runtime.
+
 ## What is "usage"?
 
 ### Description of "usage"
