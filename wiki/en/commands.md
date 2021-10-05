@@ -33,6 +33,18 @@ class SomeCommand extends Command {
 }
 ```
 
+This command can be defined in the FlyLib builder, described
+in [Getting started](https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/en/getting-started.md), to
+automatically set permissions and register and unregister plugins when they are enabled or disabled.
+Like `command(new SomeCommand());`
+
+FlyLib commands have the concept of children. This is called a subcommand in other frameworks, and it eliminates the
+need for complex argument handling like in Bukkit.  
+Unless you explicitly specify permissions on the child side, child commands inherit the permissions of the parent.
+
+**⚠️Warnings:** The child commands do not need to be defined in the FlyLib builder. By defining them using the children
+method on the parent command, they are automatically handled as children.
+
 ## What is "usage"?
 
 ### Description of "usage"
@@ -82,3 +94,70 @@ As we will see later, the command class execute will call the sendHelp method of
 can automatically call a help message when no Usage is specified (no arguments).
 
 ### How to define "Usage" in concrete terms
+
+**Kotlin:**
+
+```kotlin
+class ExplodeCommand : Command("explode") {
+    init {
+        description("Explode a player.")
+        permission(Permission.OP)
+
+        usage {
+            description("This is description of this usage.")
+            permission(Permission.EVERYONE)
+            //If none is specified, the authority setting of SomeCommand, OP, will be inherited.
+
+            entityArgument(name = "target", enableSelector = true, enableEntities = false)
+            integerArgument(name = "power", min = 1, max = 10)
+
+            executes { context ->
+                val players = context.typedArgs[0] as List<Entity>
+                val power = context.typedArgs[1] as Int
+
+                players.forEach {
+                    context.world.createExplosion(...)
+                }
+
+                context.success("Exploded ${players.size} players!")
+                //Be careful, the success method just sends a green message. 
+                //There is no system like Bukkit where the command returns true or false.
+            }
+        }
+    }
+}
+```
+
+**Java:**
+
+```java
+class ExplodeCommand extends Command {
+    public ExplodeCommand() {
+        super("explode");
+        description("Explode a player.");
+        permission(Permission.OP);
+
+        usage {
+            description("This is description of this usage.");
+            permission(Permission.EVERYONE);
+            //If none is specified, the authority setting of SomeCommand, OP, will be inherited.
+
+            entityArgument("target", true, false);
+            integerArgument("power", 1, 10);
+
+            executes(context -> {
+                ArrayList<Entity> players = (ArrayList<Entity>) context.typedArgs[0];
+                int power = (int) context.typedArgs[1];
+
+                players.stream().forEach(player -> {
+                    context.world.createExplosion(...)
+                });
+
+                context.success("Exploded " + players.size + " players!");
+                //Be careful, the success method just sends a green message. 
+                //There is no system like Bukkit where the command returns true or false.
+            });
+        }
+    }
+}
+```
