@@ -9,7 +9,7 @@ plugin.yml. The variables needed for all commands are defined on the class. As f
 **Kotlin:**
 
 ```kotlin
-class SomeCommand: Command("some") {
+class SomeCommand : Command("some") {
     init {
         description("This is some description of this command.")
         permission(Permission.OP)
@@ -62,4 +62,24 @@ never be actually executed.
 /explode SomePlayer powerrrrrrrr
 ```
 
-### How to specify "Usage" in concrete terms
+
+The way to specify "Usage" is similar to specifying the description, permission, or example of a command. In the
+constructor of the command, call the usage method. The argument of this method is a lambda expression that takes
+UsageBuilder as an argument. In both Java and Kotlin, you can manipulate this UsageBuilder to add arguments, execute "
+usage", set permissions, etc.
+
+**About permission:**
+
+Unless explicitly specified in the UsageBuilder, the permissions of "Usage" will be inherited by the command.   
+For example, if the permission of the "/config" command is OP, and you want to set only `/config get` to EVERYONE, the
+OP of the `/config` command will be inherited unless you explicitly specify `permission(Permission.EVERYONE)` in the
+UsageBuilder of `/config get`.
+
+**About execution:**
+
+The execution of Usage will execute the execute method of the command class, unless explicitly specified otherwise. This
+is very useful when you want to combine the processing of multiple Usages into one and process them separately. As we
+will see later, the command class execute will call the sendHelp method of its CommandContext by default, so it can
+automatically call a help message when no Usage is specified (no arguments).
+
+### How to define "Usage" in concrete terms
