@@ -4,7 +4,7 @@
 
 The concept of commands in FlyLib is basically the same as in Bukkit. There is a name, a description of the command,
 permissions, usage, etc. The difference between Bukkit and FlyLib is that FlyLib does not use resource files such as
-plugin.yml. The elements needed for all commands are defined on the class. As follows.
+plugin.yml. The variables needed for all commands are defined on the class. As follows.
 
 **Kotlin:**
 
