@@ -62,7 +62,6 @@ never be actually executed.
 /explode SomePlayer powerrrrrrrr
 ```
 
-
 The way to specify "Usage" is similar to specifying the description, permission, or example of a command. In the
 constructor of the command, call the usage method. The argument of this method is a lambda expression that takes
 UsageBuilder as an argument. In both Java and Kotlin, you can manipulate this UsageBuilder to add arguments, execute "
@@ -78,8 +77,8 @@ UsageBuilder of `/config get`.
 **About execution:**
 
 The execution of Usage will execute the execute method of the command class, unless explicitly specified otherwise. This
-is very useful when you want to combine the processing of multiple Usages into one and process them separately. As we
-will see later, the command class execute will call the sendHelp method of its CommandContext by default, so it can
-automatically call a help message when no Usage is specified (no arguments).
+is very useful when you want to combine the processing of multiple Usages into one and process them separately.  
+As we will see later, the command class execute will call the sendHelp method of its CommandContext by default, so it
+can automatically call a help message when no Usage is specified (no arguments).
 
 ### How to define "Usage" in concrete terms
