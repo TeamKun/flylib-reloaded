@@ -4,7 +4,8 @@
  */
 
 plugins {
-    kotlin("jvm") version "1.5.20"
+    kotlin("jvm") version "1.5.31"
+    id("org.jetbrains.dokka") version "1.5.30"
     java
     `maven-publish`
     signing
@@ -29,6 +30,7 @@ dependencies {
     api("io.insert-koin:koin-core-ext:3.0.2")
     compileOnly("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
     compileOnly(fileTree("./libs"))
+    dokkaGfmPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.5.30")
 }
 
 java {
@@ -51,6 +53,22 @@ tasks {
 
     javadoc {
         options.encoding = "UTF-8"
+    }
+
+    dokkaHtml.configure {
+        outputDirectory.set(file("./dokka/html"))
+    }
+
+    dokkaGfm.configure {
+        outputDirectory.set(file("./dokka/gfm"))
+    }
+
+    dokkaJavadoc.configure {
+        outputDirectory.set(file("./dokka/javadoc"))
+    }
+
+    dokkaJekyll.configure {
+        outputDirectory.set(file("./dokka/jekyll"))
     }
 }
 
