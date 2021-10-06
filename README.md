@@ -16,7 +16,7 @@
 ⚠️**This library is currently under development (beta version is `0.*.*`), and the API will be changed or removed
 without notice.**
 
-### 📎 Links
+## 📎 Links
 
 - [Wiki (English)](https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/en/welcome.md)
 - [Wiki (日本語)](https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/ja/welcome.md)
