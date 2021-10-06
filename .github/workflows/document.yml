@@ -1,9 +1,7 @@
 name: Document deploy to GH Pages
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
+  release:
     branches: [ master ]
 
 jobs:
