@@ -20,7 +20,7 @@ jobs:
       - run: chmod 777 ./gradlew
 
       - name: Build documents
-        run: ./gradlew dokkaHtml
+        run: ./gradlew dokkaHtml && ./gradlew dokkaJavadoc
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
