@@ -4,12 +4,12 @@
 
 <div align="center">
     <img src="https://img.shields.io/github/workflow/status/TeamKun/flylib-reloaded/Build?style=flat-square" alt="Build Result">
-    <img src="https://img.shields.io/maven-central/v/dev.kotx/flylib-reloaded?color=blueviolet&label=maven+version&style=flat-square" alt="mavencentral release version">
+    <img src="https://img.shields.io/maven-central/v/dev.kotx/flylib-reloaded?color=blueviolet&label=version&style=flat-square" alt="mavencentral release version">
     <a href="https://opensource.org/licenses/mit-license.php"><img src="https://img.shields.io/static/v1?label=license&message=MIT&style=flat-square&color=blue" alt="License"></a>
     <a href="https://twitter.com/kotx__"><img src="https://img.shields.io/static/v1?label=developer&message=kotx__&style=flat-square&color=orange" alt="developer"></a>
     <a href="https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/en/welcome.md"><img src="https://img.shields.io/static/v1?label=wiki&message=english&style=flat-square&color=red" alt="enwiki"></a>
-    <a href="https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/ja/welcome.md"><img src="https://img.shields.io/static/v1?label=wiki&message=japanese&style=flat-square&color=red" alt="developer"></a>
-    <a href="https://teamkun.github.io/flylib-reloaded/"><img src="https://img.shields.io/static/v1?label=javadoc&message=en&style=flat-square&color=red" alt="developer"></a>
+    <a href="https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/ja/welcome.md"><img src="https://img.shields.io/static/v1?label=wiki&message=japanese&style=flat-square&color=red" alt="jawik"></a>
+    <a href="https://teamkun.github.io/flylib-reloaded/"><img src="https://img.shields.io/static/v1?label=javadoc&message=en&style=flat-square&color=red" alt="javadoc"></a>
     <a href="https://www.codacy.com/gh/TeamKun/flylib-reloaded/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=TeamKun/flylib-reloaded&amp;utm_campaign=Badge_Grade"><img alt="codacy quality" src="https://img.shields.io/codacy/grade/c836938f18e14bd88d9c56f6fd063dca?style=flat-square"/></a>
 </div>
 
