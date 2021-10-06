@@ -59,16 +59,8 @@ tasks {
         outputDirectory.set(file("./dokka/html"))
     }
 
-    dokkaGfm.configure {
-        outputDirectory.set(file("./dokka/gfm"))
-    }
-
     dokkaJavadoc.configure {
         outputDirectory.set(file("./dokka/javadoc"))
-    }
-
-    dokkaJekyll.configure {
-        outputDirectory.set(file("./dokka/jekyll"))
     }
 }
 
