@@ -5,15 +5,15 @@
 <div align="center">
     <img src="https://img.shields.io/maven-central/v/dev.kotx/flylib-reloaded?color=blueviolet&label=version&style=flat-square" alt="mavencentral release version">
     <a href="https://opensource.org/licenses/mit-license.php"><img src="https://img.shields.io/static/v1?label=license&message=MIT&style=flat-square&color=blueviolet" alt="License"></a>
+    <a href="https://twitter.com/kotx__"><img src="https://img.shields.io/static/v1?label=developer&message=kotx__&style=flat-square&color=blueviolet" alt="developer"></a>
     <img src="https://img.shields.io/github/workflow/status/TeamKun/flylib-reloaded/Build?style=flat-square" alt="Build Result">
     <a href="https://www.codacy.com/gh/TeamKun/flylib-reloaded/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=TeamKun/flylib-reloaded&amp;utm_campaign=Badge_Grade"><img alt="codacy quality" src="https://img.shields.io/codacy/grade/c836938f18e14bd88d9c56f6fd063dca?style=flat-square"/></a>
 </div>
 <div align="center">
-    <a href="https://twitter.com/kotx__"><img src="https://img.shields.io/static/v1?label=developer&message=kotx__&style=flat-square&color=orange" alt="developer"></a>
-    <a href="https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/en/welcome.md"><img src="https://img.shields.io/static/v1?label=wiki&message=english&style=flat-square&color=orange" alt="enwiki"></a>
-    <a href="https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/ja/welcome.md"><img src="https://img.shields.io/static/v1?label=wiki&message=japanese&style=flat-square&color=orange" alt="jawik"></a>
-    <a href="https://teamkun.github.io/flylib-reloaded/html"><img src="https://img.shields.io/static/v1?label=document&message=kdoc&style=flat-square&color=orange" alt="kdoc"></a>
-    <a href="https://teamkun.github.io/flylib-reloaded/javadoc"><img src="https://img.shields.io/static/v1?label=document&message=javadoc&style=flat-square&color=orange" alt="javadoc"></a>
+    <a href="https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/en/welcome.md"><img src="https://img.shields.io/static/v1?label=wiki&message=english&style=flat-square&color=red" alt="enwiki"></a>
+    <a href="https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/ja/welcome.md"><img src="https://img.shields.io/static/v1?label=wiki&message=japanese&style=flat-square&color=red" alt="jawik"></a>
+    <a href="https://teamkun.github.io/flylib-reloaded/html"><img src="https://img.shields.io/static/v1?label=document&message=kdoc&style=flat-square&color=blue" alt="kdoc"></a>
+    <a href="https://teamkun.github.io/flylib-reloaded/javadoc"><img src="https://img.shields.io/static/v1?label=document&message=javadoc&style=flat-square&color=blue" alt="javadoc"></a>
 </div>
 
 ⚠️**This library is currently under development (beta version is `0.*.*`), and the API will be changed or removed
