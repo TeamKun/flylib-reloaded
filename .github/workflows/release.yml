@@ -1,21 +1,16 @@
 name: Release
 on:
   push:
-    branches:
-      - master
+    branches: [ master ]
 jobs:
-  check_and_release:
+  release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
-      - name: Grant read permission for gradle configuration file
-        run: chmod +r ./build.gradle.kts
+      - run: chmod +r ./build.gradle.kts && chmod +x ./release.sh
 
-      - name: Add permission to release scripts.
-        run: chmod +x ./release.sh
-
-      - name: Check if it can be released
+      - name: Release check
         run: ./release.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
