@@ -12,7 +12,8 @@
     <a href="https://twitter.com/kotx__"><img src="https://img.shields.io/static/v1?label=developer&message=kotx__&style=flat-square&color=orange" alt="developer"></a>
     <a href="https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/en/welcome.md"><img src="https://img.shields.io/static/v1?label=wiki&message=english&style=flat-square&color=orange" alt="enwiki"></a>
     <a href="https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/ja/welcome.md"><img src="https://img.shields.io/static/v1?label=wiki&message=japanese&style=flat-square&color=orange" alt="jawik"></a>
-    <a href="https://teamkun.github.io/flylib-reloaded/"><img src="https://img.shields.io/static/v1?label=javadoc&message=en&style=flat-square&color=orange" alt="javadoc"></a>
+    <a href="https://teamkun.github.io/flylib-reloaded/html"><img src="https://img.shields.io/static/v1?label=document&message=kdoc&style=flat-square&color=orange" alt="kdoc"></a>
+    <a href="https://teamkun.github.io/flylib-reloaded/javadoc"><img src="https://img.shields.io/static/v1?label=document&message=javadoc&style=flat-square&color=orange" alt="javadoc"></a>
 </div>
 
 ⚠️**This library is currently under development (beta version is `0.*.*`), and the API will be changed or removed
@@ -22,7 +23,8 @@ without notice.**
 
 - [Wiki (English)](https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/en/welcome.md)
 - [Wiki (日本語)](https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/ja/welcome.md)
-- [Javadoc](https://teamkun.github.io/flylib-reloaded/)
+- [KDoc](https://teamkun.github.io/flylib-reloaded/html)
+- [JavaDoc](https://teamkun.github.io/flylib-reloaded/javadoc)
 
 
 ## ⚡ Quickstart
