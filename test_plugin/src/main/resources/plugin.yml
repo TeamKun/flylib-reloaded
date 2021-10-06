@@ -1,3 +1,0 @@
-name: test_plugin
-version: @version@
-main: dev.kotx.testplugin.TestPlugin

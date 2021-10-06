@@ -1,5 +1,7 @@
 name: Document deploy
 on:
+  push:
+    branches: [ master ]
   release:
     branches: [ master ]
     types: [ created, released, prereleased, published, edited ]
