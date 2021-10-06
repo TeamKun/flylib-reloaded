@@ -1,0 +1,12 @@
+$dokka.format:javadoc-v1
+$dokka.linkExtension:html
+$dokka.location:dev.kotx.flylib.command.arguments/TextArgument.Type///PointingToDeclaration/dev/kotx/flylib/command/arguments/TextArgument.Type.html
+$dokka.location:dev.kotx.flylib.command/Permission.Companion///PointingToDeclaration/dev/kotx/flylib/command/Permission.Companion.html
+$dokka.location:dev.kotx.flylib.menu/BasicMenu.Companion///PointingToDeclaration/dev/kotx/flylib/menu/BasicMenu.Companion.html
+$dokka.location:dev.kotx.flylib/FlyLib.Companion///PointingToDeclaration/dev/kotx/flylib/FlyLib.Companion.html
+dev.kotx.flylib
+dev.kotx.flylib.command
+dev.kotx.flylib.command.arguments
+dev.kotx.flylib.menu
+dev.kotx.flylib.util
+
