@@ -13,6 +13,13 @@
 ⚠️**This library is currently under development (beta version is `0.*.*`), and the API will be changed or removed
 without notice.**
 
+### Links
+
+- [Wiki (English)](https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/en/welcome.md)
+- [Wiki (日本語)](https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/ja/welcome.md)
+- [Javadoc](https://teamkun.github.io/flylib-reloaded/)
+
+
 ## ⚡ Quickstart
 
 You can implement tab completion, type checking, help message generation, and subcommands with the following simple
@@ -20,13 +27,6 @@ code.
 
 ❗ **There is no need to add any commands or permissions to plugin.yml. They will be automatically incorporated by
 FlyLib. permissions, aliases and other command informations are defined as variables in the command.**
-
-### Wiki
-
-- [Welcome (English)](https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/en/welcome.md)
-- [ようこそ (Japanese)](https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/ja/welcome.md)
-
-### Sample code
 
 **Kotlin:**
 
