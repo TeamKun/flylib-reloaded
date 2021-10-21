@@ -36,9 +36,11 @@ internal class CommandHandlerImpl(
     private val defaultPermission: Permission
 ) : CommandHandler {
     private val depthMap = mutableMapOf<Command, Int>()
+
     internal fun enable() {
         val commandDispatcher = ((Bukkit.getServer() as CraftServer).server as MinecraftServer).commandDispatcher
         val commandNodes = (Bukkit.getCommandMap() as CraftCommandMap).knownCommands
+
         commands.handle(1)
 
         println("  $CYAN${BOLD}Commands added:$RESET")
@@ -62,9 +64,8 @@ internal class CommandHandlerImpl(
 
         val permissions = (commands.map { it.getCommandPermission() } +
                 commands.flatMap { cmd -> cmd.usages.map { cmd.getUsagePermission(it) } }).distinct()
-        permissions.filter {
-            flyLib.plugin.server.pluginManager.getPermission(it.first) == null
-        }.forEach {
+
+        permissions.filter { flyLib.plugin.server.pluginManager.getPermission(it.first) == null }.forEach {
             flyLib.plugin.server.pluginManager.addPermission(BukkitPermission(it.first, it.second.defaultPermission))
 
             println("    $GREEN$BOLD[+]$RESET$GREEN ${it.first} (${it.second.defaultPermission.name})$RESET")
@@ -120,10 +121,7 @@ internal class CommandHandlerImpl(
 
         commands.forEach { cmd ->
             registerPermission(cmd.name, cmd)
-
-            cmd.aliases.forEach {
-                registerPermission(it, cmd)
-            }
+            cmd.aliases.forEach { registerPermission(it, cmd) }
         }
     }
 
