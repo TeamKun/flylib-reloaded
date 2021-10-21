@@ -62,8 +62,11 @@ internal class CommandHandlerImpl(
 
         val permissions = (commands.map { it.getCommandPermission() } +
                 commands.flatMap { cmd -> cmd.usages.map { cmd.getUsagePermission(it) } }).distinct()
-        permissions.forEach {
+        permissions.filter {
+            flyLib.plugin.server.pluginManager.getPermission(it.first) == null
+        }.forEach {
             flyLib.plugin.server.pluginManager.addPermission(BukkitPermission(it.first, it.second.defaultPermission))
+
             println("    $GREEN$BOLD[+]$RESET$GREEN ${it.first} (${it.second.defaultPermission.name})$RESET")
         }
         println()
@@ -84,10 +87,7 @@ internal class CommandHandlerImpl(
 
         commands.forEach { cmd ->
             remove(cmd.name)
-
-            cmd.aliases.forEach {
-                remove(it)
-            }
+            cmd.aliases.forEach { remove(it) }
 
             println("    $RED$BOLD[-]$RESET$RED ${cmd.name}$RESET")
         }
