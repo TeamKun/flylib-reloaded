@@ -30,7 +30,6 @@ internal class FlyLibImpl(
 
     init {
         println("\u001B[34m\u001B[1mLoading FlyLib...\u001B[m")
-        println()
 
         listen(PluginEnableEvent::class.java) {
             if (it.plugin == plugin) {
@@ -59,9 +58,10 @@ internal class FlyLibImpl(
     private fun enable() {
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin) { load() }
         commandHandler.enable()
+        println("  \u001B[34m\u001B[1mListeners registered:\u001B[m")
         listenerActions.forEach {
-            println("\u001B[32m\u001B[1m[+]\u001B[m\u001B[32m \u001B[1m${it.value.second.simpleName}\u001B[m\u001B[32m was listened with \u001B[1m${it.value.first.priority.name}\u001B[m\u001B[32m priority\u001B[m")
             it.key.register(it.value.first)
+            println("    \u001B[32m\u001B[1m[+]\u001B[m\u001B[32m ${it.value.second.simpleName} (${it.value.first.priority.name})\u001B[m")
         }
         println()
         println(
@@ -73,16 +73,17 @@ internal class FlyLibImpl(
             [32m|_|   |_____|_|[m  
         """.trimIndent()
         )
-        println()
     }
 
     private fun disable() {
         println("\u001B[34m\u001B[1mUnloading FlyLib...\u001B[m")
         commandHandler.disable()
+        println("  \u001B[34m\u001B[1mListeners unregistered:\u001B[m")
         listenerActions.forEach {
             it.key.unregister(it.value.first)
-            println("\u001B[31m\u001B[1m[-]\u001B[m\u001B[31m A listener \u001B[1m${it.value.second.simpleName}\u001B[m\u001B[31m was unregistered\u001B[m")
+            println("    \u001B[31m\u001B[1m[+]\u001B[m\u001B[31m ${it.value.second.simpleName} (${it.value.first.priority.name})\u001B[m")
         }
+        println()
         println("\u001B[32m\u001B[1mFlyLib unloaded successfully.\u001B[m")
     }
 

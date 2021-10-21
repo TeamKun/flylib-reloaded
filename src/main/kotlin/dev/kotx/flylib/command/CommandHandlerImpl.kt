@@ -38,7 +38,7 @@ internal class CommandHandlerImpl(
 
         commands.handle(1)
 
-        println("\u001B[34m\u001B[1mCommands added:\u001B[m")
+        println("  \u001B[34m\u001B[1mCommands added:\u001B[m")
         commands.forEach { command ->
             val cmdArgument = getArgument(command.name, command)
 
@@ -63,7 +63,7 @@ internal class CommandHandlerImpl(
         }
 
         println()
-        println("\u001B[34m\u001B[1mPermissions added:\u001B[m")
+        println("  \u001B[34m\u001B[1mPermissions added:\u001B[m")
 
         val permissions = (commands.map { it.getCommandPermission() } +
                 commands.flatMap { cmd -> cmd.usages.map { cmd.getUsagePermission(it) } }).distinct()
@@ -85,7 +85,7 @@ internal class CommandHandlerImpl(
             commandNodes.remove("minecraft:$name")
         }
 
-        println("\u001B[34m\u001B[1mCommands removed:\u001B[m")
+        println("  \u001B[34m\u001B[1mCommands removed:\u001B[m")
 
         commands.forEach { cmd ->
             remove(cmd.name)
@@ -98,7 +98,7 @@ internal class CommandHandlerImpl(
         }
 
         println()
-        println("\u001B[34m\u001B[1mPermissions removed:\u001B[m")
+        println("  \u001B[34m\u001B[1mPermissions removed:\u001B[m")
 
         commands.forEach { cmd ->
             flyLib.plugin.server.pluginManager.removePermission(cmd.getCommandPermission().first)
