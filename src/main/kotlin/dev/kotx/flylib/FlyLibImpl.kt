@@ -71,11 +71,11 @@ internal class FlyLibImpl(
         println()
         println(
             """
-             ${GREEN}_____ _  __   __$RESET
-            ${GREEN}|  ___| | \ \ / /$RESET
-            ${GREEN}| |_  | |  \ V /   ${BOLD}FlyLib Reloaded by Kotx$RESET
-            ${GREEN}|  _| | |___| |    ${BOLD}inject successfully.$RESET
-            ${GREEN}|_|   |_____|_|$RESET  
+            $GREEN  _____ _  __   __$RESET
+            $GREEN |  ___| | \ \ / /$RESET
+            $GREEN | |_  | |  \ V /  $BOLD FlyLib Reloaded by Kotx$RESET
+            $GREEN |  _| | |___| |   $BOLD Ready for ${plugin.name} ${plugin.description.version}$RESET
+            $GREEN |_|   |_____|_|$RESET  
         """.trimIndent()
         )
     }
@@ -86,7 +86,7 @@ internal class FlyLibImpl(
         println("  $CYAN${BOLD}Listeners unregistered:$RESET")
         listenerActions.forEach {
             it.key.unregister(it.value.first)
-            println("    $RED${BOLD}[+]$RESET$RED ${it.value.second.simpleName} (${it.value.first.priority.name})$RESET")
+            println("    $RED${BOLD}[-]$RESET$RED ${it.value.second.simpleName} (${it.value.first.priority.name})$RESET")
         }
         println()
         println("$GREEN${BOLD}FlyLib unloaded successfully.$RESET")
