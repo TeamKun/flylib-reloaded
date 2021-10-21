@@ -8,6 +8,11 @@ package dev.kotx.flylib
 import dev.kotx.flylib.command.Command
 import dev.kotx.flylib.command.CommandHandlerImpl
 import dev.kotx.flylib.command.Permission
+import dev.kotx.flylib.util.BOLD
+import dev.kotx.flylib.util.CYAN
+import dev.kotx.flylib.util.GREEN
+import dev.kotx.flylib.util.RED
+import dev.kotx.flylib.util.RESET
 import org.bukkit.Bukkit
 import org.bukkit.event.Event
 import org.bukkit.event.EventPriority
@@ -29,7 +34,7 @@ internal class FlyLibImpl(
     override val commandHandler = CommandHandlerImpl(this, commands, defaultPermission)
 
     init {
-        println("\u001B[34m\u001B[1mLoading FlyLib...\u001B[m")
+        println("$CYAN${BOLD}Loading FlyLib...$RESET")
 
         listen(PluginEnableEvent::class.java) {
             if (it.plugin == plugin) {
@@ -58,33 +63,33 @@ internal class FlyLibImpl(
     private fun enable() {
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin) { load() }
         commandHandler.enable()
-        println("  \u001B[34m\u001B[1mListeners registered:\u001B[m")
+        println("  $CYAN${BOLD}Listeners registered:$RESET")
         listenerActions.forEach {
             it.key.register(it.value.first)
-            println("    \u001B[32m\u001B[1m[+]\u001B[m\u001B[32m ${it.value.second.simpleName} (${it.value.first.priority.name})\u001B[m")
+            println("    $GREEN${BOLD}[+]$RESET$GREEN ${it.value.second.simpleName} (${it.value.first.priority.name})$RESET")
         }
         println()
         println(
             """
-             [32m_____ _  __   __[m
-            [32m|  ___| | \ \ / /[m
-            [32m| |_  | |  \ V /   [1mFlyLib Reloaded by Kotx[m
-            [32m|  _| | |___| |    [1minject successfully.[m
-            [32m|_|   |_____|_|[m  
+             ${GREEN}_____ _  __   __$RESET
+            ${GREEN}|  ___| | \ \ / /$RESET
+            ${GREEN}| |_  | |  \ V /   ${BOLD}FlyLib Reloaded by Kotx$RESET
+            ${GREEN}|  _| | |___| |    ${BOLD}inject successfully.$RESET
+            ${GREEN}|_|   |_____|_|$RESET  
         """.trimIndent()
         )
     }
 
     private fun disable() {
-        println("\u001B[34m\u001B[1mUnloading FlyLib...\u001B[m")
+        println("$CYAN${BOLD}Unloading FlyLib...$RESET")
         commandHandler.disable()
-        println("  \u001B[34m\u001B[1mListeners unregistered:\u001B[m")
+        println("  $CYAN${BOLD}Listeners unregistered:$RESET")
         listenerActions.forEach {
             it.key.unregister(it.value.first)
-            println("    \u001B[31m\u001B[1m[+]\u001B[m\u001B[31m ${it.value.second.simpleName} (${it.value.first.priority.name})\u001B[m")
+            println("    $RED${BOLD}[+]$RESET$RED ${it.value.second.simpleName} (${it.value.first.priority.name})$RESET")
         }
         println()
-        println("\u001B[32m\u001B[1mFlyLib unloaded successfully.\u001B[m")
+        println("$GREEN${BOLD}FlyLib unloaded successfully.$RESET")
     }
 
     private fun load() {

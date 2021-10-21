@@ -32,3 +32,9 @@ internal fun <T> List<T>.joint(other: T): List<T> {
 }
 
 internal fun <T, E> List<T>.joint(joiner: E, target: (T) -> E) = map(target).joint(joiner)
+
+internal const val RED = "\u001B[31m"
+internal const val GREEN = "\u001B[32m"
+internal const val CYAN = "\u001B[34m"
+internal const val BOLD = "\u001B[1m"
+internal const val RESET = "\u001B[m"
