@@ -38,7 +38,6 @@ internal class CommandHandlerImpl(
 
         commands.handle(1)
 
-        println()
         println("\u001B[34m\u001B[1mCommands added:\u001B[m")
         commands.forEach { command ->
             val cmdArgument = getArgument(command.name, command)
@@ -72,6 +71,7 @@ internal class CommandHandlerImpl(
             flyLib.plugin.server.pluginManager.addPermission(BukkitPermission(it.first, it.second.defaultPermission))
             println("    \u001B[32m\u001B[1m[+]\u001B[m\u001B[32m ${it.first} (${it.second.defaultPermission.name})\u001B[m")
         }
+        println()
     }
 
     internal fun disable() {
@@ -85,7 +85,6 @@ internal class CommandHandlerImpl(
             commandNodes.remove("minecraft:$name")
         }
 
-        println()
         println("\u001B[34m\u001B[1mCommands removed:\u001B[m")
 
         commands.forEach { cmd ->

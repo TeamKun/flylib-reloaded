@@ -81,7 +81,7 @@ internal class FlyLibImpl(
         commandHandler.disable()
         listenerActions.forEach {
             it.key.unregister(it.value.first)
-            println("\u001B[31m\u001B[1m[-]\u001B[m\u001B[31m A listener \u001B[1m${it.key::class.simpleName}\u001B[m\u001B[31m was unregistered\u001B[m")
+            println("\u001B[31m\u001B[1m[-]\u001B[m\u001B[31m A listener \u001B[1m${it.value.second.simpleName}\u001B[m\u001B[31m was unregistered\u001B[m")
         }
         println("\u001B[32m\u001B[1mFlyLib unloaded successfully.\u001B[m")
     }
