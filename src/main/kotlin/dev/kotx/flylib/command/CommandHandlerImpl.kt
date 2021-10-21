@@ -98,13 +98,14 @@ internal class CommandHandlerImpl(
 
         commands.forEach { cmd ->
             val cmdPermission = cmd.getCommandPermission()
+
             flyLib.plugin.server.pluginManager.removePermission(cmdPermission.first)
             println("    $RED$BOLD[-]$RESET$RED ${cmdPermission.first} (${cmdPermission.second.defaultPermission.name})$RESET")
 
             cmd.usages.forEach {
                 val usagePermission = cmd.getUsagePermission(it)
-                flyLib.plugin.server.pluginManager.removePermission(usagePermission.first)
 
+                flyLib.plugin.server.pluginManager.removePermission(usagePermission.first)
                 println("    $RED$BOLD[-]$RESET$RED ${usagePermission.first} (${usagePermission.second.defaultPermission.name})$RESET")
             }
         }
@@ -112,9 +113,9 @@ internal class CommandHandlerImpl(
     }
 
     internal fun load() {
-        fun registerPermission(name: String, command: Command) {
-            val commandMap = flyLib.plugin.server.commandMap
+        val commandMap = flyLib.plugin.server.commandMap
 
+        fun registerPermission(name: String, command: Command) {
             commandMap.getCommand(name)?.permission = command.getCommandPermission().first
             commandMap.getCommand("minecraft:$name")?.permission = command.getCommandPermission().first
         }
@@ -129,18 +130,8 @@ internal class CommandHandlerImpl(
         val commandArgument = LiteralArgumentBuilder.literal<CommandListenerWrapper>(name)
         commandArgument.requires {
             it.bukkitSender.hasPermission(command.getCommandPermission().first)
-        }
-
-        commandArgument.executes { ctx ->
-            val context = CommandContext(
-                flyLib.plugin,
-                command,
-                ctx.source.bukkitSender,
-                ctx.source.bukkitWorld,
-                ctx.source.server.server as Server,
-                ctx.input,
-                depthMap[command]!!
-            )
+        }.executes { ctx ->
+            val context = getCommandContext(command, ctx)
 
             try {
                 command.apply { context.execute() }
@@ -179,16 +170,7 @@ internal class CommandHandlerImpl(
                 }
 
                 argumentBuilder.executes { ctx ->
-                    val context = CommandContext(
-                        flyLib.plugin,
-                        command,
-                        ctx.source.bukkitSender,
-                        ctx.source.bukkitWorld,
-                        ctx.source.server.server as Server,
-                        ctx.input,
-                        depthMap[command]!!,
-                        usage.parseArguments(ctx)
-                    )
+                    val context = getCommandContext(command, ctx, usage)
 
                     try {
                         if (i == 0)
@@ -268,6 +250,21 @@ internal class CommandHandlerImpl(
 
         return commandArgument.build()
     }
+
+    private fun getCommandContext(
+        command: Command,
+        context: com.mojang.brigadier.context.CommandContext<CommandListenerWrapper>,
+        usage: Usage? = null
+    ) = CommandContext(
+        flyLib.plugin,
+        command,
+        context.source.bukkitSender,
+        context.source.bukkitWorld,
+        context.source.server.server as Server,
+        context.input,
+        depthMap[command]!!,
+        usage?.let { it.parseArguments(context) } ?: emptyList()
+    )
 
     private fun Command.getCommandPermission(): Pair<String, Permission> {
         val definedPermission = permission ?: defaultPermission
