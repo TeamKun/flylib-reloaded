@@ -23,13 +23,14 @@ internal class FlyLibImpl(
     override val plugin: JavaPlugin,
     commands: List<Command>,
     defaultPermission: Permission,
-    private val listenerActions: MutableMap<HandlerList, RegisteredListener>
+    private val listenerActions: MutableMap<HandlerList, Pair<RegisteredListener, Class<*>>>
 ) :
     FlyLib {
     override val commandHandler = CommandHandlerImpl(this, commands, defaultPermission)
 
     init {
-        println("Loading FlyLib...")
+        println("\u001B[34m\u001B[1mLoading FlyLib...\u001B[m")
+        println()
 
         listen(PluginEnableEvent::class.java) {
             if (it.plugin == plugin) {
@@ -59,28 +60,30 @@ internal class FlyLibImpl(
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin) { load() }
         commandHandler.enable()
         listenerActions.forEach {
-            it.key.register(it.value)
+            println("\u001B[32m\u001B[1m[+]\u001B[m\u001B[32m \u001B[1m${it.value.second.simpleName}\u001B[m\u001B[32m was listened with \u001B[1m${it.value.first.priority.name}\u001B[m\u001B[32m priority\u001B[m")
+            it.key.register(it.value.first)
         }
         println()
         println(
             """
-             _____ _  __   __
-            |  ___| | \ \ / /
-            | |_  | |  \ V /   FlyLib Reloaded v0.3.13 by Kotx 
-            |  _| | |___| |    inject successfully.
-            |_|   |_____|_|  
+             [32m_____ _  __   __[m
+            [32m|  ___| | \ \ / /[m
+            [32m| |_  | |  \ V /   [1mFlyLib Reloaded by Kotx[m
+            [32m|  _| | |___| |    [1minject successfully.[m
+            [32m|_|   |_____|_|[m  
         """.trimIndent()
         )
         println()
     }
 
     private fun disable() {
-        println("Unloading FlyLib...")
+        println("\u001B[34m\u001B[1mUnloading FlyLib...\u001B[m")
         commandHandler.disable()
         listenerActions.forEach {
-            it.key.unregister(it.value)
+            it.key.unregister(it.value.first)
+            println("\u001B[31m\u001B[1m[-]\u001B[m\u001B[31m A listener \u001B[1m${it.key::class.simpleName}\u001B[m\u001B[31m was unregistered\u001B[m")
         }
-        println("FlyLib unloaded successfully.")
+        println("\u001B[32m\u001B[1mFlyLib unloaded successfully.\u001B[m")
     }
 
     private fun load() {

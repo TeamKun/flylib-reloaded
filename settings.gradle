@@ -4,3 +4,4 @@
  */
 
 rootProject.name = 'FlyLibReloaded'
+include("debug")

@@ -13,6 +13,7 @@ import org.bukkit.event.HandlerList
 import org.bukkit.event.Listener
 import org.bukkit.plugin.RegisteredListener
 import org.bukkit.plugin.java.JavaPlugin
+import kotlin.reflect.KClass
 
 /**
  * A builder that creates Fly Lib.
@@ -21,7 +22,7 @@ class FlyLibBuilder(
     private val plugin: JavaPlugin
 ) {
     private val commands = mutableListOf<Command>()
-    private val listenerActions = mutableMapOf<HandlerList, RegisteredListener>()
+    private val listenerActions = mutableMapOf<HandlerList, Pair<RegisteredListener, Class<*>>>()
     private var defaultPermission = Permission.OP
 
     /**
@@ -64,7 +65,7 @@ class FlyLibBuilder(
             false
         )
 
-        listenerActions[handlerList] = listener
+        listenerActions[handlerList] = listener to clazz
 
         return this
     }

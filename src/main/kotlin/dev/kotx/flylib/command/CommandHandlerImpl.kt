@@ -38,6 +38,8 @@ internal class CommandHandlerImpl(
 
         commands.handle(1)
 
+        println()
+        println("\u001B[34m\u001B[1mCommands added:\u001B[m")
         commands.forEach { command ->
             val cmdArgument = getArgument(command.name, command)
 
@@ -49,12 +51,26 @@ internal class CommandHandlerImpl(
                 commandDispatcher.a().root.addChild(aliasArgument)
                 commandNodes[alias] = VanillaCommandWrapper(commandDispatcher, aliasArgument)
             }
+
+            println("    \u001B[32m\u001B[1m[+]\u001B[m\u001B[32m ${command.name}\u001B[m")
+
+//            log(
+//                command.name, command.description ?: "no description available",
+//                command.usages.joinToString("\n") { "/${command.name} ${it.arguments.joinToString(" ") { "<${it.name}>" }}" } + if (command.children.isNotEmpty())
+//                    "\n${command.children.joinToString("\n") { "    ${it.name}" }}"
+//                else
+//                    ""
+//            )
         }
+
+        println()
+        println("\u001B[34m\u001B[1mPermissions added:\u001B[m")
 
         val permissions = (commands.map { it.getCommandPermission() } +
                 commands.flatMap { cmd -> cmd.usages.map { cmd.getUsagePermission(it) } }).distinct()
         permissions.forEach {
             flyLib.plugin.server.pluginManager.addPermission(BukkitPermission(it.first, it.second.defaultPermission))
+            println("    \u001B[32m\u001B[1m[+]\u001B[m\u001B[32m ${it.first} (${it.second.defaultPermission.name})\u001B[m")
         }
     }
 
@@ -69,6 +85,9 @@ internal class CommandHandlerImpl(
             commandNodes.remove("minecraft:$name")
         }
 
+        println()
+        println("\u001B[34m\u001B[1mCommands removed:\u001B[m")
+
         commands.forEach { cmd ->
             remove(cmd.name)
 
@@ -76,12 +95,21 @@ internal class CommandHandlerImpl(
                 remove(it)
             }
 
-            flyLib.plugin.server.pluginManager.removePermission(cmd.getCommandPermission().first)
+            println("    \u001B[31m\u001B[1m[-]\u001B[m\u001B[31m ${cmd.name}\u001B[m")
+        }
 
+        println()
+        println("\u001B[34m\u001B[1mPermissions removed:\u001B[m")
+
+        commands.forEach { cmd ->
+            flyLib.plugin.server.pluginManager.removePermission(cmd.getCommandPermission().first)
+            println("    \u001B[31m\u001B[1m[-]\u001B[m\u001B[31m ${cmd.getCommandPermission().first} (${cmd.getCommandPermission().second.defaultPermission.name})\u001B[m")
             cmd.usages.forEach {
                 flyLib.plugin.server.pluginManager.removePermission(cmd.getUsagePermission(it).first)
+                println("    \u001B[31m\u001B[1m[-]\u001B[m\u001B[31m ${cmd.getUsagePermission(it).first} (${cmd.getUsagePermission(it).second.defaultPermission.name})\u001B[m")
             }
         }
+        println()
     }
 
     internal fun load() {
@@ -343,5 +371,13 @@ internal class CommandHandlerImpl(
 
         if (children.isNotEmpty())
             children.handle(d + 1)
+    }
+
+    private fun log(headerTitle: String, headerBody: String, body: String) {
+        println("\u001B[32m┌──────────────────────────────────────────────────────────────┐\u001B[m")
+        println("\u001B[32m| \u001B[1m$headerTitle - \u001B[m\u001B[32m$headerBody${" ".repeat(60 - (headerTitle.length + headerBody.length + 3))} |\u001B[m")
+        println("\u001B[32m├--------------------------------------------------------------┤\u001B[m")
+        println(body.split("\n").joinToString("\n") { "\u001B[32m| $it${" ".repeat(60 - it.length)} |\u001B[m" })
+        println("\u001B[32m└──────────────────────────────────────────────────────────────┘\u001B[m")
     }
 }

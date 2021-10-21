@@ -30,7 +30,7 @@ dependencies {
     api("io.insert-koin:koin-core-ext:3.0.2")
     compileOnly("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
     compileOnly(fileTree("./libs"))
-    dokkaGfmPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.5.30")
+    dokkaGfmPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.5.31")
 }
 
 java {
