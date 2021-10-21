@@ -1,4 +1,4 @@
-<h1 align="center">FlyLib Reloaded</h1>
+<img align="center" src="https://raw.githubusercontent.com/TeamKun/flylib-reloaded/master/logo.png">
 
 <p align="center"><b>FlyLib Reloaded</b> is a utility library for <a href="https://papermc.io">Minecraft Paper</a> that provides commands, menus, Kotlin extensions, and more.</p>
 
