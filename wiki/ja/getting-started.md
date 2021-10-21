@@ -1,6 +1,31 @@
 # FlyLibを使い始める
 
-FlyLib Reloaded（以下、FlyLib）は、以下のコードで注入(Paperの内部にFlyLibを登録すること)を開始します。
+## 依存関係を追加する
+
+FlyLib Reloaded(以下、FlyLib)は、Maven Centralに公開されているため、普通のプロジェクト構成であれば、以下を依存関係に追加するだけですぐに使い始めることが出来ます。
+```
+Group: dev.kotx
+Artifact: flylib-reloaded
+```
+![](https://img.shields.io/maven-central/v/dev.kotx/flylib-reloaded?color=blueviolet&label=version&style=flat-square)
+
+Gradle(Gradle Kotlin DSLを含む)であれば、
+```groovy
+implementation("dev.kotx:flylib-reloaded:[version]")
+```
+を追加することで、 Mavenであれば、
+```xml
+<dependency>
+    <group>dev.kotx</group>
+    <name>flylib-reloaded</name>
+    <version>[version]</version>
+</dependency>
+```
+を追加することでFlyLibを依存関係に含めることが出来ます。
+
+## FlyLibをプラグインに導入する
+
+FlyLibは、以下のコードで注入(Paperの内部にFlyLibを登録すること)を開始します。
 
 **Kotlin:**
 

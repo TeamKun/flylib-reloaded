@@ -1,6 +1,30 @@
 # Getting started
 
-FlyLib Reloaded (hereafter referred to as FlyLib) starts injecting with the following code.
+## Add a dependency
+
+FlyLib Reloaded (following, FlyLib) is published in Maven Central, so if you have a normal project configuration, you can start using it immediately by adding the following to the dependency.
+```
+Group: dev.kotx
+Artifact: flylib-reloaded
+```
+![](https://img.shields.io/maven-central/v/dev.kotx/flylib-reloaded?color=blueviolet&label=version&style=flat-square)
+
+For Gradle (including Gradle Kotlin DSL), you can add the following:
+```groovy
+implementation("dev.kotx:flylib-reloaded:[version]")
+```
+With Maven, FlyLib can be included in the dependency by adding the following.
+```xml
+<dependency>
+    <group>dev.kotx</group>
+    <name>flylib-reloaded</name>
+    <version>[version]</version>
+</dependency>
+```
+
+## Introduce FlyLib into a plugin
+
+FlyLib starts injection (registering FlyLib inside Paper) with the following code.
 
 **Kotlin:**
 
