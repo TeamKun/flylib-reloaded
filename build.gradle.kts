@@ -4,9 +4,8 @@
  */
 
 plugins {
-    kotlin("jvm") version "1.5.31"
+    kotlin("jvm") version "1.5.32"
     id("org.jetbrains.dokka") version "1.5.30"
-    java
     `maven-publish`
     signing
 }
@@ -25,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    api(kotlin("stdlib-jdk8"))
+    api(kotlin("stdlib"))
     api("io.insert-koin:koin-core:3.1.2")
     api("io.insert-koin:koin-core-ext:3.0.2")
     compileOnly("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
@@ -39,18 +38,6 @@ java {
 }
 
 tasks {
-    compileJava {
-        sourceCompatibility = "1.8"
-        targetCompatibility = "1.8"
-        options.isFork = true
-    }
-
-    compileKotlin {
-        kotlinOptions {
-            jvmTarget = "1.8"
-        }
-    }
-
     javadoc {
         options.encoding = "UTF-8"
     }
@@ -92,7 +79,7 @@ publishing {
 
             pom {
                 name.set(projectName)
-                description.set("A utility library for Minecraft Paper that provides commands, menus, Kotlin extensions, and more.")
+                description.set("An utility library for Minecraft Paper that provides commands, menus, Kotlin extensions, and more.")
                 url.set("https://github.com/TeamKun/flylib-reloaded")
 
                 licenses {
@@ -106,14 +93,7 @@ publishing {
                     developer {
                         id.set("kotx__")
                         name.set("kotlin chan")
-                        email.set("developer.hazuku@gmail.com")
                     }
-                }
-
-                scm {
-                    connection.set("git@github.com:TeamKun/flylib-reloaded.git")
-                    developerConnection.set("git@github.com:TeamKun/flylib-reloaded.git")
-                    url.set("https://github.com/TeamKun/flylib-reloaded")
                 }
 
                 organization {
