@@ -4,7 +4,7 @@
  */
 
 plugins {
-    kotlin("jvm") version "1.5.32"
+    kotlin("jvm") version "1.5.31"
     id("org.jetbrains.dokka") version "1.5.30"
     `maven-publish`
     signing
@@ -24,9 +24,11 @@ repositories {
 }
 
 dependencies {
-    api(kotlin("stdlib"))
-    api("io.insert-koin:koin-core:3.1.2")
+    api("org.jetbrains.kotlin:kotlin-stdlib:1.5.31")
+    api("io.insert-koin:koin-core:3.1.3")
     api("io.insert-koin:koin-core-ext:3.0.2")
+    api("com.google.code.gson:gson:2.8.9")
+
     compileOnly("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
     compileOnly(fileTree("./libs"))
     dokkaGfmPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.5.31")
