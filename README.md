@@ -1,30 +1,36 @@
-<img align="center" src="https://raw.githubusercontent.com/TeamKun/flylib-reloaded/master/logo.png">
+<p align="center">
+    <a href="https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/en/welcome.md">
+        <img height="150" src="https://raw.githubusercontent.com/TeamKun/flylib-reloaded/master/Logo.png" alt="Logo">
+        <h1 align="center">FlyLib Reloaded</h1>
+    </a>
+</p>
 
-<p align="center"><b>FlyLib Reloaded</b> is a utility library for <a href="https://papermc.io">Minecraft Paper</a> that provides commands, menus, Kotlin extensions, and more.</p>
+<p align="center"><b>FlyLib Reloaded</b> is a utility library for Minecraft Paper that provides commands, menus, Kotlin extensions, and more.</p>
 
 <div align="center">
-    <img src="https://img.shields.io/maven-central/v/dev.kotx/flylib-reloaded?color=blueviolet&label=version&style=flat-square" alt="mavencentral release version">
-    <a href="https://opensource.org/licenses/mit-license.php"><img src="https://img.shields.io/static/v1?label=license&message=MIT&style=flat-square&color=blueviolet" alt="License"></a>
-    <a href="https://twitter.com/kotx__"><img src="https://img.shields.io/static/v1?label=developer&message=kotx__&style=flat-square&color=blueviolet" alt="developer"></a>
-    <img src="https://img.shields.io/github/workflow/status/TeamKun/flylib-reloaded/Build?style=flat-square" alt="Build Result">
-    <a href="https://www.codacy.com/gh/TeamKun/flylib-reloaded/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=TeamKun/flylib-reloaded&amp;utm_campaign=Badge_Grade"><img alt="codacy quality" src="https://img.shields.io/codacy/grade/c836938f18e14bd88d9c56f6fd063dca?style=flat-square"/></a>
-</div>
-<div align="center">
-    <a href="https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/en/welcome.md"><img src="https://img.shields.io/static/v1?label=wiki&message=english&style=flat-square&color=red" alt="enwiki"></a>
-    <a href="https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/ja/welcome.md"><img src="https://img.shields.io/static/v1?label=wiki&message=japanese&style=flat-square&color=red" alt="jawik"></a>
-    <a href="https://teamkun.github.io/flylib-reloaded/html"><img src="https://img.shields.io/static/v1?label=document&message=kdoc&style=flat-square&color=blue" alt="kdoc"></a>
-    <a href="https://teamkun.github.io/flylib-reloaded/javadoc"><img src="https://img.shields.io/static/v1?label=document&message=javadoc&style=flat-square&color=blue" alt="javadoc"></a>
+    <a href="https://twitter.com/kotx__"><img src="https://img.shields.io/static/v1?label=developer&message=kotx__&style=for-the-badge&color=black&labelColor=black" alt="developer"></a>
+    <img src="https://img.shields.io/maven-central/v/dev.kotx/flylib-reloaded?label=maven central&style=for-the-badge&color=blue&labelColor=black" alt="mavencentral release version">
+    <a href="https://opensource.org/licenses/mit-license.php"><img src="https://img.shields.io/static/v1?label=license&message=MIT&style=for-the-badge&color=green&labelColor=black" alt="License"></a>
+    <a href="https://www.codacy.com/gh/TeamKun/flylib-reloaded/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=TeamKun/flylib-reloaded&amp;utm_campaign=Badge_Grade"><img alt="codacy quality" src="https://img.shields.io/codacy/grade/c836938f18e14bd88d9c56f6fd063dca?style=for-the-badge&labelColor=black"/></a>
 </div>
 
 ⚠️**This library is currently under development (beta version is `0.*.*`), and the API will be changed or removed
 without notice.**
 
-## 📎 Links
+### 📎 Links
 
 - [Wiki (English)](https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/en/welcome.md)
 - [Wiki (日本語)](https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/ja/welcome.md)
 - [KDoc](https://teamkun.github.io/flylib-reloaded/html)
 - [JavaDoc](https://teamkun.github.io/flylib-reloaded/javadoc)
+
+### 🔥 Features
+
+- Powerful command engine
+- DSL Menu builder
+- Event flow manager like RxJava
+- Many useful Extensions, Utilities, Builders for Bukkit
+- Easy to setup & use
 
 
 ## ⚡ Quickstart
@@ -33,13 +39,14 @@ You can implement tab completion, type checking, help message generation, and su
 code.
 
 ❗ **There is no need to add any commands or permissions to plugin.yml. They will be automatically incorporated by
-FlyLib. permissions, aliases and other command informations are defined as variables in the command.**
+FlyLib. permissions, aliases and other command information are defined as variables in the command.**
 
 **Kotlin:**
 
 ```kotlin
 class TestPlugin : JavaPlugin() {
     init {
+        //FlyLib entrypoint. Must place in onEnable or Plugin Constructor
         flyLib {
             command(ExplodeCommand())
             listen(BlockBreakEvent::class.java) { event ->
@@ -49,9 +56,13 @@ class TestPlugin : JavaPlugin() {
     }
 }
 
+/**
+ * /explode <targets (players)> <power (integer)> <mode (one or two)>
+ */
 class ExplodeCommand : Command("explode") {
     init {
         usage {
+            //add typed arguments
             entityArgument("targets")
             integerArgument("power", min = 1, max = 10)
             selectionArgument("mode", "one", "two")
@@ -70,6 +81,7 @@ class ExplodeCommand : Command("explode") {
 public class TestPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
+        //FlyLib entrypoint. Must place in onEnable or Plugin Constructor
         FlyLibKt.flyLib(this, flyLib -> {
             flyLib.command(new ExplodeCommand());
             flyLib.listen(BlockBreakEvent.class, event -> {
@@ -79,18 +91,20 @@ public class TestPlugin extends JavaPlugin {
     }
 }
 
+/**
+ * /explode <targets (players)> <power (integer)> <mode (one or two)>
+ */
 class ExplodeCommand extends Command {
     public ExplodeCommand() {
         super("explode");
-        
+
         usage(usage -> {
+            //add typed arguments
             usage.entityArgument("targets");
             usage.integerArgument("power", 1, 10);
             usage.selectionArgument("mode", "one", "two");
-            
-            usage.executes(context -> {
-                context.message("You executed explode command!");
-            });
+
+            usage.executes(context -> context.message("You executed explode command!"));
         });
     }
 }
