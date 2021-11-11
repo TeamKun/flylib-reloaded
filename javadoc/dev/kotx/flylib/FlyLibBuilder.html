@@ -254,23 +254,39 @@ public final class <span class="typeNameLabel"><a href=FlyLibBuilder.html>FlyLib
                                         <tr id="i1" class="rowColor">
                                             <td class="colFirst"><code>final <a href=FlyLibBuilder.html>FlyLibBuilder</a></code>
                                             </td>
+                                            <th class="colSecond" scope="row"><code><a href=FlyLibBuilder.html#config(Object,String)>config</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html>Object</a> configObject, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> baseCommandName) </code>
+                                            </th>
+                                            <td class="colLast">Specify the default config.</td>
+                                        </tr>
+                                        
+                                        <tr id="i2" class="altColor">
+                                            <td class="colFirst"><code>final <a href=FlyLibBuilder.html>FlyLibBuilder</a></code>
+                                            </td>
                                             <th class="colSecond" scope="row"><code><a href=FlyLibBuilder.html#defaultPermission(Permission)>defaultPermission</a>(<a href=command/Permission.html>Permission</a> permission) </code>
                                             </th>
                                             <td class="colLast">Specifies the default permissions that will be assigned if the command permissions are not specified.</td>
                                         </tr>
                                         
-                                        <tr id="i2" class="altColor">
+                                        <tr id="i3" class="rowColor">
                                             <td class="colFirst"><code>final &lt;T extends Event&gt; <a href=FlyLibBuilder.html>FlyLibBuilder</a></code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=FlyLibBuilder.html#listen(Class,EventPriority,ListenerAction)>listen</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html>Class</a>&lt;<a href=FlyLibBuilder.html#listen(Class,EventPriority,ListenerAction)>T</a>&gt; clazz, EventPriority priority, <a href=ListenerAction.html>ListenerAction</a>&lt;<a href=FlyLibBuilder.html#listen(Class,EventPriority,ListenerAction)>T</a>&gt; action) </code>
+                                            <th class="colSecond" scope="row"><code><a href=FlyLibBuilder.html#listen(Class,EventPriority,Boolean,ListenerAction)>listen</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html>Class</a>&lt;<a href=FlyLibBuilder.html#listen(Class,EventPriority,Boolean,ListenerAction)>T</a>&gt; clazz, EventPriority priority, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a> ignoreCancelled, <a href=ListenerAction.html>ListenerAction</a>&lt;<a href=FlyLibBuilder.html#listen(Class,EventPriority,Boolean,ListenerAction)>T</a>&gt; action) </code>
                                             </th>
                                             <td class="colLast">Listens to the specified event with the specified priority.</td>
                                         </tr>
                                         
-                                        <tr id="i3" class="rowColor">
+                                        <tr id="i4" class="altColor">
                                             <td class="colFirst"><code>final &lt;T extends Event&gt; <a href=FlyLibBuilder.html>FlyLibBuilder</a></code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=FlyLibBuilder.html#listen(Class,EventPriority,ListenerAction)>listen</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html>Class</a>&lt;<a href=FlyLibBuilder.html#listen(Class,EventPriority,ListenerAction)>T</a>&gt; clazz, <a href=ListenerAction.html>ListenerAction</a>&lt;<a href=FlyLibBuilder.html#listen(Class,EventPriority,ListenerAction)>T</a>&gt; action) </code>
+                                            <th class="colSecond" scope="row"><code><a href=FlyLibBuilder.html#listen(Class,EventPriority,Boolean,ListenerAction)>listen</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html>Class</a>&lt;<a href=FlyLibBuilder.html#listen(Class,EventPriority,Boolean,ListenerAction)>T</a>&gt; clazz, EventPriority priority, <a href=ListenerAction.html>ListenerAction</a>&lt;<a href=FlyLibBuilder.html#listen(Class,EventPriority,Boolean,ListenerAction)>T</a>&gt; action) </code>
+                                            </th>
+                                            <td class="colLast">Listens to the specified event with the specified priority.</td>
+                                        </tr>
+                                        
+                                        <tr id="i5" class="rowColor">
+                                            <td class="colFirst"><code>final &lt;T extends Event&gt; <a href=FlyLibBuilder.html>FlyLibBuilder</a></code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=FlyLibBuilder.html#listen(Class,EventPriority,Boolean,ListenerAction)>listen</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html>Class</a>&lt;<a href=FlyLibBuilder.html#listen(Class,EventPriority,Boolean,ListenerAction)>T</a>&gt; clazz, <a href=ListenerAction.html>ListenerAction</a>&lt;<a href=FlyLibBuilder.html#listen(Class,EventPriority,Boolean,ListenerAction)>T</a>&gt; action) </code>
                                             </th>
                                             <td class="colLast">Listens to the specified event with the specified priority.</td>
                                         </tr>
@@ -344,6 +360,21 @@ public final class <span class="typeNameLabel"><a href=FlyLibBuilder.html>FlyLib
                                     </li>
                                 </ul>
                                 
+                                <a id="config(Object,String)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>config</h4>
+                                        <pre class="methodSignature"> final <a href=FlyLibBuilder.html>FlyLibBuilder</a> <a href=FlyLibBuilder.html#config(Object,String)>config</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html>Object</a> configObject, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> baseCommandName)</pre>
+                                        <div class="block"><p>Specify the default config.</p></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
                                 <a id="defaultPermission(Permission)">
                                     <!--   -->
                                 </a>
@@ -359,6 +390,21 @@ public final class <span class="typeNameLabel"><a href=FlyLibBuilder.html>FlyLib
                                     </li>
                                 </ul>
                                 
+                                <a id="listen(Class,EventPriority,Boolean,ListenerAction)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>listen</h4>
+                                        <pre class="methodSignature">@<a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-overloads/index.html>JvmOverloads</a>() final &lt;T extends Event&gt; <a href=FlyLibBuilder.html>FlyLibBuilder</a> <a href=FlyLibBuilder.html#listen(Class,EventPriority,Boolean,ListenerAction)>listen</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html>Class</a>&lt;<a href=FlyLibBuilder.html#listen(Class,EventPriority,Boolean,ListenerAction)>T</a>&gt; clazz, EventPriority priority, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a> ignoreCancelled, <a href=ListenerAction.html>ListenerAction</a>&lt;<a href=FlyLibBuilder.html#listen(Class,EventPriority,Boolean,ListenerAction)>T</a>&gt; action)</pre>
+                                        <div class="block"><p>Listens to the specified event with the specified priority. The event Listen is registered when the calling plugin is enabled, not when this method is called, and is unregistered when the calling plugin is disabled.</p></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
                                 <a id="listen(Class,EventPriority,ListenerAction)">
                                     <!--   -->
                                 </a>
@@ -367,7 +413,7 @@ public final class <span class="typeNameLabel"><a href=FlyLibBuilder.html>FlyLib
                                           >
                                     <li class="blockList">
                                         <h4>listen</h4>
-                                        <pre class="methodSignature">@<a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-overloads/index.html>JvmOverloads</a>() final &lt;T extends Event&gt; <a href=FlyLibBuilder.html>FlyLibBuilder</a> <a href=FlyLibBuilder.html#listen(Class,EventPriority,ListenerAction)>listen</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html>Class</a>&lt;<a href=FlyLibBuilder.html#listen(Class,EventPriority,ListenerAction)>T</a>&gt; clazz, EventPriority priority, <a href=ListenerAction.html>ListenerAction</a>&lt;<a href=FlyLibBuilder.html#listen(Class,EventPriority,ListenerAction)>T</a>&gt; action)</pre>
+                                        <pre class="methodSignature">@<a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-overloads/index.html>JvmOverloads</a>() final &lt;T extends Event&gt; <a href=FlyLibBuilder.html>FlyLibBuilder</a> <a href=FlyLibBuilder.html#listen(Class,EventPriority,Boolean,ListenerAction)>listen</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html>Class</a>&lt;<a href=FlyLibBuilder.html#listen(Class,EventPriority,Boolean,ListenerAction)>T</a>&gt; clazz, EventPriority priority, <a href=ListenerAction.html>ListenerAction</a>&lt;<a href=FlyLibBuilder.html#listen(Class,EventPriority,Boolean,ListenerAction)>T</a>&gt; action)</pre>
                                         <div class="block"><p>Listens to the specified event with the specified priority. The event Listen is registered when the calling plugin is enabled, not when this method is called, and is unregistered when the calling plugin is disabled.</p></div>
                                         
                                         <!-- TODO missing return annotation -->
@@ -382,7 +428,7 @@ public final class <span class="typeNameLabel"><a href=FlyLibBuilder.html>FlyLib
                                           >
                                     <li class="blockList">
                                         <h4>listen</h4>
-                                        <pre class="methodSignature">@<a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-overloads/index.html>JvmOverloads</a>() final &lt;T extends Event&gt; <a href=FlyLibBuilder.html>FlyLibBuilder</a> <a href=FlyLibBuilder.html#listen(Class,EventPriority,ListenerAction)>listen</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html>Class</a>&lt;<a href=FlyLibBuilder.html#listen(Class,EventPriority,ListenerAction)>T</a>&gt; clazz, <a href=ListenerAction.html>ListenerAction</a>&lt;<a href=FlyLibBuilder.html#listen(Class,EventPriority,ListenerAction)>T</a>&gt; action)</pre>
+                                        <pre class="methodSignature">@<a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-overloads/index.html>JvmOverloads</a>() final &lt;T extends Event&gt; <a href=FlyLibBuilder.html>FlyLibBuilder</a> <a href=FlyLibBuilder.html#listen(Class,EventPriority,Boolean,ListenerAction)>listen</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html>Class</a>&lt;<a href=FlyLibBuilder.html#listen(Class,EventPriority,Boolean,ListenerAction)>T</a>&gt; clazz, <a href=ListenerAction.html>ListenerAction</a>&lt;<a href=FlyLibBuilder.html#listen(Class,EventPriority,Boolean,ListenerAction)>T</a>&gt; action)</pre>
                                         <div class="block"><p>Listens to the specified event with the specified priority. The event Listen is registered when the calling plugin is enabled, not when this method is called, and is unregistered when the calling plugin is disabled.</p></div>
                                         
                                         <!-- TODO missing return annotation -->

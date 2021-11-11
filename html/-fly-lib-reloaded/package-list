@@ -8,7 +8,7 @@ $dokka.location:dev.kotx.flylib.command.arguments/BooleanArgument/parse/#com.moj
 $dokka.location:dev.kotx.flylib.command.arguments/BooleanArgument/suggestion/#/PointingToDeclaration/-fly-lib-reloaded/dev.kotx.flylib.command.arguments/-boolean-argument/suggestion.html
 $dokka.location:dev.kotx.flylib.command.arguments/BooleanArgument/type/#/PointingToDeclaration/-fly-lib-reloaded/dev.kotx.flylib.command.arguments/-boolean-argument/type.html
 $dokka.location:dev.kotx.flylib.command.arguments/DoubleArgument///PointingToDeclaration/-fly-lib-reloaded/dev.kotx.flylib.command.arguments/-double-argument/index.html
-$dokka.location:dev.kotx.flylib.command.arguments/DoubleArgument/DoubleArgument/#kotlin.String#dev.kotx.flylib.command.SuggestionAction?#kotlin.Double#kotlin.Double/PointingToDeclaration/-fly-lib-reloaded/dev.kotx.flylib.command.arguments/-double-argument/-double-argument.html
+$dokka.location:dev.kotx.flylib.command.arguments/DoubleArgument/DoubleArgument/#kotlin.String#kotlin.Double#kotlin.Double#dev.kotx.flylib.command.SuggestionAction?/PointingToDeclaration/-fly-lib-reloaded/dev.kotx.flylib.command.arguments/-double-argument/-double-argument.html
 $dokka.location:dev.kotx.flylib.command.arguments/DoubleArgument/name/#/PointingToDeclaration/-fly-lib-reloaded/dev.kotx.flylib.command.arguments/-double-argument/name.html
 $dokka.location:dev.kotx.flylib.command.arguments/DoubleArgument/parse/#com.mojang.brigadier.context.CommandContext[net.minecraft.server.v1_16_R3.CommandListenerWrapper]#kotlin.String/PointingToDeclaration/-fly-lib-reloaded/dev.kotx.flylib.command.arguments/-double-argument/parse.html
 $dokka.location:dev.kotx.flylib.command.arguments/DoubleArgument/suggestion/#/PointingToDeclaration/-fly-lib-reloaded/dev.kotx.flylib.command.arguments/-double-argument/suggestion.html
@@ -269,8 +269,9 @@ $dokka.location:dev.kotx.flylib/FlyLibAction/initialize/dev.kotx.flylib.FlyLibBu
 $dokka.location:dev.kotx.flylib/FlyLibBuilder///PointingToDeclaration/-fly-lib-reloaded/dev.kotx.flylib/-fly-lib-builder/index.html
 $dokka.location:dev.kotx.flylib/FlyLibBuilder/FlyLibBuilder/#org.bukkit.plugin.java.JavaPlugin/PointingToDeclaration/-fly-lib-reloaded/dev.kotx.flylib/-fly-lib-builder/-fly-lib-builder.html
 $dokka.location:dev.kotx.flylib/FlyLibBuilder/command/#kotlin.Array[dev.kotx.flylib.command.Command]/PointingToDeclaration/-fly-lib-reloaded/dev.kotx.flylib/-fly-lib-builder/command.html
+$dokka.location:dev.kotx.flylib/FlyLibBuilder/config/#kotlin.Any#kotlin.String?/PointingToDeclaration/-fly-lib-reloaded/dev.kotx.flylib/-fly-lib-builder/config.html
 $dokka.location:dev.kotx.flylib/FlyLibBuilder/defaultPermission/#dev.kotx.flylib.command.Permission/PointingToDeclaration/-fly-lib-reloaded/dev.kotx.flylib/-fly-lib-builder/default-permission.html
-$dokka.location:dev.kotx.flylib/FlyLibBuilder/listen/#java.lang.Class[TypeParam(bounds=[org.bukkit.event.Event])]#org.bukkit.event.EventPriority#dev.kotx.flylib.ListenerAction[TypeParam(bounds=[org.bukkit.event.Event])]/PointingToDeclaration/-fly-lib-reloaded/dev.kotx.flylib/-fly-lib-builder/listen.html
+$dokka.location:dev.kotx.flylib/FlyLibBuilder/listen/#java.lang.Class[TypeParam(bounds=[org.bukkit.event.Event])]#org.bukkit.event.EventPriority#kotlin.Boolean#dev.kotx.flylib.ListenerAction[TypeParam(bounds=[org.bukkit.event.Event])]/PointingToDeclaration/-fly-lib-reloaded/dev.kotx.flylib/-fly-lib-builder/listen.html
 $dokka.location:dev.kotx.flylib/ListenerAction///PointingToDeclaration/-fly-lib-reloaded/dev.kotx.flylib/-listener-action/index.html
 $dokka.location:dev.kotx.flylib/ListenerAction/execute/#TypeParam(bounds=[org.bukkit.event.Event])/PointingToDeclaration/-fly-lib-reloaded/dev.kotx.flylib/-listener-action/execute.html
 dev.kotx.flylib
