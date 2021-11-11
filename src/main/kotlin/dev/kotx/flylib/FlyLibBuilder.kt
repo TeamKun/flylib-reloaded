@@ -13,7 +13,6 @@ import org.bukkit.event.HandlerList
 import org.bukkit.event.Listener
 import org.bukkit.plugin.RegisteredListener
 import org.bukkit.plugin.java.JavaPlugin
-import kotlin.reflect.KClass
 
 /**
  * A builder that creates Fly Lib.
@@ -24,6 +23,8 @@ class FlyLibBuilder(
     private val commands = mutableListOf<Command>()
     private val listenerActions = mutableMapOf<HandlerList, Pair<RegisteredListener, Class<*>>>()
     private var defaultPermission = Permission.OP
+    private var configObject: Any? = null
+    private var configBaseCommandName: String? = null
 
     /**
      * Add a command.
@@ -33,6 +34,16 @@ class FlyLibBuilder(
             it.children.setParent(it)
             this.commands.add(it)
         }
+
+        return this
+    }
+
+    /**
+     * Specify the default config.
+     */
+    fun config(configObject: Any, baseCommandName: String? = null): FlyLibBuilder {
+        this.configObject = configObject
+        this.configBaseCommandName = baseCommandName
 
         return this
     }
@@ -53,6 +64,7 @@ class FlyLibBuilder(
     fun <T : Event> listen(
         clazz: Class<T>,
         priority: EventPriority = EventPriority.NORMAL,
+        ignoreCancelled: Boolean = false,
         action: ListenerAction<T>
     ): FlyLibBuilder {
         val handlerList =
@@ -62,7 +74,7 @@ class FlyLibBuilder(
             { _, event -> action.execute(event as T) },
             priority,
             plugin,
-            false
+            ignoreCancelled
         )
 
         listenerActions[handlerList] = listener to clazz
@@ -75,7 +87,7 @@ class FlyLibBuilder(
         it.children.setParent(it)
     }
 
-    internal fun build(): FlyLib = FlyLibImpl(plugin, commands, defaultPermission, listenerActions)
+    internal fun build(): FlyLib = FlyLibImpl(plugin, commands, defaultPermission, configObject, configBaseCommandName, listenerActions)
 }
 
 /**
