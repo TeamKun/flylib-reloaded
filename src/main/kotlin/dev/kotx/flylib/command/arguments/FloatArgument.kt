@@ -24,7 +24,7 @@ class FloatArgument(
     override val name: String,
     min: Float = Float.MIN_VALUE,
     max: Float = Float.MAX_VALUE,
-    override val suggestion: SuggestionAction?,
+    override val suggestion: SuggestionAction? = null,
 ) : Argument<Float> {
     override val type: ArgumentType<*>? = FloatArgumentType.floatArg(min, max)
     override fun parse(context: CommandContext<CommandListenerWrapper>, key: String): Float =
