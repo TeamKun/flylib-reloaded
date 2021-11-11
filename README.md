@@ -7,12 +7,20 @@
 
 <p align="center"><b>FlyLib Reloaded</b> is a utility library for Minecraft Paper that provides commands, menus, Kotlin extensions, and more.</p>
 
-<div align="center">
-    <a href="https://twitter.com/kotx__"><img src="https://img.shields.io/static/v1?label=developer&message=kotx__&style=for-the-badge&color=black&labelColor=black" alt="developer"></a>
-    <img src="https://img.shields.io/maven-central/v/dev.kotx/flylib-reloaded?label=maven central&style=for-the-badge&color=blue&labelColor=black" alt="mavencentral release version">
-    <a href="https://opensource.org/licenses/mit-license.php"><img src="https://img.shields.io/static/v1?label=license&message=MIT&style=for-the-badge&color=green&labelColor=black" alt="License"></a>
-    <a href="https://www.codacy.com/gh/TeamKun/flylib-reloaded/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=TeamKun/flylib-reloaded&amp;utm_campaign=Badge_Grade"><img alt="codacy quality" src="https://img.shields.io/codacy/grade/c836938f18e14bd88d9c56f6fd063dca?style=for-the-badge&labelColor=black"/></a>
-</div>
+<p align="center">
+  <a aria-label="Developer" href="https://twitter.com/kotx__">
+    <img src="https://img.shields.io/badge/MADE%20BY%20Kotx__-000000.svg?style=for-the-badge&logo=Twitter&labelColor=000">
+  </a>
+  <a aria-label="Maven Central" href="https://www.npmjs.com/package/next">
+    <img alt="" src="https://img.shields.io/maven-central/v/dev.kotx/flylib-reloaded?style=for-the-badge&labelColor=000000&color=blue">
+  </a>
+  <a aria-label="License" href="https://github.com/vercel/next.js/blob/canary/license.md">
+    <img alt="" src="https://img.shields.io/github/license/TeamKun/flylib-reloaded?style=for-the-badge&labelColor=000000&color=red">
+  </a>
+  <a aria-label="Codacy Code Quality" href="https://www.codacy.com/gh/TeamKun/flylib-reloaded/dashboard">
+    <img alt="" src="https://img.shields.io/codacy/grade/c836938f18e14bd88d9c56f6fd063dca?style=for-the-badge&labelColor=black&logo=codacy">
+  </a>
+</p>
 
 ⚠️**This library is currently under development (beta version is `0.*.*`), and the API will be changed or removed
 without notice.**
@@ -31,7 +39,6 @@ without notice.**
 - Event flow manager like RxJava
 - Many useful Extensions, Utilities, Builders for Bukkit
 - Easy to setup & use
-
 
 ## ⚡ Quickstart
 
@@ -202,6 +209,7 @@ tasks.shadowJar.dependsOn tasks.relocateShadow
 Add the following dependencies and add them to the jar file with `maven-shade-plugin` etc. when building the plugin.
 
 ```xml
+
 <dependency>
     <group>dev.kotx</group>
     <name>flylib-reloaded</name>
