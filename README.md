@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/en/welcome.md">
-        <img height="150" src="https://raw.githubusercontent.com/TeamKun/flylib-reloaded/master/Logo.png" alt="Logo">
+        <img height="150" src="https://raw.githubusercontent.com/TeamKun/flylib-reloaded/master/logo.png" alt="Logo">
         <h1 align="center">FlyLib Reloaded</h1>
     </a>
 </p>
