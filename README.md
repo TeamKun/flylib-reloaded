@@ -25,20 +25,20 @@
 ⚠️**This library is currently under development (beta version is `0.*.*`), and the API will be changed or removed
 without notice.**
 
-### 📎 Links
-
-- [Wiki (English)](https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/en/welcome.md)
-- [Wiki (日本語)](https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/ja/welcome.md)
-- [KDoc](https://teamkun.github.io/flylib-reloaded/html)
-- [JavaDoc](https://teamkun.github.io/flylib-reloaded/javadoc)
-
 ### 🔥 Features
 
 - Powerful command engine
 - DSL Menu builder
 - Event flow manager like RxJava
 - Many useful Extensions, Utilities, Builders for Bukkit
-- Easy to setup & use
+- Easy to set up & use
+
+### 📎 Links
+
+- [Wiki (English)](https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/en/welcome.md)
+- [Wiki (日本語)](https://github.com/TeamKun/flylib-reloaded/blob/master/wiki/ja/welcome.md)
+- [KDoc](https://teamkun.github.io/flylib-reloaded/html)
+- [JavaDoc](https://teamkun.github.io/flylib-reloaded/javadoc)
 
 ## ⚡ Quickstart
 
