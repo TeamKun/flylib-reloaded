@@ -42,6 +42,26 @@ internal class CommandHandlerImpl(
     private val depthMap = mutableMapOf<Command, Int>()
 
     internal fun enable() {
+        if (configObject != null) {
+            val gson = GsonBuilder()
+                .setPrettyPrinting()
+                .setLenient()
+                .serializeNulls()
+                .create()
+
+            val baseCommand = commands.find { it.name.lowercase() == configBaseCommandName }
+                ?: object : Command(flyLib.plugin.name.lowercase().replace(" ", "")) {
+                    init {
+                        permission(Permission.OP)
+                    }
+                }.also { commands.add(it) }
+
+            val configCommand = baseCommand.children.find { it.name.lowercase() == "config" }
+                ?: object : Command("config") {}.also { baseCommand.children.add(it) }
+
+
+        }
+
         val commandDispatcher = ((Bukkit.getServer() as CraftServer).server as MinecraftServer).commandDispatcher
         val commandNodes = (Bukkit.getCommandMap() as CraftCommandMap).knownCommands
 
