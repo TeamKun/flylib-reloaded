@@ -185,6 +185,12 @@ public final class <span class="typeNameLabel"><a href=LocationArgument.html>Loc
                                             <td class="colLast"></td>
                                         </tr>
                                         
+                                        <tr class="rowColor">
+                                            <td class="colFirst"><code>private final <a href=../ContextAction.html>ContextAction</a></code></td>
+                                            <th class="colSecond" scope="row"><code><a href=LocationArgument.html#action>action</a></code></th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
                                     </table>
                                 </div>
                             </li>
@@ -211,7 +217,7 @@ public final class <span class="typeNameLabel"><a href=LocationArgument.html>Loc
                                         
                                             <tr class="altColor">
                                                 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a
-                                                        href="#LocationArgument(String,SuggestionAction)">LocationArgument</a></span>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> name, <a href=../SuggestionAction.html>SuggestionAction</a> suggestion)</code></th>
+                                                        href="#LocationArgument(String,SuggestionAction,ContextAction)">LocationArgument</a></span>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> name, <a href=../SuggestionAction.html>SuggestionAction</a> suggestion, <a href=../ContextAction.html>ContextAction</a> action)</code></th>
                                                 <td class="colLast"></td>
                                             </tr>
                                         
@@ -289,6 +295,14 @@ public final class <span class="typeNameLabel"><a href=LocationArgument.html>Loc
                                         </tr>
                                         
                                         <tr id="i3" class="rowColor">
+                                            <td class="colFirst"><code><a href=../ContextAction.html>ContextAction</a></code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=LocationArgument.html#getAction()>getAction</a>() </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i4" class="altColor">
                                             <td class="colFirst"><code>Location</code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=LocationArgument.html#parse(CommandContext,String)>parse</a>(CommandContext&lt;CommandListenerWrapper&gt; context, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> key) </code>
@@ -327,11 +341,11 @@ public final class <span class="typeNameLabel"><a href=LocationArgument.html>Loc
                             </a>
                                 <h3>Constructor Detail</h3>
                                 
-                                <a name="LocationArgument(String,SuggestionAction)"></a>
+                                <a name="LocationArgument(String,SuggestionAction,ContextAction)"></a>
                                 <ul class="blockList">
                                     <li class="blockList">
                                         <h4>LocationArgument</h4>
-                                        <pre>LocationArgument(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> name, <a href=../SuggestionAction.html>SuggestionAction</a> suggestion)</pre>
+                                        <pre>LocationArgument(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> name, <a href=../SuggestionAction.html>SuggestionAction</a> suggestion, <a href=../ContextAction.html>ContextAction</a> action)</pre>
                                         <div class="block"></div>
                                         
                                         <dl>
@@ -343,6 +357,8 @@ public final class <span class="typeNameLabel"><a href=LocationArgument.html>Loc
                                             
                                             
                                             <dd><code>suggestion</code> - Lambda expression for tab completion of its arguments.</dd>
+                                            
+                                            
                                             
                                             
                                         </dl>
@@ -402,6 +418,21 @@ public final class <span class="typeNameLabel"><a href=LocationArgument.html>Loc
                                     <li class="blockList">
                                         <h4>getSuggestion</h4>
                                         <pre class="methodSignature"> <a href=../SuggestionAction.html>SuggestionAction</a> <a href=LocationArgument.html#getSuggestion()>getSuggestion</a>()</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="getAction()">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>getAction</h4>
+                                        <pre class="methodSignature"> <a href=../ContextAction.html>ContextAction</a> <a href=LocationArgument.html#getAction()>getAction</a>()</pre>
                                         <div class="block"></div>
                                         
                                         <!-- TODO missing return annotation -->

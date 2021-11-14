@@ -185,6 +185,12 @@ public final class <span class="typeNameLabel"><a href=EntityArgument.html>Entit
                                             <td class="colLast"></td>
                                         </tr>
                                         
+                                        <tr class="rowColor">
+                                            <td class="colFirst"><code>private final <a href=../ContextAction.html>ContextAction</a></code></td>
+                                            <th class="colSecond" scope="row"><code><a href=EntityArgument.html#action>action</a></code></th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
                                     </table>
                                 </div>
                             </li>
@@ -211,7 +217,7 @@ public final class <span class="typeNameLabel"><a href=EntityArgument.html>Entit
                                         
                                             <tr class="altColor">
                                                 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a
-                                                        href="#EntityArgument(String,Boolean,Boolean,SuggestionAction)">EntityArgument</a></span>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> name, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a> enableSelector, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a> enableEntities, <a href=../SuggestionAction.html>SuggestionAction</a> suggestion)</code></th>
+                                                        href="#EntityArgument(String,Boolean,Boolean,SuggestionAction,ContextAction)">EntityArgument</a></span>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> name, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a> enableSelector, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a> enableEntities, <a href=../SuggestionAction.html>SuggestionAction</a> suggestion, <a href=../ContextAction.html>ContextAction</a> action)</code></th>
                                                 <td class="colLast"></td>
                                             </tr>
                                         
@@ -289,6 +295,14 @@ public final class <span class="typeNameLabel"><a href=EntityArgument.html>Entit
                                         </tr>
                                         
                                         <tr id="i3" class="rowColor">
+                                            <td class="colFirst"><code><a href=../ContextAction.html>ContextAction</a></code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=EntityArgument.html#getAction()>getAction</a>() </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i4" class="altColor">
                                             <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/List.html>List</a>&lt;CraftEntity&gt;</code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=EntityArgument.html#parse(CommandContext,String)>parse</a>(CommandContext&lt;CommandListenerWrapper&gt; context, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> key) </code>
@@ -327,11 +341,11 @@ public final class <span class="typeNameLabel"><a href=EntityArgument.html>Entit
                             </a>
                                 <h3>Constructor Detail</h3>
                                 
-                                <a name="EntityArgument(String,Boolean,Boolean,SuggestionAction)"></a>
+                                <a name="EntityArgument(String,Boolean,Boolean,SuggestionAction,ContextAction)"></a>
                                 <ul class="blockList">
                                     <li class="blockList">
                                         <h4>EntityArgument</h4>
-                                        <pre>EntityArgument(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> name, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a> enableSelector, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a> enableEntities, <a href=../SuggestionAction.html>SuggestionAction</a> suggestion)</pre>
+                                        <pre>EntityArgument(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> name, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a> enableSelector, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a> enableEntities, <a href=../SuggestionAction.html>SuggestionAction</a> suggestion, <a href=../ContextAction.html>ContextAction</a> action)</pre>
                                         <div class="block"></div>
                                         
                                         <dl>
@@ -351,6 +365,8 @@ public final class <span class="typeNameLabel"><a href=EntityArgument.html>Entit
                                             
                                             
                                             <dd><code>suggestion</code> - Lambda expression for tab completion of its arguments.</dd>
+                                            
+                                            
                                             
                                             
                                         </dl>
@@ -410,6 +426,21 @@ public final class <span class="typeNameLabel"><a href=EntityArgument.html>Entit
                                     <li class="blockList">
                                         <h4>getSuggestion</h4>
                                         <pre class="methodSignature"> <a href=../SuggestionAction.html>SuggestionAction</a> <a href=EntityArgument.html#getSuggestion()>getSuggestion</a>()</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="getAction()">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>getAction</h4>
+                                        <pre class="methodSignature"> <a href=../ContextAction.html>ContextAction</a> <a href=EntityArgument.html#getAction()>getAction</a>()</pre>
                                         <div class="block"></div>
                                         
                                         <!-- TODO missing return annotation -->

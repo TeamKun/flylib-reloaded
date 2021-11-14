@@ -185,6 +185,12 @@ public final class <span class="typeNameLabel"><a href=LiteralArgument.html>Lite
                                             <td class="colLast"></td>
                                         </tr>
                                         
+                                        <tr class="rowColor">
+                                            <td class="colFirst"><code>private final <a href=../ContextAction.html>ContextAction</a></code></td>
+                                            <th class="colSecond" scope="row"><code><a href=LiteralArgument.html#action>action</a></code></th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
                                     </table>
                                 </div>
                             </li>
@@ -211,7 +217,7 @@ public final class <span class="typeNameLabel"><a href=LiteralArgument.html>Lite
                                         
                                             <tr class="altColor">
                                                 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a
-                                                        href="#LiteralArgument(String)">LiteralArgument</a></span>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> name)</code></th>
+                                                        href="#LiteralArgument(String,ContextAction)">LiteralArgument</a></span>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> name, <a href=../ContextAction.html>ContextAction</a> action)</code></th>
                                                 <td class="colLast"></td>
                                             </tr>
                                         
@@ -289,6 +295,14 @@ public final class <span class="typeNameLabel"><a href=LiteralArgument.html>Lite
                                         </tr>
                                         
                                         <tr id="i3" class="rowColor">
+                                            <td class="colFirst"><code><a href=../ContextAction.html>ContextAction</a></code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=LiteralArgument.html#getAction()>getAction</a>() </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i4" class="altColor">
                                             <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=LiteralArgument.html#parse(CommandContext,String)>parse</a>(CommandContext&lt;CommandListenerWrapper&gt; context, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> key) </code>
@@ -327,11 +341,11 @@ public final class <span class="typeNameLabel"><a href=LiteralArgument.html>Lite
                             </a>
                                 <h3>Constructor Detail</h3>
                                 
-                                <a name="LiteralArgument(String)"></a>
+                                <a name="LiteralArgument(String,ContextAction)"></a>
                                 <ul class="blockList">
                                     <li class="blockList">
                                         <h4>LiteralArgument</h4>
-                                        <pre>LiteralArgument(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> name)</pre>
+                                        <pre>LiteralArgument(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> name, <a href=../ContextAction.html>ContextAction</a> action)</pre>
                                         <div class="block"></div>
                                         
                                         <dl>
@@ -339,6 +353,8 @@ public final class <span class="typeNameLabel"><a href=LiteralArgument.html>Lite
                                             
                                             
                                             <dd><code>name</code> - Name of argument.</dd>
+                                            
+                                            
                                             
                                             
                                         </dl>
@@ -398,6 +414,21 @@ public final class <span class="typeNameLabel"><a href=LiteralArgument.html>Lite
                                     <li class="blockList">
                                         <h4>getName</h4>
                                         <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> <a href=LiteralArgument.html#getName()>getName</a>()</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="getAction()">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>getAction</h4>
+                                        <pre class="methodSignature"> <a href=../ContextAction.html>ContextAction</a> <a href=LiteralArgument.html#getAction()>getAction</a>()</pre>
                                         <div class="block"></div>
                                         
                                         <!-- TODO missing return annotation -->
