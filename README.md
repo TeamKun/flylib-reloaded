@@ -11,7 +11,7 @@
   <a aria-label="Developer" href="https://twitter.com/kotx__">
     <img src="https://img.shields.io/badge/MADE%20BY%20Kotx__-000000.svg?style=for-the-badge&logo=Twitter&labelColor=000">
   </a>
-  <a aria-label="Maven Central" href="https://www.npmjs.com/package/next">
+  <a aria-label="Maven Central" href="https://search.maven.org/artifact/dev.kotx/flylib-reloaded/0.4.1/jar">
     <img alt="" src="https://img.shields.io/maven-central/v/dev.kotx/flylib-reloaded?style=for-the-badge&labelColor=000000&color=blue">
   </a>
   <a aria-label="License" href="https://github.com/vercel/next.js/blob/canary/license.md">
