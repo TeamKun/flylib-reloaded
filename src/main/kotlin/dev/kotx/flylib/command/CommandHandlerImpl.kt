@@ -5,7 +5,6 @@
 
 package dev.kotx.flylib.command
 
-import com.google.gson.GsonBuilder
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.builder.RequiredArgumentBuilder
