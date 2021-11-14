@@ -7,6 +7,7 @@ package dev.kotx.flylib.command.arguments
 
 import com.mojang.brigadier.context.CommandContext
 import dev.kotx.flylib.command.Argument
+import dev.kotx.flylib.command.ContextAction
 import dev.kotx.flylib.command.SuggestionAction
 import net.minecraft.server.v1_16_R3.ArgumentEntity
 import net.minecraft.server.v1_16_R3.CommandListenerWrapper
@@ -29,12 +30,13 @@ class EntityArgument(
     override val name: String,
     enableSelector: Boolean = true,
     enableEntities: Boolean = true,
-    override val suggestion: SuggestionAction?
+    override val suggestion: SuggestionAction?,
+    override val action: ContextAction? = null
 ) : Argument<List<Entity>> {
     override val type: ArgumentEntity = when {
         enableSelector && enableEntities -> ArgumentEntity.multipleEntities()
         enableSelector && !enableEntities -> ArgumentEntity.d()
-        !enableSelector && enableEntities -> ArgumentEntity::class.java.getMethod("a").invoke(null) as ArgumentEntity;
+        !enableSelector && enableEntities -> ArgumentEntity::class.java.getMethod("a").invoke(null) as ArgumentEntity
         !enableSelector && !enableEntities -> ArgumentEntity.c()
 
         else -> ArgumentEntity.multipleEntities()

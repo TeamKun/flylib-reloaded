@@ -4,6 +4,7 @@ import com.mojang.brigadier.arguments.ArgumentType
 import com.mojang.brigadier.arguments.BoolArgumentType
 import com.mojang.brigadier.context.CommandContext
 import dev.kotx.flylib.command.Argument
+import dev.kotx.flylib.command.ContextAction
 import dev.kotx.flylib.command.SuggestionAction
 import net.minecraft.server.v1_16_R3.CommandListenerWrapper
 
@@ -20,7 +21,8 @@ import net.minecraft.server.v1_16_R3.CommandListenerWrapper
  */
 class BooleanArgument(
     override val name: String,
-    override val suggestion: SuggestionAction? = null
+    override val suggestion: SuggestionAction? = null,
+    override val action: ContextAction? = null
 ) : Argument<Boolean> {
     override val type: ArgumentType<*>? = BoolArgumentType.bool()
     override fun parse(context: CommandContext<CommandListenerWrapper>, key: String): Boolean =

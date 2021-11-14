@@ -52,8 +52,11 @@ class UsageBuilder {
     /**
      * Only the text specified in the literal argument literal is allowed, and the user's own input is not accepted.
      */
-    fun literalArgument(literal: String): UsageBuilder {
-        this.arguments.add(LiteralArgument(literal))
+    fun literalArgument(
+        literal: String,
+        action: ContextAction? = null
+    ): UsageBuilder {
+        this.arguments.add(LiteralArgument(literal, action))
         return this
     }
 
@@ -65,17 +68,21 @@ class UsageBuilder {
         name: String,
         min: Int = Int.MIN_VALUE,
         max: Int = Int.MAX_VALUE,
-        suggestion: SuggestionAction? = null
+        suggestion: SuggestionAction? = null,
+        action: ContextAction? = null
     ): UsageBuilder {
-        this.arguments.add(IntegerArgument(name, min, max, suggestion))
+        this.arguments.add(IntegerArgument(name, min, max, suggestion, action))
         return this
     }
 
     /**
      * An argument that takes an Int value.
      */
-    fun integerArgument(name: String, suggestion: SuggestionAction? = null): UsageBuilder {
-        this.arguments.add(IntegerArgument(name, suggestion = suggestion))
+    fun integerArgument(
+        name: String, suggestion: SuggestionAction? = null,
+        action: ContextAction? = null
+    ): UsageBuilder {
+        this.arguments.add(IntegerArgument(name, suggestion = suggestion, action = action))
         return this
     }
 
@@ -87,17 +94,21 @@ class UsageBuilder {
         name: String,
         min: Long = Long.MIN_VALUE,
         max: Long = Long.MAX_VALUE,
-        suggestion: SuggestionAction? = null
+        suggestion: SuggestionAction? = null,
+        action: ContextAction? = null
     ): UsageBuilder {
-        this.arguments.add(LongArgument(name, min, max, suggestion))
+        this.arguments.add(LongArgument(name, min, max, suggestion, action))
         return this
     }
 
     /**
      * An argument that takes a long value.
      */
-    fun longArgument(name: String, suggestion: SuggestionAction? = null): UsageBuilder {
-        this.arguments.add(LongArgument(name, suggestion = suggestion))
+    fun longArgument(
+        name: String, suggestion: SuggestionAction? = null,
+        action: ContextAction? = null
+    ): UsageBuilder {
+        this.arguments.add(LongArgument(name, suggestion = suggestion, action = action))
         return this
     }
 
@@ -109,17 +120,21 @@ class UsageBuilder {
         name: String,
         min: Double = Double.MIN_VALUE,
         max: Double = Double.MAX_VALUE,
-        suggestion: SuggestionAction? = null
+        suggestion: SuggestionAction? = null,
+        action: ContextAction? = null
     ): UsageBuilder {
-        this.arguments.add(DoubleArgument(name, min, max, suggestion))
+        this.arguments.add(DoubleArgument(name, min, max, suggestion, action))
         return this
     }
 
     /**
      * An argument that takes a double value.
      */
-    fun doubleArgument(name: String, suggestion: SuggestionAction? = null): UsageBuilder {
-        this.arguments.add(DoubleArgument(name, suggestion = suggestion))
+    fun doubleArgument(
+        name: String, suggestion: SuggestionAction? = null,
+        action: ContextAction? = null
+    ): UsageBuilder {
+        this.arguments.add(DoubleArgument(name, suggestion = suggestion, action = action))
         return this
     }
 
@@ -131,17 +146,21 @@ class UsageBuilder {
         name: String,
         min: Float = Float.MIN_VALUE,
         max: Float = Float.MAX_VALUE,
-        suggestion: SuggestionAction? = null
+        suggestion: SuggestionAction? = null,
+        action: ContextAction? = null
     ): UsageBuilder {
-        this.arguments.add(FloatArgument(name, min, max, suggestion))
+        this.arguments.add(FloatArgument(name, min, max, suggestion, action))
         return this
     }
 
     /**
      * An argument that takes a float value.
      */
-    fun floatArgument(name: String, suggestion: SuggestionAction? = null): UsageBuilder {
-        this.arguments.add(LongArgument(name, suggestion = suggestion))
+    fun floatArgument(
+        name: String, suggestion: SuggestionAction? = null,
+        action: ContextAction? = null
+    ): UsageBuilder {
+        this.arguments.add(LongArgument(name, suggestion = suggestion, action = action))
         return this
     }
 
@@ -152,41 +171,54 @@ class UsageBuilder {
     fun textArgument(
         name: String,
         type: TextArgument.Type = TextArgument.Type.WORD,
-        suggestion: SuggestionAction? = null
+        suggestion: SuggestionAction? = null,
+        action: ContextAction? = null
     ): UsageBuilder {
-        this.arguments.add(TextArgument(name, type, suggestion))
+        this.arguments.add(TextArgument(name, type, suggestion, action))
         return this
     }
 
     /**
      * An argument that takes a String value.
      */
-    fun textArgument(name: String, suggestion: SuggestionAction? = null): UsageBuilder {
-        this.arguments.add(TextArgument(name, suggestion = suggestion))
+    fun textArgument(
+        name: String, suggestion: SuggestionAction? = null,
+        action: ContextAction? = null
+    ): UsageBuilder {
+        this.arguments.add(TextArgument(name, suggestion = suggestion, action = action))
         return this
     }
 
     /**
      * String argument of the selection formula.
      */
-    fun selectionArgument(name: String, selections: List<String>): UsageBuilder {
-        this.arguments.add(TextArgument(name) { suggestAll(selections) })
+    fun selectionArgument(
+        name: String, selections: List<String>,
+        action: ContextAction? = null
+    ): UsageBuilder {
+        this.arguments.add(TextArgument(name, suggestion = { suggestAll(selections) }, action = action))
         return this
     }
 
     /**
      * String argument of the selection formula.
      */
-    fun selectionArgument(name: String, vararg selections: String): UsageBuilder {
-        this.arguments.add(TextArgument(name) { suggestAll(listOf(*selections)) })
+    fun selectionArgument(
+        name: String, vararg selections: String,
+        action: ContextAction? = null
+    ): UsageBuilder {
+        this.arguments.add(TextArgument(name, suggestion = { suggestAll(listOf(*selections)) }, action = action))
         return this
     }
 
     /**
      * An argument that takes a boolean value.
      */
-    fun booleanArgument(name: String, suggestion: SuggestionAction? = null): UsageBuilder {
-        this.arguments.add(BooleanArgument(name, suggestion = suggestion))
+    fun booleanArgument(
+        name: String, suggestion: SuggestionAction? = null,
+        action: ContextAction? = null
+    ): UsageBuilder {
+        this.arguments.add(BooleanArgument(name, suggestion = suggestion, action = action))
         return this
     }
 
@@ -201,9 +233,10 @@ class UsageBuilder {
         name: String,
         enableSelector: Boolean = true,
         enableEntities: Boolean = true,
-        suggestion: SuggestionAction? = null
+        suggestion: SuggestionAction? = null,
+        action: ContextAction? = null
     ): UsageBuilder {
-        this.arguments.add(EntityArgument(name, enableSelector, enableEntities, suggestion))
+        this.arguments.add(EntityArgument(name, enableSelector, enableEntities, suggestion, action))
         return this
     }
 
@@ -214,8 +247,11 @@ class UsageBuilder {
      * `10 235 66` `~ ~10 ~-5` `~ 10 ^200`
      */
     @JvmOverloads
-    fun locationArgument(name: String, suggestion: SuggestionAction? = null): UsageBuilder {
-        this.arguments.add(LocationArgument(name, suggestion))
+    fun locationArgument(
+        name: String, suggestion: SuggestionAction? = null,
+        action: ContextAction? = null
+    ): UsageBuilder {
+        this.arguments.add(LocationArgument(name, suggestion, action))
         return this
     }
 
@@ -226,8 +262,11 @@ class UsageBuilder {
      * `5 3 1` `^ ^ ^` `~ ~5 ~`
      */
     @JvmOverloads
-    fun vectorArgument(name: String, suggestion: SuggestionAction? = null): UsageBuilder {
-        this.arguments.add(VectorArgument(name, suggestion))
+    fun vectorArgument(
+        name: String, suggestion: SuggestionAction? = null,
+        action: ContextAction? = null
+    ): UsageBuilder {
+        this.arguments.add(VectorArgument(name, suggestion, action))
         return this
     }
 

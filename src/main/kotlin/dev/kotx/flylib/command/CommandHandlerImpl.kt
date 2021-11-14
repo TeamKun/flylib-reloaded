@@ -6,19 +6,11 @@
 package dev.kotx.flylib.command
 
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonPrimitive
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.builder.RequiredArgumentBuilder
 import com.mojang.brigadier.tree.LiteralCommandNode
 import dev.kotx.flylib.FlyLibImpl
-import dev.kotx.flylib.command.arguments.BooleanArgument
-import dev.kotx.flylib.command.arguments.DoubleArgument
-import dev.kotx.flylib.command.arguments.FloatArgument
-import dev.kotx.flylib.command.arguments.IntegerArgument
-import dev.kotx.flylib.command.arguments.LiteralArgument
-import dev.kotx.flylib.command.arguments.LongArgument
-import dev.kotx.flylib.command.arguments.TextArgument
 import dev.kotx.flylib.util.BOLD
 import dev.kotx.flylib.util.CYAN
 import dev.kotx.flylib.util.GREEN
@@ -49,109 +41,9 @@ internal class CommandHandlerImpl(
     private val commands = commands.toMutableList()
     private val depthMap = mutableMapOf<Command, Int>()
 
-    private fun generateConfigCommand(): Command {
-        val gson = GsonBuilder()
-            .setPrettyPrinting()
-            .setLenient()
-            .serializeNulls()
-            .create()
-
-        val json = gson.toJsonTree(configObject).asJsonObject
-
-        val baseName = configBaseCommandName ?: flyLib.plugin.name.lowercase().replace(" ", "")
-        val baseCommand = commands.find { it.name == baseName } ?: object : Command(baseName) {
-            init {
-                permission(Permission.OP)
-            }
-        }
-
-        val configCommand = baseCommand.children.find { it.name == "config" } ?: object : Command("config") {
-            override fun CommandContext.execute() {
-                success("list : $args")
-                //List keys
-            }
-        }
-
-        fun JsonPrimitive.toArgument(key: String) = when {
-            isString -> TextArgument(key)
-            isNumber -> {
-                asString.toDoubleOrNull()?.let { DoubleArgument(key) }
-                    ?: asString.toFloatOrNull()?.let { FloatArgument(key) }
-                    ?: asString.toLongOrNull()?.let { LongArgument(key) }
-                    ?: asString.toIntOrNull()?.let { IntegerArgument(key) }
-            }
-
-            isBoolean -> BooleanArgument(key)
-            else -> null
-        }
-
-        //うんこーど書いていく
-        //後で整形
-        json.entrySet().forEach { entry ->
-            configCommand.usages.add(
-                Usage(
-                    listOf(LiteralArgument(entry.key))
-                ) {
-                    success("get : $args")
-                    //Get key value
-                }
-            )
-
-            //Set key value
-            if (entry.value.isJsonArray) {
-                val arg = if (entry.value.asJsonArray.firstOrNull() == null)
-                    TextArgument(entry.key)
-                else
-                    entry.value.asJsonArray.first().asJsonPrimitive.toArgument(entry.key)
-
-                configCommand.usages.add(Usage(
-                    listOf(LiteralArgument(entry.key), LiteralArgument("add"), arg as Argument<*>)
-                ) {
-                    success("add : $args")
-                })
-
-                configCommand.usages.add(Usage(
-                    listOf(LiteralArgument(entry.key), LiteralArgument("remove"), arg as Argument<*>)
-                ) {
-                    success("remove : $args")
-                })
-
-                configCommand.usages.add(Usage(
-                    listOf(LiteralArgument(entry.key), LiteralArgument("clear"))
-                ) {
-                    success("clear : $args")
-                })
-            } else if (entry.value.isJsonPrimitive) {
-                val argument = entry.value.asJsonPrimitive.toArgument(entry.key) ?: return@forEach
-
-                configCommand.usages.add(Usage(
-                    listOf(LiteralArgument(entry.key), argument)
-                ) {
-                    success("set : $args")
-                })
-            }
-        }
-
-        /**
-         * /plugin config - Get list of keys
-         * /plugin config <key> - Get key value
-         * /plugin config <key> <value> - Set key value
-         */
-
-        baseCommand.children.add(configCommand)
-
-        return baseCommand
-    }
-
     internal fun enable() {
         val commandDispatcher = ((Bukkit.getServer() as CraftServer).server as MinecraftServer).commandDispatcher
         val commandNodes = (Bukkit.getCommandMap() as CraftCommandMap).knownCommands
-
-        if (configObject != null) {
-            val configCmd = generateConfigCommand()
-            commands.removeIf { it.name == configCmd.name }
-            commands.add(configCmd)
-        }
 
         commands.handle(1)
 
@@ -286,9 +178,10 @@ internal class CommandHandlerImpl(
 
                     try {
                         if (i == 0)
-                            usage.action?.apply { context.execute() } ?: command.apply { context.execute() }
+                            argument.action?.apply { context.execute() } ?: usage.action?.apply { context.execute() }
+                            ?: command.apply { context.execute() }
                         else
-                            context.sendHelp()
+                            argument.action?.apply { context.execute() } ?: context.sendHelp()
                     } catch (e: Exception) {
                         e.printStackTrace()
 
@@ -375,7 +268,7 @@ internal class CommandHandlerImpl(
         context.source.server.server as Server,
         context.input,
         depthMap[command]!!,
-        usage?.let { it.parseArguments(context) } ?: emptyList()
+        usage?.parseArguments(context) ?: emptyList()
     )
 
     private fun Command.getCommandPermission(): Pair<String, Permission> {

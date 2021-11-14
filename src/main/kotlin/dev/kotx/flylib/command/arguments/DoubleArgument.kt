@@ -4,6 +4,7 @@ import com.mojang.brigadier.arguments.ArgumentType
 import com.mojang.brigadier.arguments.DoubleArgumentType
 import com.mojang.brigadier.context.CommandContext
 import dev.kotx.flylib.command.Argument
+import dev.kotx.flylib.command.ContextAction
 import dev.kotx.flylib.command.SuggestionAction
 import net.minecraft.server.v1_16_R3.CommandListenerWrapper
 
@@ -25,6 +26,7 @@ class DoubleArgument(
     min: Double = Double.MIN_VALUE,
     max: Double = Double.MAX_VALUE,
     override val suggestion: SuggestionAction? = null,
+    override val action: ContextAction? = null
 ) : Argument<Double> {
     override val type: ArgumentType<*>? = DoubleArgumentType.doubleArg(min, max)
     override fun parse(context: CommandContext<CommandListenerWrapper>, key: String): Double =

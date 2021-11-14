@@ -19,8 +19,9 @@ import net.minecraft.server.v1_16_R3.CommandListenerWrapper
  */
 interface Argument<T> {
     val name: String
-    val suggestion: SuggestionAction?
     val type: ArgumentType<*>?
+    val suggestion: SuggestionAction?
+    val action: ContextAction?
 
     fun parse(context: CommandContext<CommandListenerWrapper>, key: String): T
 }

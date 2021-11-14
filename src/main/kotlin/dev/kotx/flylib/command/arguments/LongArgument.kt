@@ -9,6 +9,7 @@ import com.mojang.brigadier.arguments.ArgumentType
 import com.mojang.brigadier.arguments.LongArgumentType
 import com.mojang.brigadier.context.CommandContext
 import dev.kotx.flylib.command.Argument
+import dev.kotx.flylib.command.ContextAction
 import dev.kotx.flylib.command.SuggestionAction
 import net.minecraft.server.v1_16_R3.CommandListenerWrapper
 
@@ -30,7 +31,8 @@ class LongArgument(
     override val name: String,
     min: Long = Long.MIN_VALUE,
     max: Long = Long.MAX_VALUE,
-    override val suggestion: SuggestionAction? = null
+    override val suggestion: SuggestionAction? = null,
+    override val action: ContextAction? = null
 ) : Argument<Long> {
     override val type: ArgumentType<*>? = LongArgumentType.longArg(min, max)
 

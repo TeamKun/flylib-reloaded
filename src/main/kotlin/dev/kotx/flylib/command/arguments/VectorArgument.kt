@@ -7,6 +7,7 @@ package dev.kotx.flylib.command.arguments
 
 import com.mojang.brigadier.context.CommandContext
 import dev.kotx.flylib.command.Argument
+import dev.kotx.flylib.command.ContextAction
 import dev.kotx.flylib.command.SuggestionAction
 import net.minecraft.server.v1_16_R3.ArgumentVec3
 import net.minecraft.server.v1_16_R3.CommandListenerWrapper
@@ -27,6 +28,7 @@ import org.bukkit.util.Vector
 class VectorArgument(
     override val name: String,
     override val suggestion: SuggestionAction? = null,
+    override val action: ContextAction? = null
 ) : Argument<Vector> {
     override val type: ArgumentVec3 = ArgumentVec3.a()
     override fun parse(context: CommandContext<CommandListenerWrapper>, key: String): Vector {
