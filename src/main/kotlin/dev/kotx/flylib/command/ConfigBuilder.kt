@@ -5,6 +5,7 @@ import dev.kotx.flylib.command.parameters.DoubleParameter
 import dev.kotx.flylib.command.parameters.FloatParameter
 import dev.kotx.flylib.command.parameters.IntegerParameter
 import dev.kotx.flylib.command.parameters.LongParameter
+import dev.kotx.flylib.command.parameters.ObjectParameter
 
 class ConfigBuilder {
     private val parameters = mutableListOf<ConfigParameter<*>>()
@@ -59,6 +60,12 @@ class ConfigBuilder {
         defaultValue: Boolean? = null
     ): ConfigBuilder {
         parameters.add(BooleanParameter(key, defaultValue))
+        return this
+    }
+
+    @JvmOverloads
+    fun obj(key: String, objectBuilder: ConfigBuilder.() -> Unit = {}): ConfigBuilder {
+        parameters.add(ObjectParameter(key, ConfigBuilder().apply(objectBuilder).build()))
         return this
     }
 
