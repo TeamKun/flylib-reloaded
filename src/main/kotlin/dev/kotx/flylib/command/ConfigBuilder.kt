@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021 kotx__
+ */
+
 package dev.kotx.flylib.command
 
 import dev.kotx.flylib.command.parameters.BooleanArrayElement
