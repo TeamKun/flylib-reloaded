@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2021 kotx__.
- * Twitter: https://twitter.com/kotx__
+ * Copyright (c) 2021 kotx__
  */
 
 package dev.kotx.flylib.command
@@ -33,12 +32,31 @@ private typealias BukkitPermission = org.bukkit.permissions.Permission
 internal class CommandHandlerImpl(
     override val flyLib: FlyLibImpl,
     commands: List<Command>,
-    private val defaultPermission: Permission
+    private val defaultPermission: Permission,
+    private val config: Config?,
+    private val configCommandName: String?
 ) : CommandHandler {
     private val commands = commands.toMutableList()
     private val depthMap = mutableMapOf<Command, Int>()
 
     internal fun enable() {
+        if (config != null) {
+            val baseCommand = commands.find { it.name.equals(configCommandName, true) }
+                ?: object : Command(flyLib.plugin.name.lowercase().replace(" ", "")) {
+
+                    init {
+                        permission(Permission.OP)
+                    }
+                }
+
+            val configCommand = baseCommand.children.find { it.name.equals("config", true) }
+                ?: object : Command("config") {}
+
+            config.elements.forEach {
+
+            }
+        }
+
         val commandDispatcher = ((Bukkit.getServer() as CraftServer).server as MinecraftServer).commandDispatcher
         val commandNodes = (Bukkit.getCommandMap() as CraftCommandMap).knownCommands
 
