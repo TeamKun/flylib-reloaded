@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2021 kotx__.
- * Twitter: https://twitter.com/kotx__
+ * Copyright (c) 2021 kotx__
  */
 
 package dev.kotx.flylib.command.arguments
@@ -26,7 +25,7 @@ import net.minecraft.server.v1_16_R3.CommandListenerWrapper
  *  Check the following for the specifications of other arguments.
  *  @see Argument
  */
-class TextArgument(
+class StringArgument(
     override val name: String,
     type: Type = Type.WORD,
     override val suggestion: SuggestionAction? = null,

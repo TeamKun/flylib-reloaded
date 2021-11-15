@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2021 kotx__.
- * Twitter: https://twitter.com/kotx__
+ * Copyright (c) 2021 kotx__
  */
 
 package dev.kotx.flylib.command
@@ -13,7 +12,7 @@ import dev.kotx.flylib.command.arguments.IntegerArgument
 import dev.kotx.flylib.command.arguments.LiteralArgument
 import dev.kotx.flylib.command.arguments.LocationArgument
 import dev.kotx.flylib.command.arguments.LongArgument
-import dev.kotx.flylib.command.arguments.TextArgument
+import dev.kotx.flylib.command.arguments.StringArgument
 import dev.kotx.flylib.command.arguments.VectorArgument
 
 /**
@@ -168,24 +167,24 @@ class UsageBuilder {
      * An argument that takes a String value. Type can be specified.
      */
     @JvmOverloads
-    fun textArgument(
+    fun stringArgument(
         name: String,
-        type: TextArgument.Type = TextArgument.Type.WORD,
+        type: StringArgument.Type = StringArgument.Type.WORD,
         suggestion: SuggestionAction? = null,
         action: ContextAction? = null
     ): UsageBuilder {
-        this.arguments.add(TextArgument(name, type, suggestion, action))
+        this.arguments.add(StringArgument(name, type, suggestion, action))
         return this
     }
 
     /**
      * An argument that takes a String value.
      */
-    fun textArgument(
+    fun stringArgument(
         name: String, suggestion: SuggestionAction? = null,
         action: ContextAction? = null
     ): UsageBuilder {
-        this.arguments.add(TextArgument(name, suggestion = suggestion, action = action))
+        this.arguments.add(StringArgument(name, suggestion = suggestion, action = action))
         return this
     }
 
@@ -196,7 +195,7 @@ class UsageBuilder {
         name: String, selections: List<String>,
         action: ContextAction? = null
     ): UsageBuilder {
-        this.arguments.add(TextArgument(name, suggestion = { suggestAll(selections) }, action = action))
+        this.arguments.add(StringArgument(name, suggestion = { suggestAll(selections) }, action = action))
         return this
     }
 
@@ -207,7 +206,7 @@ class UsageBuilder {
         name: String, vararg selections: String,
         action: ContextAction? = null
     ): UsageBuilder {
-        this.arguments.add(TextArgument(name, suggestion = { suggestAll(listOf(*selections)) }, action = action))
+        this.arguments.add(StringArgument(name, suggestion = { suggestAll(listOf(*selections)) }, action = action))
         return this
     }
 

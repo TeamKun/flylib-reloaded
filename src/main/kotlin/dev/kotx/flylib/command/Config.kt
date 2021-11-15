@@ -1,6 +1,10 @@
+/*
+ * Copyright (c) 2021 kotx__
+ */
+
 package dev.kotx.flylib.command
 
-import dev.kotx.flylib.command.arguments.TextArgument
+import dev.kotx.flylib.command.arguments.StringArgument
 import dev.kotx.flylib.command.parameters.ArrayElement
 import dev.kotx.flylib.command.parameters.BooleanElement
 import dev.kotx.flylib.command.parameters.DoubleElement
@@ -47,12 +51,12 @@ class Config(
                             init {
                                 usage {
                                     literalArgument("add")
-                                    stringArgument("value(s)", TextArgument.Type.PHRASE)
+                                    stringArgument("value(s)", StringArgument.Type.PHRASE)
                                 }
 
                                 usage {
                                     literalArgument("remove")
-                                    stringArgument("value(s)", TextArgument.Type.PHRASE)
+                                    stringArgument("value(s)", StringArgument.Type.PHRASE)
                                 }
 
                                 usage {
