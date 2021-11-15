@@ -51,13 +51,30 @@ class Config(
                         children(object : Command(parameter.key) {
                             init {
                                 usage {
+                                    literalArgument("get")
+                                    executes {
+                                        success("The primitive value of \"$baseName ${parameter.key}\" is ${parameter.value?.joinToString()}")
+                                    }
+                                }
+
+                                usage {
                                     literalArgument("add")
                                     stringArgument("value(s)", StringArgument.Type.PHRASE)
+
+                                    executes {
+
+                                    }
                                 }
 
                                 usage {
                                     literalArgument("remove")
-                                    stringArgument("value(s)", StringArgument.Type.PHRASE)
+                                    stringArgument("value(s)", StringArgument.Type.PHRASE, suggestion = {
+
+                                    })
+
+                                    executes {
+
+                                    }
                                 }
 
                                 usage {
@@ -68,16 +85,21 @@ class Config(
                                     }
                                 }
                             }
-
-                            override fun CommandContext.execute() {
-                                success("The primitive value of \"$baseName ${parameter.key}\" is ${parameter.value}")
-                            }
                         })
                     }
                     else -> {
                         children(object : Command(parameter.key) {
                             init {
                                 usage {
+                                    literalArgument("get")
+                                    executes {
+                                        success("The primitive value of \"$baseName ${parameter.key}\" is ${parameter.value?.toString()}")
+                                    }
+                                }
+
+                                usage {
+                                    literalArgument("set")
+
                                     when (parameter) {
                                         is IntegerElement -> integerArgument("value")
                                         is LongElement -> longArgument("value")
@@ -86,11 +108,11 @@ class Config(
                                         is StringElement -> stringArgument("value")
                                         is BooleanElement -> booleanArgument("value")
                                     }
-                                }
-                            }
 
-                            override fun CommandContext.execute() {
-                                success("The primitive value of \"$baseName ${parameter.key}\" is ${parameter.value}")
+                                    executes {
+
+                                    }
+                                }
                             }
                         })
                     }

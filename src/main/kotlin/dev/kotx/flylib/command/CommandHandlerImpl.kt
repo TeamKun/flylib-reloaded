@@ -60,6 +60,9 @@ internal class CommandHandlerImpl(
         val commandNodes = (Bukkit.getCommandMap() as CraftCommandMap).knownCommands
 
         commands.handle(1)
+        commands.forEach {
+            it.children.setParent(it)
+        }
 
         println("  $CYAN${BOLD}Commands added:$RESET")
         commands.forEach { command ->
@@ -325,5 +328,10 @@ internal class CommandHandlerImpl(
 
         if (children.isNotEmpty())
             children.handle(depth + 1)
+    }
+
+    private fun List<Command>.setParent(parent: Command): Unit = forEach {
+        it.parent = parent
+        it.children.setParent(it)
     }
 }
