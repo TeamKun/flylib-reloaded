@@ -4,6 +4,7 @@
 
 package dev.kotx.flylib.command
 
+import com.google.gson.GsonBuilder
 import dev.kotx.flylib.command.arguments.StringArgument
 import dev.kotx.flylib.command.parameters.ArrayElement
 import dev.kotx.flylib.command.parameters.BooleanElement
@@ -34,16 +35,16 @@ class Config(
                         if (parameter.value == null)
                             children(object : Command(parameter.key) {
                                 override fun CommandContext.execute() {
-                                    //
                                     fail("The value of \"$baseName ${parameter.key}\" is expected to be JsonObject, but is currently set to null.")
                                 }
                             })
                         else
-                            children(parameter.value.asCommand(if (baseName == null) parameter.key else "$baseName ${parameter.key}", parameter.key))
-                    }
-
-                    is ObjectArrayElement -> {
-
+                            children(
+                                parameter.value.asCommand(
+                                    if (baseName == null) parameter.key else "$baseName ${parameter.key}",
+                                    parameter.key
+                                )
+                            )
                     }
 
                     is ArrayElement<*> -> {
@@ -69,7 +70,7 @@ class Config(
                             }
 
                             override fun CommandContext.execute() {
-
+                                success("The primitive value of \"$baseName ${parameter.key}\" is ${parameter.value}")
                             }
                         })
                     }
@@ -77,7 +78,7 @@ class Config(
                         children(object : Command(parameter.key) {
                             init {
                                 usage {
-                                    when(parameter) {
+                                    when (parameter) {
                                         is IntegerElement -> integerArgument("value")
                                         is LongElement -> longArgument("value")
                                         is FloatElement -> floatArgument("value")
@@ -89,10 +90,26 @@ class Config(
                             }
 
                             override fun CommandContext.execute() {
-
+                                success("The primitive value of \"$baseName ${parameter.key}\" is ${parameter.value}")
                             }
                         })
                     }
+                }
+            }
+
+            usage {
+                literalArgument("get")
+                executes {
+                    success(
+                        "The value of \"$baseName\" is:\n${
+                            GsonBuilder()
+                                .setPrettyPrinting()
+                                .serializeNulls()
+                                .setLenient()
+                                .create()
+                                .toJson(encodeToMap())
+                        }"
+                    )
                 }
             }
         }

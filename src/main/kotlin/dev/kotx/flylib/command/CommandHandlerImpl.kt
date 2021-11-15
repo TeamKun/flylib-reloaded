@@ -49,12 +49,11 @@ internal class CommandHandlerImpl(
                     }
                 }
 
-            val configCommand = baseCommand.children.find { it.name.equals("config", true) }
-                ?: object : Command("config") {}
+            baseCommand.children.find { it.name.equals("config", true) }
+                ?: config.asCommand(name = "config").also { baseCommand.children.add(it) }
 
-            config.elements.forEach {
-
-            }
+            commands.removeIf { it.name == baseCommand.name }
+            commands.add(baseCommand)
         }
 
         val commandDispatcher = ((Bukkit.getServer() as CraftServer).server as MinecraftServer).commandDispatcher
