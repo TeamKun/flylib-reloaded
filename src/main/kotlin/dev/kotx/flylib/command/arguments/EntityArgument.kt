@@ -35,7 +35,7 @@ class EntityArgument(
     override val type: ArgumentEntity = when {
         enableSelector && enableEntities -> ArgumentEntity.multipleEntities()
         enableSelector && !enableEntities -> ArgumentEntity.d()
-        !enableSelector && enableEntities -> ArgumentEntity::class.java.getMethod("a").invoke(null) as ArgumentEntity
+        !enableSelector && enableEntities -> (ArgumentEntity::class.java.getMethod("a").invoke(null) as ArgumentEntity)
         !enableSelector && !enableEntities -> ArgumentEntity.c()
 
         else -> ArgumentEntity.multipleEntities()
