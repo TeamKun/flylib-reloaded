@@ -1,6 +1,6 @@
 package dev.kotx.flylib.command
 
-interface ConfigParameter<T> {
+interface ConfigElement<T> {
     val key: String
     val value: T?
 }

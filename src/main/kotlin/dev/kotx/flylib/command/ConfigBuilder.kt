@@ -1,19 +1,21 @@
 package dev.kotx.flylib.command
 
-import dev.kotx.flylib.command.parameters.BooleanArrayParameter
-import dev.kotx.flylib.command.parameters.BooleanParameter
-import dev.kotx.flylib.command.parameters.DoubleArrayParameter
-import dev.kotx.flylib.command.parameters.DoubleParameter
-import dev.kotx.flylib.command.parameters.FloatArrayParameter
-import dev.kotx.flylib.command.parameters.FloatParameter
-import dev.kotx.flylib.command.parameters.IntegerArrayParameter
-import dev.kotx.flylib.command.parameters.IntegerParameter
-import dev.kotx.flylib.command.parameters.LongArrayParameter
-import dev.kotx.flylib.command.parameters.LongParameter
-import dev.kotx.flylib.command.parameters.ObjectParameter
+import dev.kotx.flylib.command.parameters.BooleanArrayElement
+import dev.kotx.flylib.command.parameters.BooleanElement
+import dev.kotx.flylib.command.parameters.DoubleArrayElement
+import dev.kotx.flylib.command.parameters.DoubleElement
+import dev.kotx.flylib.command.parameters.FloatArrayElement
+import dev.kotx.flylib.command.parameters.FloatElement
+import dev.kotx.flylib.command.parameters.IntegerArrayElement
+import dev.kotx.flylib.command.parameters.IntegerElement
+import dev.kotx.flylib.command.parameters.LongArrayElement
+import dev.kotx.flylib.command.parameters.LongElement
+import dev.kotx.flylib.command.parameters.ObjectElement
+import dev.kotx.flylib.command.parameters.StringArrayElement
+import dev.kotx.flylib.command.parameters.StringElement
 
 class ConfigBuilder {
-    private val parameters = mutableListOf<ConfigParameter<*>>()
+    private val parameters = mutableListOf<ConfigElement<*>>()
 
     @JvmOverloads
     fun integer(
@@ -22,7 +24,7 @@ class ConfigBuilder {
         min: Int = Int.MIN_VALUE,
         max: Int = Int.MAX_VALUE
     ): ConfigBuilder {
-        parameters.add(IntegerParameter(key, defaultValue, min, max))
+        parameters.add(IntegerElement(key, defaultValue, min, max))
         return this
     }
 
@@ -31,7 +33,7 @@ class ConfigBuilder {
         key: String,
         defaultValue: Array<Int>? = null,
     ): ConfigBuilder {
-        parameters.add(IntegerArrayParameter(key, defaultValue))
+        parameters.add(IntegerArrayElement(key, defaultValue))
         return this
     }
 
@@ -42,7 +44,7 @@ class ConfigBuilder {
         min: Long = Long.MIN_VALUE,
         max: Long = Long.MAX_VALUE
     ): ConfigBuilder {
-        parameters.add(LongParameter(key, defaultValue, min, max))
+        parameters.add(LongElement(key, defaultValue, min, max))
         return this
     }
 
@@ -51,7 +53,7 @@ class ConfigBuilder {
         key: String,
         defaultValue: Array<Long>? = null,
     ): ConfigBuilder {
-        parameters.add(LongArrayParameter(key, defaultValue))
+        parameters.add(LongArrayElement(key, defaultValue))
         return this
     }
 
@@ -62,7 +64,7 @@ class ConfigBuilder {
         min: Float = Float.MIN_VALUE,
         max: Float = Float.MAX_VALUE
     ): ConfigBuilder {
-        parameters.add(FloatParameter(key, defaultValue, min, max))
+        parameters.add(FloatElement(key, defaultValue, min, max))
         return this
     }
 
@@ -71,7 +73,7 @@ class ConfigBuilder {
         key: String,
         defaultValue: Array<Float>? = null,
     ): ConfigBuilder {
-        parameters.add(FloatArrayParameter(key, defaultValue))
+        parameters.add(FloatArrayElement(key, defaultValue))
         return this
     }
 
@@ -82,7 +84,7 @@ class ConfigBuilder {
         min: Double = Double.MIN_VALUE,
         max: Double = Double.MAX_VALUE
     ): ConfigBuilder {
-        parameters.add(DoubleParameter(key, defaultValue, min, max))
+        parameters.add(DoubleElement(key, defaultValue, min, max))
         return this
     }
 
@@ -91,7 +93,7 @@ class ConfigBuilder {
         key: String,
         defaultValue: Array<Double>? = null,
     ): ConfigBuilder {
-        parameters.add(DoubleArrayParameter(key, defaultValue))
+        parameters.add(DoubleArrayElement(key, defaultValue))
         return this
     }
 
@@ -100,7 +102,7 @@ class ConfigBuilder {
         key: String,
         defaultValue: Boolean? = null
     ): ConfigBuilder {
-        parameters.add(BooleanParameter(key, defaultValue))
+        parameters.add(BooleanElement(key, defaultValue))
         return this
     }
 
@@ -109,13 +111,31 @@ class ConfigBuilder {
         key: String,
         defaultValue: Array<Boolean>? = null
     ): ConfigBuilder {
-        parameters.add(BooleanArrayParameter(key, defaultValue))
+        parameters.add(BooleanArrayElement(key, defaultValue))
+        return this
+    }
+
+    @JvmOverloads
+    fun string(
+        key: String,
+        defaultValue: String? = null
+    ): ConfigBuilder {
+        parameters.add(StringElement(key, defaultValue))
+        return this
+    }
+
+    @JvmOverloads
+    fun stringArray(
+        key: String,
+        defaultValue: Array<String>? = null
+    ): ConfigBuilder {
+        parameters.add(StringArrayElement(key, defaultValue))
         return this
     }
 
     @JvmOverloads
     fun obj(key: String, objectBuilder: ConfigBuilder.() -> Unit = {}): ConfigBuilder {
-        parameters.add(ObjectParameter(key, ConfigBuilder().apply(objectBuilder).build()))
+        parameters.add(ObjectElement(key, ConfigBuilder().apply(objectBuilder).build()))
         return this
     }
 
