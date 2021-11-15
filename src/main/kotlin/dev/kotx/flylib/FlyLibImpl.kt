@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2021 kotx__.
- * Twitter: https://twitter.com/kotx__
+ * Copyright (c) 2021 kotx__
  */
 
 package dev.kotx.flylib
 
 import dev.kotx.flylib.command.Command
 import dev.kotx.flylib.command.CommandHandlerImpl
+import dev.kotx.flylib.command.Config
 import dev.kotx.flylib.command.Permission
 import dev.kotx.flylib.util.BOLD
 import dev.kotx.flylib.util.CYAN
@@ -28,13 +28,13 @@ internal class FlyLibImpl(
     override val plugin: JavaPlugin,
     commands: List<Command>,
     defaultPermission: Permission,
-    configObject: Any?,
-    configBaseCommandName: String?,
+    config: Config?,
+    configCommandName: String?,
     private val listenerActions: MutableMap<HandlerList, Pair<RegisteredListener, Class<*>>>
 ) :
     FlyLib {
     override val commandHandler =
-        CommandHandlerImpl(this, commands, defaultPermission, configObject, configBaseCommandName)
+        CommandHandlerImpl(this, commands, defaultPermission, config, configCommandName)
 
     init {
         println("$CYAN${BOLD}Loading FlyLib...$RESET")
