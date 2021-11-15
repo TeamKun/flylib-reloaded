@@ -32,7 +32,6 @@ class FlyLibBuilder(
      */
     fun command(vararg command: Command): FlyLibBuilder {
         command.forEach {
-            it.children.setParent(it)
             this.commands.add(it)
         }
 
@@ -81,11 +80,6 @@ class FlyLibBuilder(
         listenerActions[handlerList] = listener to clazz
 
         return this
-    }
-
-    private fun List<Command>.setParent(parent: Command): Unit = forEach {
-        it.parent = parent
-        it.children.setParent(it)
     }
 
     internal fun build(): FlyLib =
