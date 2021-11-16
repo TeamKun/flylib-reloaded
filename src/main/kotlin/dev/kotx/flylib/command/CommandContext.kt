@@ -183,8 +183,6 @@ class CommandContext(
                 appendln()
             }
 
-            appendln()
-
             if (command.aliases.isNotEmpty()) {
                 appendln()
                 append("Aliases", Color.RED)
