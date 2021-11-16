@@ -29,12 +29,12 @@ internal class FlyLibImpl(
     commands: List<Command>,
     defaultPermission: Permission,
     config: Config?,
-    configCommandName: String?,
+    baseCommandName: String?,
     private val listenerActions: MutableMap<HandlerList, Pair<RegisteredListener, Class<*>>>
 ) :
     FlyLib {
     override val commandHandler =
-        CommandHandlerImpl(this, commands, defaultPermission, config, configCommandName)
+        CommandHandlerImpl(this, commands, defaultPermission, config, baseCommandName)
 
     init {
         println("$CYAN${BOLD}Loading FlyLib...$RESET")

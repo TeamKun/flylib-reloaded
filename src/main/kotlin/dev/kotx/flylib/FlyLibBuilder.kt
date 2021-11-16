@@ -25,7 +25,7 @@ class FlyLibBuilder(
     private val listenerActions = mutableMapOf<HandlerList, Pair<RegisteredListener, Class<*>>>()
     private var defaultPermission = Permission.OP
     private var config: Config? = null
-    private var configCommandName: String? = null
+    private var baseCommandName: String? = null
 
     /**
      * Add a command.
@@ -50,8 +50,8 @@ class FlyLibBuilder(
      * Set the config and its name.
      */
     @JvmOverloads
-    fun config(configCommandName: String? = null, config: ConfigBuilder.() -> Unit): FlyLibBuilder {
-        this.configCommandName = configCommandName
+    fun config(baseCommandName: String? = null, config: ConfigBuilder.() -> Unit): FlyLibBuilder {
+        this.baseCommandName = baseCommandName
         this.config = ConfigBuilder().apply(config).build()
         return this
     }
@@ -83,7 +83,7 @@ class FlyLibBuilder(
     }
 
     internal fun build(): FlyLib =
-        FlyLibImpl(plugin, commands, defaultPermission, config, configCommandName, listenerActions)
+        FlyLibImpl(plugin, commands, defaultPermission, config, baseCommandName, listenerActions)
 }
 
 /**
