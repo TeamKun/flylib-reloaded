@@ -30,7 +30,7 @@ class ComponentBuilder {
      * Add text.
      */
     fun append(component: Component): ComponentBuilder {
-        component.append(component)
+        this.component.append(component)
         return this
     }
 
@@ -95,6 +95,15 @@ class ComponentBuilder {
      */
     fun appendln(text: String, color: Color, vararg decorations: TextDecoration): ComponentBuilder {
         component.append("$text\n".component(Style.style(*decorations, TextColor.color(color.rgb))))
+        return this
+    }
+
+    /**
+     * Adds component with line breaks.
+     */
+    fun appendln(component: Component): ComponentBuilder {
+        this.component.append(component)
+        appendln()
         return this
     }
 
