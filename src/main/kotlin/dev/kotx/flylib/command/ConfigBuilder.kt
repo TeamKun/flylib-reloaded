@@ -4,19 +4,19 @@
 
 package dev.kotx.flylib.command
 
-import dev.kotx.flylib.command.parameters.BooleanArrayElement
-import dev.kotx.flylib.command.parameters.BooleanElement
-import dev.kotx.flylib.command.parameters.DoubleArrayElement
-import dev.kotx.flylib.command.parameters.DoubleElement
-import dev.kotx.flylib.command.parameters.FloatArrayElement
-import dev.kotx.flylib.command.parameters.FloatElement
-import dev.kotx.flylib.command.parameters.IntegerArrayElement
-import dev.kotx.flylib.command.parameters.IntegerElement
-import dev.kotx.flylib.command.parameters.LongArrayElement
-import dev.kotx.flylib.command.parameters.LongElement
-import dev.kotx.flylib.command.parameters.ObjectElement
-import dev.kotx.flylib.command.parameters.StringArrayElement
-import dev.kotx.flylib.command.parameters.StringElement
+import dev.kotx.flylib.command.elements.BooleanArrayElement
+import dev.kotx.flylib.command.elements.BooleanElement
+import dev.kotx.flylib.command.elements.DoubleArrayElement
+import dev.kotx.flylib.command.elements.DoubleElement
+import dev.kotx.flylib.command.elements.FloatArrayElement
+import dev.kotx.flylib.command.elements.FloatElement
+import dev.kotx.flylib.command.elements.IntegerArrayElement
+import dev.kotx.flylib.command.elements.IntegerElement
+import dev.kotx.flylib.command.elements.LongArrayElement
+import dev.kotx.flylib.command.elements.LongElement
+import dev.kotx.flylib.command.elements.ObjectElement
+import dev.kotx.flylib.command.elements.StringArrayElement
+import dev.kotx.flylib.command.elements.StringElement
 
 class ConfigBuilder {
     private val parameters = mutableListOf<ConfigElement<*>>()
@@ -35,9 +35,9 @@ class ConfigBuilder {
     @JvmOverloads
     fun integerArray(
         key: String,
-        defaultValue: Array<Int>? = null,
+        defaultValue: List<Int>? = null,
     ): ConfigBuilder {
-        parameters.add(IntegerArrayElement(key, defaultValue))
+        parameters.add(IntegerArrayElement(key, defaultValue?.toMutableList()))
         return this
     }
 
@@ -55,9 +55,9 @@ class ConfigBuilder {
     @JvmOverloads
     fun longArray(
         key: String,
-        defaultValue: Array<Long>? = null,
+        defaultValue: List<Long>? = null,
     ): ConfigBuilder {
-        parameters.add(LongArrayElement(key, defaultValue))
+        parameters.add(LongArrayElement(key, defaultValue?.toMutableList()))
         return this
     }
 
@@ -75,9 +75,9 @@ class ConfigBuilder {
     @JvmOverloads
     fun floatArray(
         key: String,
-        defaultValue: Array<Float>? = null,
+        defaultValue: List<Float>? = null,
     ): ConfigBuilder {
-        parameters.add(FloatArrayElement(key, defaultValue))
+        parameters.add(FloatArrayElement(key, defaultValue?.toMutableList()))
         return this
     }
 
@@ -95,9 +95,9 @@ class ConfigBuilder {
     @JvmOverloads
     fun doubleArray(
         key: String,
-        defaultValue: Array<Double>? = null,
+        defaultValue: List<Double>? = null,
     ): ConfigBuilder {
-        parameters.add(DoubleArrayElement(key, defaultValue))
+        parameters.add(DoubleArrayElement(key, defaultValue?.toMutableList()))
         return this
     }
 
@@ -113,9 +113,9 @@ class ConfigBuilder {
     @JvmOverloads
     fun booleanArray(
         key: String,
-        defaultValue: Array<Boolean>? = null
+        defaultValue: List<Boolean>? = null
     ): ConfigBuilder {
-        parameters.add(BooleanArrayElement(key, defaultValue))
+        parameters.add(BooleanArrayElement(key, defaultValue?.toMutableList()))
         return this
     }
 
@@ -131,9 +131,9 @@ class ConfigBuilder {
     @JvmOverloads
     fun stringArray(
         key: String,
-        defaultValue: Array<String>? = null
+        defaultValue: List<String>? = null
     ): ConfigBuilder {
-        parameters.add(StringArrayElement(key, defaultValue))
+        parameters.add(StringArrayElement(key, defaultValue?.toMutableList()))
         return this
     }
 
