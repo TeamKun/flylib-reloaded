@@ -15,6 +15,7 @@ import dev.kotx.flylib.command.parameters.ObjectArrayElement
 import dev.kotx.flylib.command.parameters.ObjectElement
 import dev.kotx.flylib.command.parameters.StringElement
 import dev.kotx.flylib.util.ComponentBuilder
+import dev.kotx.flylib.util.component
 import java.awt.Color
 
 class Config(
@@ -71,7 +72,7 @@ class Config(
                                             } else {
                                                 append("[")
                                                 element.value!!.forEachIndexed { index, value ->
-                                                    append(value.toString(), Color.CYAN)
+                                                    append(value.toComponent())
 
                                                     if (index < element.value!!.size - 1)
                                                         append(", ", Color(147, 52, 25))
@@ -125,7 +126,7 @@ class Config(
                                             if (element.value == null) {
                                                 append("null", Color(222, 72, 26))
                                             } else {
-                                                append(element.value.toString(), Color.CYAN)
+                                                append(element.value.toComponent())
                                             }
                                         }
                                     }
@@ -175,20 +176,56 @@ class Config(
 
     private fun ComponentBuilder.asJson(depth: Int, elements: List<ConfigElement<*>>) {
         val tabSize = "  ".repeat(depth)
-        elements.forEach { element ->
+        elements.forEachIndexed { index, element ->
             when (element) {
                 is ObjectElement -> {
-                    appendln("$tabSize\"${element.key}\": {")
+                    append(tabSize)
+                    append("\"${element.key}\"", Color(180, 85, 227))
+                    append(": ", Color(147, 52, 25))
+                    appendln("{")
                     asJson(depth + 1, element.value!!.elements)
-                    appendln("$tabSize}")
+                    append("$tabSize}")
+                    if (index < elements.size - 1)
+                        appendln(",", Color(147, 52, 25))
+                    else
+                        appendln()
                 }
                 is ArrayElement<*> -> {
-                    appendln("$tabSize\"${element.key}\": ${element.value?.joinToString()}")
+                    append(tabSize)
+                    append("\"${element.key}\"", Color(180, 85, 227))
+                    append(": ", Color(147, 52, 25))
+                    appendln("[")
+                    element.value!!.forEachIndexed { index, it ->
+                        append("$tabSize  ")
+                        append(it.toComponent())
+                        if (index < element.value!!.size - 1)
+                            appendln(",", Color(147, 52, 25))
+                        else
+                            appendln()
+                    }
+                    append("$tabSize]")
+                    if (index < elements.size - 1)
+                        appendln(",", Color(147, 52, 25))
+                    else
+                        appendln()
                 }
                 else -> {
-                    appendln("$tabSize\"${element.key}\": ${element.value?.toString()}")
+                    append(tabSize)
+                    append("\"${element.key}\"", Color(180, 85, 227))
+                    append(": ", Color(147, 52, 25))
+                    append(element.value.toComponent())
+                    if (index < elements.size - 1)
+                        appendln(",", Color(147, 52, 25))
+                    else
+                        appendln()
                 }
             }
         }
+    }
+
+    private fun Any?.toComponent() = when (this) {
+        is String -> "\"${toString()}\"".component(Color(83, 184, 59))
+        is Number -> toString().component(Color(58, 165, 239))
+        else -> toString().component(Color(255, 118, 76))
     }
 }
