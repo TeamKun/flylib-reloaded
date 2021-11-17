@@ -969,7 +969,7 @@ internal class CommandHandlerImpl(
         }
     }
 
-    private fun saveConfig() {
+    internal fun saveConfig() {
         val json = config!!.getJsonString(gson)
 
         Path("./plugins/config/${flyLib.plugin.name}.json")
@@ -978,7 +978,7 @@ internal class CommandHandlerImpl(
             .writeText(json)
     }
 
-    private fun loadConfig() {
+    internal fun loadConfig() {
         if (!Path("./plugins/config/${flyLib.plugin.name}.json").exists()) return
 
         val json = Path("./plugins/config/${flyLib.plugin.name}.json").readText().asJsonObject()

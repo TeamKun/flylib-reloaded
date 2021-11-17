@@ -28,7 +28,7 @@ internal class FlyLibImpl(
     override val plugin: JavaPlugin,
     commands: List<Command>,
     defaultPermission: Permission,
-    config: Config?,
+    override val config: Config?,
     baseCommandName: String?,
     private val listenerActions: MutableMap<HandlerList, Pair<RegisteredListener, Class<*>>>
 ) :
@@ -101,6 +101,14 @@ internal class FlyLibImpl(
 
     override fun <T : Event> listen(clazz: Class<T>, action: ListenerAction<T>) {
         listen(clazz, EventPriority.NORMAL, action)
+    }
+
+    override fun saveConfig() {
+        commandHandler.saveConfig()
+    }
+
+    override fun loadConfig() {
+        commandHandler.loadConfig()
     }
 
     @Suppress("UNCHECKED_CAST")
