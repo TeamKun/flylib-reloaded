@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <!-- NewPage -->
 <html lang="en"><head>
-    <title>CommandContext 0.4.1 API </title>
+    <title>CommandContext 0.5.0 API </title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="dc.created" content="2020-03-25">
     <link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
@@ -183,36 +183,42 @@ public final class <span class="typeNameLabel"><a href=CommandContext.html>Comma
                                         </tr>
                                         
                                         <tr class="rowColor">
+                                            <td class="colFirst"><code>private final <a href=Config.html>Config</a></code></td>
+                                            <th class="colSecond" scope="row"><code><a href=CommandContext.html#config>config</a></code></th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr class="altColor">
                                             <td class="colFirst"><code>private final <a href=Command.html>Command</a></code></td>
                                             <th class="colSecond" scope="row"><code><a href=CommandContext.html#command>command</a></code></th>
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr class="altColor">
+                                        <tr class="rowColor">
                                             <td class="colFirst"><code>private final CommandSender</code></td>
                                             <th class="colSecond" scope="row"><code><a href=CommandContext.html#sender>sender</a></code></th>
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr class="rowColor">
+                                        <tr class="altColor">
                                             <td class="colFirst"><code>private final World</code></td>
                                             <th class="colSecond" scope="row"><code><a href=CommandContext.html#world>world</a></code></th>
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr class="altColor">
+                                        <tr class="rowColor">
                                             <td class="colFirst"><code>private final Server</code></td>
                                             <th class="colSecond" scope="row"><code><a href=CommandContext.html#server>server</a></code></th>
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr class="rowColor">
+                                        <tr class="altColor">
                                             <td class="colFirst"><code>private final <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a></code></td>
                                             <th class="colSecond" scope="row"><code><a href=CommandContext.html#message>message</a></code></th>
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr class="altColor">
+                                        <tr class="rowColor">
                                             <td class="colFirst"><code>private final <a href=https://docs.oracle.com/javase/8/docs/api/java/util/List.html>List</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html>Object</a>&gt;</code></td>
                                             <th class="colSecond" scope="row"><code><a href=CommandContext.html#typedArgs>typedArgs</a></code></th>
                                             <td class="colLast"></td>
@@ -244,7 +250,7 @@ public final class <span class="typeNameLabel"><a href=CommandContext.html>Comma
                                         
                                             <tr class="altColor">
                                                 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a
-                                                        href="#CommandContext(JavaPlugin,Command,CommandSender,World,Server,String,Integer,List)">CommandContext</a></span>(JavaPlugin plugin, <a href=Command.html>Command</a> command, CommandSender sender, World world, Server server, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> message, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html>Integer</a> depth, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/List.html>List</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html>Object</a>&gt; typedArgs)</code></th>
+                                                        href="#CommandContext(JavaPlugin,Config,Command,CommandSender,World,Server,String,Integer,List)">CommandContext</a></span>(JavaPlugin plugin, <a href=Config.html>Config</a> config, <a href=Command.html>Command</a> command, CommandSender sender, World world, Server server, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> message, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html>Integer</a> depth, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/List.html>List</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html>Object</a>&gt; typedArgs)</code></th>
                                                 <td class="colLast"></td>
                                             </tr>
                                         
@@ -322,6 +328,14 @@ public final class <span class="typeNameLabel"><a href=CommandContext.html>Comma
                                         </tr>
                                         
                                         <tr id="i3" class="rowColor">
+                                            <td class="colFirst"><code>final <a href=Config.html>Config</a></code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=CommandContext.html#getConfig()>getConfig</a>() </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i4" class="altColor">
                                             <td class="colFirst"><code>final <a href=Command.html>Command</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=CommandContext.html#getCommand()>getCommand</a>() </code>
@@ -329,7 +343,7 @@ public final class <span class="typeNameLabel"><a href=CommandContext.html>Comma
                                             <td class="colLast">The command that has been executed or is about to be executed.</td>
                                         </tr>
                                         
-                                        <tr id="i4" class="altColor">
+                                        <tr id="i5" class="rowColor">
                                             <td class="colFirst"><code>final CommandSender</code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=CommandContext.html#getSender()>getSender</a>() </code>
@@ -337,7 +351,7 @@ public final class <span class="typeNameLabel"><a href=CommandContext.html>Comma
                                             <td class="colLast">The executor of the command or the entity that is about to execute it (may not be the player).</td>
                                         </tr>
                                         
-                                        <tr id="i5" class="rowColor">
+                                        <tr id="i6" class="altColor">
                                             <td class="colFirst"><code>final World</code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=CommandContext.html#getWorld()>getWorld</a>() </code>
@@ -345,7 +359,7 @@ public final class <span class="typeNameLabel"><a href=CommandContext.html>Comma
                                             <td class="colLast">The world where the command was executed</td>
                                         </tr>
                                         
-                                        <tr id="i6" class="altColor">
+                                        <tr id="i7" class="rowColor">
                                             <td class="colFirst"><code>final Server</code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=CommandContext.html#getServer()>getServer</a>() </code>
@@ -353,7 +367,7 @@ public final class <span class="typeNameLabel"><a href=CommandContext.html>Comma
                                             <td class="colLast">The server on which the plugin was run</td>
                                         </tr>
                                         
-                                        <tr id="i7" class="rowColor">
+                                        <tr id="i8" class="altColor">
                                             <td class="colFirst"><code>final <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=CommandContext.html#getMessage()>getMessage</a>() </code>
@@ -361,7 +375,7 @@ public final class <span class="typeNameLabel"><a href=CommandContext.html>Comma
                                             <td class="colLast">Command input message.</td>
                                         </tr>
                                         
-                                        <tr id="i8" class="altColor">
+                                        <tr id="i9" class="rowColor">
                                             <td class="colFirst"><code>final <a href=https://docs.oracle.com/javase/8/docs/api/java/util/List.html>List</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html>Object</a>&gt;</code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=CommandContext.html#getTypedArgs()>getTypedArgs</a>() </code>
@@ -369,7 +383,7 @@ public final class <span class="typeNameLabel"><a href=CommandContext.html>Comma
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr id="i9" class="rowColor">
+                                        <tr id="i10" class="altColor">
                                             <td class="colFirst"><code>final <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=CommandContext.html#message(String)>message</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> text) </code>
@@ -377,7 +391,7 @@ public final class <span class="typeNameLabel"><a href=CommandContext.html>Comma
                                             <td class="colLast">send string message</td>
                                         </tr>
                                         
-                                        <tr id="i10" class="altColor">
+                                        <tr id="i11" class="rowColor">
                                             <td class="colFirst"><code>final <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=CommandContext.html#message(String,Color)>message</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> text, <a href=https://docs.oracle.com/javase/8/docs/api/java/awt/Color.html>Color</a> color) </code>
@@ -385,7 +399,7 @@ public final class <span class="typeNameLabel"><a href=CommandContext.html>Comma
                                             <td class="colLast">send string colored message</td>
                                         </tr>
                                         
-                                        <tr id="i11" class="rowColor">
+                                        <tr id="i12" class="altColor">
                                             <td class="colFirst"><code>final <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=CommandContext.html#message(Component)>message</a>(Component component) </code>
@@ -393,7 +407,7 @@ public final class <span class="typeNameLabel"><a href=CommandContext.html>Comma
                                             <td class="colLast">send component</td>
                                         </tr>
                                         
-                                        <tr id="i12" class="altColor">
+                                        <tr id="i13" class="rowColor">
                                             <td class="colFirst"><code>final <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=CommandContext.html#message(ComponentBuilderAction)>message</a>(<a href=../util/ComponentBuilderAction.html>ComponentBuilderAction</a> builder) </code>
@@ -401,7 +415,7 @@ public final class <span class="typeNameLabel"><a href=CommandContext.html>Comma
                                             <td class="colLast">send component via builder</td>
                                         </tr>
                                         
-                                        <tr id="i13" class="rowColor">
+                                        <tr id="i14" class="altColor">
                                             <td class="colFirst"><code>final <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=CommandContext.html#success(String)>success</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> text) </code>
@@ -409,7 +423,7 @@ public final class <span class="typeNameLabel"><a href=CommandContext.html>Comma
                                             <td class="colLast">send green string</td>
                                         </tr>
                                         
-                                        <tr id="i14" class="altColor">
+                                        <tr id="i15" class="rowColor">
                                             <td class="colFirst"><code>final <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=CommandContext.html#warn(String)>warn</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> text) </code>
@@ -417,7 +431,7 @@ public final class <span class="typeNameLabel"><a href=CommandContext.html>Comma
                                             <td class="colLast">send yellow string</td>
                                         </tr>
                                         
-                                        <tr id="i15" class="rowColor">
+                                        <tr id="i16" class="altColor">
                                             <td class="colFirst"><code>final <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=CommandContext.html#fail(String)>fail</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> text) </code>
@@ -425,7 +439,7 @@ public final class <span class="typeNameLabel"><a href=CommandContext.html>Comma
                                             <td class="colLast">send red string</td>
                                         </tr>
                                         
-                                        <tr id="i16" class="altColor">
+                                        <tr id="i17" class="rowColor">
                                             <td class="colFirst"><code>final <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=CommandContext.html#pluginMessage(String)>pluginMessage</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> text) </code>
@@ -433,7 +447,7 @@ public final class <span class="typeNameLabel"><a href=CommandContext.html>Comma
                                             <td class="colLast">send string with plugin name</td>
                                         </tr>
                                         
-                                        <tr id="i17" class="rowColor">
+                                        <tr id="i18" class="altColor">
                                             <td class="colFirst"><code>final <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=CommandContext.html#pluginMessage(String,Color)>pluginMessage</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> text, <a href=https://docs.oracle.com/javase/8/docs/api/java/awt/Color.html>Color</a> color) </code>
@@ -441,7 +455,7 @@ public final class <span class="typeNameLabel"><a href=CommandContext.html>Comma
                                             <td class="colLast">send colored string with plugin name</td>
                                         </tr>
                                         
-                                        <tr id="i18" class="altColor">
+                                        <tr id="i19" class="rowColor">
                                             <td class="colFirst"><code>final <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=CommandContext.html#pluginMessage(Component)>pluginMessage</a>(Component component) </code>
@@ -449,7 +463,7 @@ public final class <span class="typeNameLabel"><a href=CommandContext.html>Comma
                                             <td class="colLast">send component with plugin name</td>
                                         </tr>
                                         
-                                        <tr id="i19" class="rowColor">
+                                        <tr id="i20" class="altColor">
                                             <td class="colFirst"><code>final <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=CommandContext.html#pluginMessage(ComponentBuilderAction)>pluginMessage</a>(<a href=../util/ComponentBuilderAction.html>ComponentBuilderAction</a> builder) </code>
@@ -457,7 +471,7 @@ public final class <span class="typeNameLabel"><a href=CommandContext.html>Comma
                                             <td class="colLast">send component via builder with plugin name</td>
                                         </tr>
                                         
-                                        <tr id="i20" class="altColor">
+                                        <tr id="i21" class="rowColor">
                                             <td class="colFirst"><code>final <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=CommandContext.html#pluginMessageSuccess(String)>pluginMessageSuccess</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> text) </code>
@@ -465,7 +479,7 @@ public final class <span class="typeNameLabel"><a href=CommandContext.html>Comma
                                             <td class="colLast">send green string with plugin name</td>
                                         </tr>
                                         
-                                        <tr id="i21" class="rowColor">
+                                        <tr id="i22" class="altColor">
                                             <td class="colFirst"><code>final <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=CommandContext.html#pluginMessageWarn(String)>pluginMessageWarn</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> text) </code>
@@ -473,7 +487,7 @@ public final class <span class="typeNameLabel"><a href=CommandContext.html>Comma
                                             <td class="colLast">send yellow string with plugin name</td>
                                         </tr>
                                         
-                                        <tr id="i22" class="altColor">
+                                        <tr id="i23" class="rowColor">
                                             <td class="colFirst"><code>final <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=CommandContext.html#pluginMessageFail(String)>pluginMessageFail</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> text) </code>
@@ -481,7 +495,7 @@ public final class <span class="typeNameLabel"><a href=CommandContext.html>Comma
                                             <td class="colLast">send red string with plugin name</td>
                                         </tr>
                                         
-                                        <tr id="i23" class="rowColor">
+                                        <tr id="i24" class="altColor">
                                             <td class="colFirst"><code>final <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=CommandContext.html#sendHelp()>sendHelp</a>() </code>
@@ -520,11 +534,11 @@ public final class <span class="typeNameLabel"><a href=CommandContext.html>Comma
                             </a>
                                 <h3>Constructor Detail</h3>
                                 
-                                <a name="CommandContext(JavaPlugin,Command,CommandSender,World,Server,String,Integer,List)"></a>
+                                <a name="CommandContext(JavaPlugin,Config,Command,CommandSender,World,Server,String,Integer,List)"></a>
                                 <ul class="blockList">
                                     <li class="blockList">
                                         <h4>CommandContext</h4>
-                                        <pre>CommandContext(JavaPlugin plugin, <a href=Command.html>Command</a> command, CommandSender sender, World world, Server server, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> message, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html>Integer</a> depth, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/List.html>List</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html>Object</a>&gt; typedArgs)</pre>
+                                        <pre>CommandContext(JavaPlugin plugin, <a href=Config.html>Config</a> config, <a href=Command.html>Command</a> command, CommandSender sender, World world, Server server, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> message, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html>Integer</a> depth, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/List.html>List</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html>Object</a>&gt; typedArgs)</pre>
                                         <div class="block"></div>
                                         
                                     </li>
@@ -583,6 +597,21 @@ public final class <span class="typeNameLabel"><a href=CommandContext.html>Comma
                                         <h4>getPlugin</h4>
                                         <pre class="methodSignature"> final JavaPlugin <a href=CommandContext.html#getPlugin()>getPlugin</a>()</pre>
                                         <div class="block"><p>The plugin you registered FlyLib</p></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="getConfig()">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>getConfig</h4>
+                                        <pre class="methodSignature"> final <a href=Config.html>Config</a> <a href=CommandContext.html#getConfig()>getConfig</a>()</pre>
+                                        <div class="block"></div>
                                         
                                         <!-- TODO missing return annotation -->
                                     </li>
