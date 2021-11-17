@@ -35,6 +35,7 @@ class CommandContext(
      * The plugin you registered FlyLib
      */
     val plugin: JavaPlugin,
+    val config: Config?,
     /**
      * The command that has been executed or is about to be executed.
      */
