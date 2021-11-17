@@ -34,7 +34,21 @@ import dev.kotx.flylib.util.RESET
 import dev.kotx.flylib.util.asJsonObject
 import dev.kotx.flylib.util.component
 import dev.kotx.flylib.util.fullCommand
+import dev.kotx.flylib.util.getBoolean
+import dev.kotx.flylib.util.getBooleanArray
+import dev.kotx.flylib.util.getDouble
+import dev.kotx.flylib.util.getDoubleArray
+import dev.kotx.flylib.util.getFloat
+import dev.kotx.flylib.util.getFloatArray
+import dev.kotx.flylib.util.getInt
+import dev.kotx.flylib.util.getIntArray
+import dev.kotx.flylib.util.getLong
+import dev.kotx.flylib.util.getLongArray
+import dev.kotx.flylib.util.getObject
+import dev.kotx.flylib.util.getString
+import dev.kotx.flylib.util.getStringArray
 import dev.kotx.flylib.util.message
+import kotlinx.serialization.json.JsonObject
 import net.minecraft.server.v1_16_R3.CommandListenerWrapper
 import net.minecraft.server.v1_16_R3.MinecraftServer
 import org.bukkit.Bukkit
@@ -70,6 +84,8 @@ internal class CommandHandlerImpl(
 
     internal fun enable() {
         if (config != null) {
+            loadConfig()
+
             val baseCommand = commands.find { it.name.equals(configCommandName, true) }
                 ?: object : Command(flyLib.plugin.name.lowercase().replace(" ", "")) {
 
@@ -895,10 +911,28 @@ internal class CommandHandlerImpl(
     private fun loadConfig() {
         if (!Path("./plugins/config/${flyLib.plugin.name}.json").exists()) return
 
-        var json = Path("./plugins/config/${flyLib.plugin.name}.json").readText().asJsonObject()
+        val json = Path("./plugins/config/${flyLib.plugin.name}.json").readText().asJsonObject()
 
-        config!!.elements.forEach {
-            it.value
+        config!!.loadJsonObject(json)
+    }
+
+    private fun Config.loadJsonObject(json: JsonObject) {
+        elements.forEach {
+            when (it) {
+                is IntegerElement -> it.value = json.getInt(it.key)
+                is LongElement -> it.value = json.getLong(it.key)
+                is FloatElement -> it.value = json.getFloat(it.key)
+                is DoubleElement -> it.value = json.getDouble(it.key)
+                is StringElement -> it.value = json.getString(it.key)
+                is BooleanElement -> it.value = json.getBoolean(it.key)
+                is IntegerArrayElement -> it.value = json.getIntArray(it.key).toMutableList()
+                is LongArrayElement -> it.value = json.getLongArray(it.key).toMutableList()
+                is FloatArrayElement -> it.value = json.getFloatArray(it.key).toMutableList()
+                is DoubleArrayElement -> it.value = json.getDoubleArray(it.key).toMutableList()
+                is StringArrayElement -> it.value = json.getStringArray(it.key).toMutableList()
+                is BooleanArrayElement -> it.value = json.getBooleanArray(it.key).toMutableList()
+                is ObjectElement -> it.value!!.loadJsonObject(json.getObject(it.key))
+            }
         }
     }
 
