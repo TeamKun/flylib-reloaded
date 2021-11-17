@@ -385,7 +385,10 @@ internal class CommandHandlerImpl(
     private fun Config.getConfigCommand(name: String, baseName: String? = null): Command = object : Command(name) {
         init {
             if (baseName == null) children(object : Command("reload") {
-
+                override fun CommandContext.execute() {
+                    loadConfig()
+                    success("The config reload was successful.")
+                }
             })
 
             elements.forEach { element ->
