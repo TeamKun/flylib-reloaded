@@ -3,8 +3,8 @@
  */
 
 plugins {
-    kotlin("jvm") version "1.5.31"
-    kotlin("plugin.serialization") version "1.5.31"
+    kotlin("jvm") version "1.6.0"
+    kotlin("plugin.serialization") version "1.6.0"
     id("org.jetbrains.dokka") version "1.5.30"
     `maven-publish`
     signing
@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    api("org.jetbrains.kotlin:kotlin-stdlib:1.5.31")
+    api("org.jetbrains.kotlin:kotlin-stdlib:1.6.0")
     api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.1")
     api("io.insert-koin:koin-core:3.1.3")
     api("io.insert-koin:koin-core-ext:3.0.2")
