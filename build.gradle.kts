@@ -102,6 +102,12 @@ publishing {
                     name.set("TeamKun")
                     url.set("https://github.com/TeamKun")
                 }
+
+                scm {
+                    connection.set("git@github.com:TeamKun/flylib-reloaded.git")
+                    developerConnection.set("git@github.com:TeamKun/flylib-reloaded.git")
+                    url.set("https://github.com/TeamKun/flylib-reloaded")
+                }
             }
         }
     }
