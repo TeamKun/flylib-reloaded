@@ -4,6 +4,7 @@
 
 package dev.kotx.flylib.command
 
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
@@ -34,19 +35,19 @@ import dev.kotx.flylib.util.RESET
 import dev.kotx.flylib.util.asJsonObject
 import dev.kotx.flylib.util.component
 import dev.kotx.flylib.util.fullCommand
-import dev.kotx.flylib.util.getBoolean
-import dev.kotx.flylib.util.getBooleanArray
-import dev.kotx.flylib.util.getDouble
-import dev.kotx.flylib.util.getDoubleArray
-import dev.kotx.flylib.util.getFloat
-import dev.kotx.flylib.util.getFloatArray
-import dev.kotx.flylib.util.getInt
-import dev.kotx.flylib.util.getIntArray
-import dev.kotx.flylib.util.getLong
-import dev.kotx.flylib.util.getLongArray
-import dev.kotx.flylib.util.getObject
-import dev.kotx.flylib.util.getString
-import dev.kotx.flylib.util.getStringArray
+import dev.kotx.flylib.util.getBooleanArrayOrNull
+import dev.kotx.flylib.util.getBooleanOrNull
+import dev.kotx.flylib.util.getDoubleArrayOrNull
+import dev.kotx.flylib.util.getDoubleOrNull
+import dev.kotx.flylib.util.getFloatArrayOrNull
+import dev.kotx.flylib.util.getFloatOrNull
+import dev.kotx.flylib.util.getIntArrayOrNull
+import dev.kotx.flylib.util.getIntOrNull
+import dev.kotx.flylib.util.getLongArrayOrNull
+import dev.kotx.flylib.util.getLongOrNull
+import dev.kotx.flylib.util.getObjectOrNull
+import dev.kotx.flylib.util.getStringArrayOrNull
+import dev.kotx.flylib.util.getStringOrNull
 import dev.kotx.flylib.util.message
 import kotlinx.serialization.json.JsonObject
 import net.minecraft.server.v1_16_R3.CommandListenerWrapper
@@ -324,6 +325,7 @@ internal class CommandHandlerImpl(
         usage: Usage? = null
     ) = CommandContext(
         flyLib.plugin,
+        config,
         command,
         context.source.bukkitSender,
         context.source.bukkitWorld,
@@ -864,16 +866,84 @@ internal class CommandHandlerImpl(
                                     literalArgument("set")
 
                                     when (element) {
-                                        is IntegerElement -> integerArgument("value")
-                                        is LongElement -> longArgument("value")
-                                        is FloatElement -> floatArgument("value")
-                                        is DoubleElement -> doubleArgument("value")
-                                        is StringElement -> stringArgument("value")
-                                        is BooleanElement -> booleanArgument("value")
-                                    }
+                                        is IntegerElement -> integerArgument("value") {
+                                            element.value = typedArgs[1]!! as Int
 
-                                    executes {
+                                            message {
+                                                bold("[+] ", Color.GREEN)
+                                                append("set ", Color.GREEN)
+                                                append(element.value.toString())
+                                                append(" to ", Color.GREEN)
+                                                bold("\"$fullName\"", Color(180, 85, 227))
+                                            }
 
+                                            saveConfig()
+                                        }
+                                        is LongElement -> longArgument("value") {
+                                            element.value = typedArgs[1]!! as Long
+
+                                            message {
+                                                bold("[+] ", Color.GREEN)
+                                                append("set ", Color.GREEN)
+                                                append(element.value.toString())
+                                                append(" to ", Color.GREEN)
+                                                bold("\"$fullName\"", Color(180, 85, 227))
+                                            }
+
+                                            saveConfig()
+                                        }
+                                        is FloatElement -> floatArgument("value") {
+                                            element.value = typedArgs[1]!! as Float
+
+                                            message {
+                                                bold("[+] ", Color.GREEN)
+                                                append("set ", Color.GREEN)
+                                                append(element.value.toString())
+                                                append(" to ", Color.GREEN)
+                                                bold("\"$fullName\"", Color(180, 85, 227))
+                                            }
+
+                                            saveConfig()
+                                        }
+                                        is DoubleElement -> doubleArgument("value") {
+                                            element.value = typedArgs[1]!! as Double
+
+                                            message {
+                                                bold("[+] ", Color.GREEN)
+                                                append("set ", Color.GREEN)
+                                                append(element.value.toString())
+                                                append(" to ", Color.GREEN)
+                                                bold("\"$fullName\"", Color(180, 85, 227))
+                                            }
+
+                                            saveConfig()
+                                        }
+                                        is StringElement -> stringArgument("value") {
+                                            element.value = typedArgs[1]!! as String
+
+                                            message {
+                                                bold("[+] ", Color.GREEN)
+                                                append("set ", Color.GREEN)
+                                                append(element.value.toString())
+                                                append(" to ", Color.GREEN)
+                                                bold("\"$fullName\"", Color(180, 85, 227))
+                                            }
+
+                                            saveConfig()
+                                        }
+                                        is BooleanElement -> booleanArgument("value") {
+                                            element.value = typedArgs[1]!! as Boolean
+
+                                            message {
+                                                bold("[+] ", Color.GREEN)
+                                                append("set ", Color.GREEN)
+                                                append(element.value.toString())
+                                                append(" to ", Color.GREEN)
+                                                bold("\"$fullName\"", Color(180, 85, 227))
+                                            }
+
+                                            saveConfig()
+                                        }
                                     }
                                 }
                             }
@@ -917,21 +987,27 @@ internal class CommandHandlerImpl(
     }
 
     private fun Config.loadJsonObject(json: JsonObject) {
-        elements.forEach {
-            when (it) {
-                is IntegerElement -> it.value = json.getInt(it.key)
-                is LongElement -> it.value = json.getLong(it.key)
-                is FloatElement -> it.value = json.getFloat(it.key)
-                is DoubleElement -> it.value = json.getDouble(it.key)
-                is StringElement -> it.value = json.getString(it.key)
-                is BooleanElement -> it.value = json.getBoolean(it.key)
-                is IntegerArrayElement -> it.value = json.getIntArray(it.key).toMutableList()
-                is LongArrayElement -> it.value = json.getLongArray(it.key).toMutableList()
-                is FloatArrayElement -> it.value = json.getFloatArray(it.key).toMutableList()
-                is DoubleArrayElement -> it.value = json.getDoubleArray(it.key).toMutableList()
-                is StringArrayElement -> it.value = json.getStringArray(it.key).toMutableList()
-                is BooleanArrayElement -> it.value = json.getBooleanArray(it.key).toMutableList()
-                is ObjectElement -> it.value!!.loadJsonObject(json.getObject(it.key))
+        elements.forEach { element ->
+            when (element) {
+                is IntegerElement -> element.value = json.getIntOrNull(element.key)
+                is LongElement -> element.value = json.getLongOrNull(element.key)
+                is FloatElement -> element.value = json.getFloatOrNull(element.key)
+                is DoubleElement -> element.value = json.getDoubleOrNull(element.key)
+                is StringElement -> element.value = json.getStringOrNull(element.key)
+                is BooleanElement -> element.value = json.getBooleanOrNull(element.key)
+                is IntegerArrayElement -> element.value =
+                    json.getIntArrayOrNull(element.key)?.filterNotNull()?.toMutableList()
+                is LongArrayElement -> element.value =
+                    json.getLongArrayOrNull(element.key)?.filterNotNull()?.toMutableList()
+                is FloatArrayElement -> element.value =
+                    json.getFloatArrayOrNull(element.key)?.filterNotNull()?.toMutableList()
+                is DoubleArrayElement -> element.value =
+                    json.getDoubleArrayOrNull(element.key)?.filterNotNull()?.toMutableList()
+                is StringArrayElement -> element.value =
+                    json.getStringArrayOrNull(element.key)?.filterNotNull()?.toMutableList()
+                is BooleanArrayElement -> element.value =
+                    json.getBooleanArrayOrNull(element.key)?.filterNotNull()?.toMutableList()
+                is ObjectElement -> json.getObjectOrNull(element.key)?.let { element.value!!.loadJsonObject(it) }
             }
         }
     }
@@ -989,5 +1065,14 @@ internal class CommandHandlerImpl(
         is String -> "\"${toString()}\"".component(Color(83, 184, 59))
         is Number -> toString().component(Color(58, 165, 239))
         else -> toString().component(Color(255, 118, 76))
+    }
+
+    private fun Config.getJsonString(gson: Gson) = gson.toJson(mapJsonObject())!!
+
+    private fun Config.mapJsonObject(): Map<String, Any?> = elements.associate {
+        it.key to when (it) {
+            is ObjectElement -> it.value?.mapJsonObject()
+            else -> it.value
+        }
     }
 }
