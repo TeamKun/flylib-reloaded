@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2021 kotx__.
- * Twitter: https://twitter.com/kotx__
+ * Copyright (c) 2021 kotx__
  */
 
 plugins {
-    kotlin("jvm") version "1.5.31"
+    kotlin("jvm") version "1.6.0"
+    kotlin("plugin.serialization") version "1.6.0"
     id("org.jetbrains.dokka") version "1.5.30"
     `maven-publish`
     signing
@@ -12,7 +12,7 @@ plugins {
 
 val projectName: String = "flylib-reloaded"
 val projectGroup: String = "dev.kotx"
-val projectVersion: String = "0.4.1"
+val projectVersion: String = "0.5.0"
 
 group = projectGroup
 version = projectVersion
@@ -24,10 +24,10 @@ repositories {
 }
 
 dependencies {
-    api("org.jetbrains.kotlin:kotlin-stdlib:1.5.31")
+    api("org.jetbrains.kotlin:kotlin-stdlib:1.6.0")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.1")
     api("io.insert-koin:koin-core:3.1.3")
     api("io.insert-koin:koin-core-ext:3.0.2")
-    api("com.google.code.gson:gson:2.8.9")
 
     compileOnly("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
     compileOnly(fileTree("./libs"))

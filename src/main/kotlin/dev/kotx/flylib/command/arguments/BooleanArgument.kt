@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021 kotx__
+ */
+
 package dev.kotx.flylib.command.arguments
 
 import com.mojang.brigadier.arguments.ArgumentType

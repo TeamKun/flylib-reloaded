@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2021 kotx__.
- * Twitter: https://twitter.com/kotx__
+ * Copyright (c) 2021 kotx__
  */
 
 package dev.kotx.flylib
 
 import dev.kotx.flylib.command.CommandHandler
+import dev.kotx.flylib.command.Config
 import org.bukkit.event.Event
 import org.bukkit.event.EventPriority
 import org.bukkit.plugin.java.JavaPlugin
@@ -25,6 +25,8 @@ interface FlyLib {
      */
     val commandHandler: CommandHandler
 
+    val config: Config?
+
     /**
      * Listens to the specified event with Event Priority.NORMAL
      */
@@ -34,6 +36,9 @@ interface FlyLib {
      * Listens to the specified event with the specified priority.
      */
     fun <T : Event> listen(clazz: Class<T>, priority: EventPriority, action: ListenerAction<T>)
+
+    fun loadConfig()
+    fun saveConfig()
 
     companion object {
         /**

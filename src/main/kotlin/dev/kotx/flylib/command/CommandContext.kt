@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2021 kotx__.
- * Twitter: https://twitter.com/kotx__
+ * Copyright (c) 2021 kotx__
  */
 
 package dev.kotx.flylib.command
@@ -36,6 +35,7 @@ class CommandContext(
      * The plugin you registered FlyLib
      */
     val plugin: JavaPlugin,
+    val config: Config?,
     /**
      * The command that has been executed or is about to be executed.
      */
@@ -183,8 +183,6 @@ class CommandContext(
                 }
                 appendln()
             }
-
-            appendln()
 
             if (command.aliases.isNotEmpty()) {
                 appendln()

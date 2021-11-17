@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 2021 kotx__.
- * Twitter: https://twitter.com/kotx__
+ * Copyright (c) 2021 kotx__
  */
 
 package dev.kotx.flylib
 
 import dev.kotx.flylib.command.Command
+import dev.kotx.flylib.command.Config
+import dev.kotx.flylib.command.ConfigBuilder
 import dev.kotx.flylib.command.Permission
 import org.bukkit.event.Event
 import org.bukkit.event.EventPriority
@@ -23,27 +24,16 @@ class FlyLibBuilder(
     private val commands = mutableListOf<Command>()
     private val listenerActions = mutableMapOf<HandlerList, Pair<RegisteredListener, Class<*>>>()
     private var defaultPermission = Permission.OP
-    private var configObject: Any? = null
-    private var configBaseCommandName: String? = null
+    private var config: Config? = null
+    private var baseCommandName: String? = null
 
     /**
      * Add a command.
      */
     fun command(vararg command: Command): FlyLibBuilder {
         command.forEach {
-            it.children.setParent(it)
             this.commands.add(it)
         }
-
-        return this
-    }
-
-    /**
-     * Specify the default config.
-     */
-    fun config(configObject: Any, baseCommandName: String? = null): FlyLibBuilder {
-        this.configObject = configObject
-        this.configBaseCommandName = baseCommandName
 
         return this
     }
@@ -53,6 +43,16 @@ class FlyLibBuilder(
      */
     fun defaultPermission(permission: Permission): FlyLibBuilder {
         defaultPermission = permission
+        return this
+    }
+
+    /**
+     * Set the config and its name.
+     */
+    @JvmOverloads
+    fun config(baseCommandName: String? = null, config: ConfigBuilder.() -> Unit): FlyLibBuilder {
+        this.baseCommandName = baseCommandName
+        this.config = ConfigBuilder().apply(config).build()
         return this
     }
 
@@ -82,12 +82,8 @@ class FlyLibBuilder(
         return this
     }
 
-    private fun List<Command>.setParent(parent: Command): Unit = forEach {
-        it.parent = parent
-        it.children.setParent(it)
-    }
-
-    internal fun build(): FlyLib = FlyLibImpl(plugin, commands, defaultPermission, configObject, configBaseCommandName, listenerActions)
+    internal fun build(): FlyLib =
+        FlyLibImpl(plugin, commands, defaultPermission, config, baseCommandName, listenerActions)
 }
 
 /**
