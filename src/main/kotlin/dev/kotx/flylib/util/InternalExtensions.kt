@@ -169,6 +169,7 @@ fun JsonObject.getPrimitiveArray(key: String) = get(key)!!.jsonArray.map { it.js
 fun JsonObject.getArrayArray(key: String) = get(key)!!.jsonArray.map { it.jsonArray }
 
 fun JsonObject.getStringArray(key: String) = get(key)!!.jsonArray.map { it.jsonPrimitive.content }
+fun JsonObject.getIntArray(key: String) = get(key)!!.jsonArray.map { it.jsonPrimitive.int }
 fun JsonObject.getLongArray(key: String) = get(key)!!.jsonArray.map { it.jsonPrimitive.long }
 fun JsonObject.getFloatArray(key: String) = get(key)!!.jsonArray.map { it.jsonPrimitive.float }
 fun JsonObject.getDoubleArray(key: String) = get(key)!!.jsonArray.map { it.jsonPrimitive.double }
@@ -194,6 +195,12 @@ fun JsonObject.getArrayArrayOrNull(key: String) = try {
 
 fun JsonObject.getStringArrayOrNull(key: String) = try {
     get(key)?.jsonArray?.map { it.jsonPrimitive.contentOrNull }
+} catch (e: Exception) {
+    null
+}
+
+fun JsonObject.getIntArrayOrNull(key: String) = try {
+    get(key)?.jsonArray?.map { it.jsonPrimitive.intOrNull }
 } catch (e: Exception) {
     null
 }
