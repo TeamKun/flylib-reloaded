@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2021 kotx__
  */
-
 package dev.kotx.flylib.util
 
 import net.kyori.adventure.text.Component
