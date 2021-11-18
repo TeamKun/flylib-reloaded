@@ -47,8 +47,7 @@ Replace `[version]` with the version you want to use.
 <summary>Gradle Kotlin DSL</summary>
 <div>
 
-Please add the following configs to your `build.gradle.kts`.  
-Use the `shadowJar` task when building plugins (generating jars to put in plugins/).
+Using shadowJar, you can generate a Jar file with all dependencies, including the Kotlin runtime.
 
 ```kotlin
 plugins {
@@ -62,16 +61,10 @@ dependencies {
 }
 ```
 
-The following code is a configuration of shadowJar that combines all dependencies into one jar.  
-It relocates all classes under the project's groupId to avoid conflicts that can occur when multiple plugins using
-different versions of flylib are deployed to the server.
-
-By setting the following, the contents of the jar file will look like this
+Configure relocation to be done at build time to avoid conflicts when loading multiple plugins that use FlyLib Reloaded.
 
 ```kotlin
 import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
-
-//some gradle configurations
 
 val relocateShadow by tasks.registering(ConfigureShadowRelocation::class) {
     target = tasks.shadowJar.get()
@@ -90,6 +83,8 @@ tasks.shadowJar {
 <summary>Gradle</summary>
 <div>
 
+Using shadowJar, you can generate a Jar file with all dependencies, including the Kotlin runtime.
+
 ```groovy
 plugins {
     id 'com.github.johnrengelman.shadow' version '6.0.0'
@@ -102,16 +97,10 @@ dependencies {
 }
 ```
 
-The following code is a configuration of shadowJar that combines all dependencies into one jar.  
-It relocates all classes under the project's groupId to avoid conflicts that can occur when multiple plugins using
-different versions of flylib are deployed to the server.
-
-By setting the following, the contents of the jar file will look like this
+Configure relocation to be done at build time to avoid conflicts when loading multiple plugins that use FlyLib Reloaded.
 
 ```groovy
 import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
-
-//some gradle configurations
 
 task relocateShadow(type: ConfigureShadowRelocation) {
     target = tasks.shadowJar
