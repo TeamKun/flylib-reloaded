@@ -7,11 +7,11 @@ package dev.kotx.flylib.command
 /**
  * Command usage and definition
  */
-class Usage(
+class Usage<T>(
     /**
      * A list of arguments. This is also used for the definition.
      */
-    val arguments: List<Argument<*>>,
+    val arguments: List<Argument<*, T>>,
     /**
      * Explanation of usage and definition. Used in the default help message.
      */
@@ -23,5 +23,5 @@ class Usage(
     /**
      * What will be executed if you enter this definition.
      */
-    val action: ContextAction? = null
+    val action: ContextAction<T>? = null
 )

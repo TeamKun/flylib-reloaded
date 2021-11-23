@@ -18,16 +18,16 @@ import dev.kotx.flylib.command.arguments.VectorArgument
 /**
  * Builder for creating arguments and definitions.
  */
-class UsageBuilder {
-    private val arguments = mutableListOf<Argument<*>>()
+class UsageBuilder<T> {
+    private val arguments = mutableListOf<Argument<*, T>>()
     private var description: String? = null
     private var permission: Permission? = null
-    private var action: ContextAction? = null
+    private var action: ContextAction<T>? = null
 
     /**
      * Description of arguments and definitions.
      */
-    fun description(description: String): UsageBuilder {
+    fun description(description: String): UsageBuilder<T> {
         this.description = description
         return this
     }
@@ -35,7 +35,7 @@ class UsageBuilder {
     /**
      * Permission to execute.
      */
-    fun permission(permission: Permission): UsageBuilder {
+    fun permission(permission: Permission): UsageBuilder<T> {
         this.permission = permission
         return this
     }
@@ -43,7 +43,7 @@ class UsageBuilder {
     /**
      * What is done.
      */
-    fun executes(action: ContextAction): UsageBuilder {
+    fun executes(action: ContextAction<T>): UsageBuilder<T> {
         this.action = action
         return this
     }
@@ -53,8 +53,8 @@ class UsageBuilder {
      */
     fun literalArgument(
         literal: String,
-        action: ContextAction? = null
-    ): UsageBuilder {
+        action: ContextAction<T>? = null
+    ): UsageBuilder<T> {
         this.arguments.add(LiteralArgument(literal, action))
         return this
     }
@@ -67,9 +67,9 @@ class UsageBuilder {
         name: String,
         min: Int = Int.MIN_VALUE,
         max: Int = Int.MAX_VALUE,
-        suggestion: SuggestionAction? = null,
-        action: ContextAction? = null
-    ): UsageBuilder {
+        suggestion: SuggestionAction<T>? = null,
+        action: ContextAction<T>? = null
+    ): UsageBuilder<T> {
         this.arguments.add(IntegerArgument(name, min, max, suggestion, action))
         return this
     }
@@ -78,9 +78,9 @@ class UsageBuilder {
      * An argument that takes an Int value.
      */
     fun integerArgument(
-        name: String, suggestion: SuggestionAction? = null,
-        action: ContextAction? = null
-    ): UsageBuilder {
+        name: String, suggestion: SuggestionAction<T>? = null,
+        action: ContextAction<T>? = null
+    ): UsageBuilder<T> {
         this.arguments.add(IntegerArgument(name, suggestion = suggestion, action = action))
         return this
     }
@@ -93,9 +93,9 @@ class UsageBuilder {
         name: String,
         min: Long = Long.MIN_VALUE,
         max: Long = Long.MAX_VALUE,
-        suggestion: SuggestionAction? = null,
-        action: ContextAction? = null
-    ): UsageBuilder {
+        suggestion: SuggestionAction<T>? = null,
+        action: ContextAction<T>? = null
+    ): UsageBuilder<T> {
         this.arguments.add(LongArgument(name, min, max, suggestion, action))
         return this
     }
@@ -104,9 +104,9 @@ class UsageBuilder {
      * An argument that takes a long value.
      */
     fun longArgument(
-        name: String, suggestion: SuggestionAction? = null,
-        action: ContextAction? = null
-    ): UsageBuilder {
+        name: String, suggestion: SuggestionAction<T>? = null,
+        action: ContextAction<T>? = null
+    ): UsageBuilder<T> {
         this.arguments.add(LongArgument(name, suggestion = suggestion, action = action))
         return this
     }
@@ -119,9 +119,9 @@ class UsageBuilder {
         name: String,
         min: Double = Double.MIN_VALUE,
         max: Double = Double.MAX_VALUE,
-        suggestion: SuggestionAction? = null,
-        action: ContextAction? = null
-    ): UsageBuilder {
+        suggestion: SuggestionAction<T>? = null,
+        action: ContextAction<T>? = null
+    ): UsageBuilder<T> {
         this.arguments.add(DoubleArgument(name, min, max, suggestion, action))
         return this
     }
@@ -130,9 +130,9 @@ class UsageBuilder {
      * An argument that takes a double value.
      */
     fun doubleArgument(
-        name: String, suggestion: SuggestionAction? = null,
-        action: ContextAction? = null
-    ): UsageBuilder {
+        name: String, suggestion: SuggestionAction<T>? = null,
+        action: ContextAction<T>? = null
+    ): UsageBuilder<T> {
         this.arguments.add(DoubleArgument(name, suggestion = suggestion, action = action))
         return this
     }
@@ -145,9 +145,9 @@ class UsageBuilder {
         name: String,
         min: Float = Float.MIN_VALUE,
         max: Float = Float.MAX_VALUE,
-        suggestion: SuggestionAction? = null,
-        action: ContextAction? = null
-    ): UsageBuilder {
+        suggestion: SuggestionAction<T>? = null,
+        action: ContextAction<T>? = null
+    ): UsageBuilder<T> {
         this.arguments.add(FloatArgument(name, min, max, suggestion, action))
         return this
     }
@@ -156,9 +156,9 @@ class UsageBuilder {
      * An argument that takes a float value.
      */
     fun floatArgument(
-        name: String, suggestion: SuggestionAction? = null,
-        action: ContextAction? = null
-    ): UsageBuilder {
+        name: String, suggestion: SuggestionAction<T>? = null,
+        action: ContextAction<T>? = null
+    ): UsageBuilder<T> {
         this.arguments.add(LongArgument(name, suggestion = suggestion, action = action))
         return this
     }
@@ -170,9 +170,9 @@ class UsageBuilder {
     fun stringArgument(
         name: String,
         type: StringArgument.Type = StringArgument.Type.WORD,
-        suggestion: SuggestionAction? = null,
-        action: ContextAction? = null
-    ): UsageBuilder {
+        suggestion: SuggestionAction<T>? = null,
+        action: ContextAction<T>? = null
+    ): UsageBuilder<T> {
         this.arguments.add(StringArgument(name, type, suggestion, action))
         return this
     }
@@ -181,9 +181,9 @@ class UsageBuilder {
      * An argument that takes a String value.
      */
     fun stringArgument(
-        name: String, suggestion: SuggestionAction? = null,
-        action: ContextAction? = null
-    ): UsageBuilder {
+        name: String, suggestion: SuggestionAction<T>? = null,
+        action: ContextAction<T>? = null
+    ): UsageBuilder<T> {
         this.arguments.add(StringArgument(name, suggestion = suggestion, action = action))
         return this
     }
@@ -193,8 +193,8 @@ class UsageBuilder {
      */
     fun selectionArgument(
         name: String, selections: List<String>,
-        action: ContextAction? = null
-    ): UsageBuilder {
+        action: ContextAction<T>? = null
+    ): UsageBuilder<T> {
         this.arguments.add(StringArgument(name, suggestion = { suggestAll(selections) }, action = action))
         return this
     }
@@ -204,8 +204,8 @@ class UsageBuilder {
      */
     fun selectionArgument(
         name: String, vararg selections: String,
-        action: ContextAction? = null
-    ): UsageBuilder {
+        action: ContextAction<T>? = null
+    ): UsageBuilder<T> {
         this.arguments.add(StringArgument(name, suggestion = { suggestAll(listOf(*selections)) }, action = action))
         return this
     }
@@ -214,9 +214,9 @@ class UsageBuilder {
      * An argument that takes a boolean value.
      */
     fun booleanArgument(
-        name: String, suggestion: SuggestionAction? = null,
-        action: ContextAction? = null
-    ): UsageBuilder {
+        name: String, suggestion: SuggestionAction<T>? = null,
+        action: ContextAction<T>? = null
+    ): UsageBuilder<T> {
         this.arguments.add(BooleanArgument(name, suggestion = suggestion, action = action))
         return this
     }
@@ -232,9 +232,9 @@ class UsageBuilder {
         name: String,
         enableSelector: Boolean = true,
         enableEntities: Boolean = true,
-        suggestion: SuggestionAction? = null,
-        action: ContextAction? = null
-    ): UsageBuilder {
+        suggestion: SuggestionAction<T>? = null,
+        action: ContextAction<T>? = null
+    ): UsageBuilder<T> {
         this.arguments.add(EntityArgument(name, enableSelector, enableEntities, suggestion, action))
         return this
     }
@@ -247,9 +247,9 @@ class UsageBuilder {
      */
     @JvmOverloads
     fun locationArgument(
-        name: String, suggestion: SuggestionAction? = null,
-        action: ContextAction? = null
-    ): UsageBuilder {
+        name: String, suggestion: SuggestionAction<T>? = null,
+        action: ContextAction<T>? = null
+    ): UsageBuilder<T> {
         this.arguments.add(LocationArgument(name, suggestion, action))
         return this
     }
@@ -262,9 +262,9 @@ class UsageBuilder {
      */
     @JvmOverloads
     fun vectorArgument(
-        name: String, suggestion: SuggestionAction? = null,
-        action: ContextAction? = null
-    ): UsageBuilder {
+        name: String, suggestion: SuggestionAction<T>? = null,
+        action: ContextAction<T>? = null
+    ): UsageBuilder<T> {
         this.arguments.add(VectorArgument(name, suggestion, action))
         return this
     }
@@ -275,9 +275,9 @@ class UsageBuilder {
 /**
  * Usage Builder actions
  */
-fun interface UsageAction {
+fun interface UsageAction<T> {
     /**
      * An method which replacing kotlin apply block.
      */
-    fun UsageBuilder.initialize()
+    fun UsageBuilder<T>.initialize()
 }

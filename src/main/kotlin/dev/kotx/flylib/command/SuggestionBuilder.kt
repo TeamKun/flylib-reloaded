@@ -13,7 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin
 /**
  * A builder that creates a list of suggestions.
  */
-class SuggestionBuilder(
+class SuggestionBuilder<T>(
     /**
      * Your plugin.
      */
@@ -21,7 +21,7 @@ class SuggestionBuilder(
     /**
      * Executed command.
      */
-    val command: Command,
+    val command: Command<T>,
     /**
      * Executed command sender. (It doesn't matter if you are a player or not.)
      */
@@ -76,7 +76,7 @@ class SuggestionBuilder(
      * Tooltips: The string displayed when the mouse hovers over a suggestion.
      */
     @JvmOverloads
-    fun suggest(content: String, tooltip: String? = null): SuggestionBuilder {
+    fun suggest(content: String, tooltip: String? = null): SuggestionBuilder<T> {
         suggestions.add(Suggestion(content, tooltip))
         return this
     }
@@ -84,7 +84,7 @@ class SuggestionBuilder(
     /**
      * Suggest multiple content.
      */
-    fun suggestAll(contents: List<String>): SuggestionBuilder {
+    fun suggestAll(contents: List<String>): SuggestionBuilder<T> {
         suggestions.addAll(contents.map { Suggestion(it, null) })
         return this
     }
@@ -95,9 +95,9 @@ class SuggestionBuilder(
 /**
  * Builder Action to add a suggestion
  */
-fun interface SuggestionAction {
+fun interface SuggestionAction<T> {
     /**
      * An method which replacing kotlin apply block.
      */
-    fun SuggestionBuilder.initialize()
+    fun SuggestionBuilder<T>.initialize()
 }

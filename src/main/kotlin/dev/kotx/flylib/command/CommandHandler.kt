@@ -9,6 +9,6 @@ import dev.kotx.flylib.FlyLib
 /**
  * An interface for CommandHandlerImpl to hiding inner method
  */
-interface CommandHandler {
-    val flyLib: FlyLib
+interface CommandHandler<T> {
+    val flyLib: FlyLib<T>
 }

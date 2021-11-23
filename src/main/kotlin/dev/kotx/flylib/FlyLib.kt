@@ -5,7 +5,6 @@
 package dev.kotx.flylib
 
 import dev.kotx.flylib.command.CommandHandler
-import dev.kotx.flylib.command.Config
 import org.bukkit.event.Event
 import org.bukkit.event.EventPriority
 import org.bukkit.plugin.java.JavaPlugin
@@ -14,7 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin
  * FlyLib interface.
  * Use FlyLibBuilder.
  */
-interface FlyLib {
+interface FlyLib<T> {
     /**
      * The original plugin that called FlyLib
      */
@@ -23,9 +22,9 @@ interface FlyLib {
     /**
      * Class that manages commands
      */
-    val commandHandler: CommandHandler
+    val commandHandler: CommandHandler<T>
 
-    val config: Config?
+    val config: T?
 
     /**
      * Listens to the specified event with Event Priority.NORMAL
@@ -39,14 +38,15 @@ interface FlyLib {
 
     fun loadConfig()
     fun saveConfig()
+    fun updateConfig(action: T.() -> Unit)
 
     companion object {
         /**
          * Start FlyLib with the specified plugin. It also supports disabling and enabling plug-ins by Plug Man, etc.
          */
         @JvmStatic
-        fun create(plugin: JavaPlugin, builder: FlyLibAction): FlyLib =
-            FlyLibBuilder(plugin).apply { builder.apply { initialize() } }.build()
+        fun <T> create(plugin: JavaPlugin, builder: FlyLibAction<T>): FlyLib<T> =
+            FlyLibBuilder<T>(plugin).apply { builder.apply { initialize() } }.build()
     }
 }
 
@@ -54,4 +54,4 @@ interface FlyLib {
  * Start FlyLib.
  * This is a function for Kotlin.
  */
-fun JavaPlugin.flyLib(builder: FlyLibAction) = FlyLib.create(this, builder)
+fun <T> JavaPlugin.flyLib(builder: FlyLibAction<T>) = FlyLib.create(this, builder)
