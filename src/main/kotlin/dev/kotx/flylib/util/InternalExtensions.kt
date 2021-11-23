@@ -4,7 +4,6 @@
 
 package dev.kotx.flylib.util
 
-import dev.kotx.flylib.command.Command
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
@@ -313,19 +312,6 @@ fun JsonElement.getArrayArrayOrNull(key: String) = try {
 } catch (e: Exception) {
     null
 }
-
-internal val Command.fullCommand: List<Command>
-    get() {
-        val commands = mutableListOf<Command>()
-        var current: Command? = this
-
-        do {
-            commands.add(current!!)
-            current = current.parent
-        } while (current != null)
-
-        return commands.reversed()
-    }
 
 internal fun <T> List<T>.joint(other: T): List<T> {
     val res = mutableListOf<T>()
