@@ -25,6 +25,7 @@ repositories {
 
 dependencies {
     api("org.jetbrains.kotlin:kotlin-stdlib:1.6.0")
+    api("org.jetbrains.kotlin:kotlin-reflect:1.6.0")
     api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.1")
     api("io.insert-koin:koin-core:3.1.3")
     api("io.insert-koin:koin-core-ext:3.0.2")
