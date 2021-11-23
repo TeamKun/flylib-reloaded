@@ -25,13 +25,13 @@ import net.minecraft.server.v1_16_R3.CommandListenerWrapper
  *  Check the following for the specifications of other arguments.
  *  @see Argument
  */
-class IntegerArgument(
+class IntegerArgument<T>(
     override val name: String,
     min: Int = Int.MIN_VALUE,
     max: Int = Int.MAX_VALUE,
-    override val suggestion: SuggestionAction? = null,
-    override val action: ContextAction? = null
-) : Argument<Int> {
+    override val suggestion: SuggestionAction<T>? = null,
+    override val action: ContextAction<T>? = null
+) : Argument<Int, T> {
     override val type: ArgumentType<*>? = IntegerArgumentType.integer(min, max)
     override fun parse(context: CommandContext<CommandListenerWrapper>, key: String): Int =
         IntegerArgumentType.getInteger(context, key)

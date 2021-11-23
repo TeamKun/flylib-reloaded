@@ -12,7 +12,7 @@ import net.minecraft.server.v1_16_R3.CommandListenerWrapper
  *  Command arguments. It can be used as a child element of Usage.
  *  There is a type in the argument, type analysis is automatically performed when the client inputs, and if it cannot be parsed, the command execution is refused.
  */
-interface Argument<T> {
+interface Argument<T, C> {
     /**
      * Name of argument.
      */
@@ -26,12 +26,12 @@ interface Argument<T> {
     /**
      * Lambda expression for tab completion of its arguments.
      */
-    val suggestion: SuggestionAction?
+    val suggestion: SuggestionAction<C>?
 
     /**
      * Argument context action
      */
-    val action: ContextAction?
+    val action: ContextAction<C>?
 
     fun parse(context: CommandContext<CommandListenerWrapper>, key: String): T
 }

@@ -21,12 +21,12 @@ import net.minecraft.server.v1_16_R3.CommandListenerWrapper
  *  Check the following for the specifications of other arguments.
  *  @see Argument
  */
-class LiteralArgument(
+class LiteralArgument<T>(
     override val name: String,
-    override val action: ContextAction? = null
-) : Argument<String> {
+    override val action: ContextAction<T>? = null
+) : Argument<String, T> {
     override val type: ArgumentType<*>? = null
-    override val suggestion: SuggestionAction? = null
+    override val suggestion: SuggestionAction<T>? = null
 
     override fun parse(context: CommandContext<CommandListenerWrapper>, key: String) = key
 }

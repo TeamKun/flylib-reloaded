@@ -25,13 +25,13 @@ import org.bukkit.entity.Entity
  *  Check the following for the specifications of other arguments.
  *  @see Argument
  */
-class EntityArgument(
+class EntityArgument<T>(
     override val name: String,
     enableSelector: Boolean = true,
     enableEntities: Boolean = true,
-    override val suggestion: SuggestionAction?,
-    override val action: ContextAction? = null
-) : Argument<List<Entity>> {
+    override val suggestion: SuggestionAction<T>?,
+    override val action: ContextAction<T>? = null
+) : Argument<List<Entity>, T> {
     override val type: ArgumentEntity = when {
         enableSelector && enableEntities -> ArgumentEntity.multipleEntities()
         enableSelector && !enableEntities -> ArgumentEntity.d()

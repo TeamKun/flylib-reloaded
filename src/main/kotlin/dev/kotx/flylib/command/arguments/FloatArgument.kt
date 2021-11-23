@@ -25,13 +25,13 @@ import net.minecraft.server.v1_16_R3.CommandListenerWrapper
  *  Check the following for the specifications of other arguments.
  *  @see Argument
  */
-class FloatArgument(
+class FloatArgument<T>(
     override val name: String,
     min: Float = Float.MIN_VALUE,
     max: Float = Float.MAX_VALUE,
-    override val suggestion: SuggestionAction? = null,
-    override val action: ContextAction? = null
-) : Argument<Float> {
+    override val suggestion: SuggestionAction<T>? = null,
+    override val action: ContextAction<T>? = null
+) : Argument<Float, T> {
     override val type: ArgumentType<*>? = FloatArgumentType.floatArg(min, max)
     override fun parse(context: CommandContext<CommandListenerWrapper>, key: String): Float =
         FloatArgumentType.getFloat(context, key)

@@ -24,11 +24,11 @@ import org.bukkit.util.Vector
  *
  *  @see Argument
  */
-class VectorArgument(
+class VectorArgument<T>(
     override val name: String,
-    override val suggestion: SuggestionAction? = null,
-    override val action: ContextAction? = null
-) : Argument<Vector> {
+    override val suggestion: SuggestionAction<T>? = null,
+    override val action: ContextAction<T>? = null
+) : Argument<Vector, T> {
     override val type: ArgumentVec3 = ArgumentVec3.a()
     override fun parse(context: CommandContext<CommandListenerWrapper>, key: String): Vector {
         val vec = ArgumentVec3.a(context, key)

@@ -23,11 +23,11 @@ import net.minecraft.server.v1_16_R3.CommandListenerWrapper
  *  Check the following for the specifications of other arguments.
  *  @see Argument
  */
-class BooleanArgument(
+class BooleanArgument<T>(
     override val name: String,
-    override val suggestion: SuggestionAction? = null,
-    override val action: ContextAction? = null
-) : Argument<Boolean> {
+    override val suggestion: SuggestionAction<T>? = null,
+    override val action: ContextAction<T>? = null
+) : Argument<Boolean, T> {
     override val type: ArgumentType<*>? = BoolArgumentType.bool()
     override fun parse(context: CommandContext<CommandListenerWrapper>, key: String): Boolean =
         BoolArgumentType.getBool(context, key)

@@ -24,11 +24,11 @@ import org.bukkit.Location
  *
  *  @see Argument
  */
-class LocationArgument(
+class LocationArgument<T>(
     override val name: String,
-    override val suggestion: SuggestionAction? = null,
-    override val action: ContextAction? = null
-) : Argument<Location> {
+    override val suggestion: SuggestionAction<T>? = null,
+    override val action: ContextAction<T>? = null
+) : Argument<Location, T> {
     override val type: ArgumentPosition = ArgumentPosition.a()
 
     override fun parse(context: CommandContext<CommandListenerWrapper>, key: String): Location {

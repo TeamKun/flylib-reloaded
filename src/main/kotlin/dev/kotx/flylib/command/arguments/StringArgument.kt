@@ -25,12 +25,12 @@ import net.minecraft.server.v1_16_R3.CommandListenerWrapper
  *  Check the following for the specifications of other arguments.
  *  @see Argument
  */
-class StringArgument(
+class StringArgument<T>(
     override val name: String,
     type: Type = Type.WORD,
-    override val suggestion: SuggestionAction? = null,
-    override val action: ContextAction? = null
-) : Argument<String> {
+    override val suggestion: SuggestionAction<T>? = null,
+    override val action: ContextAction<T>? = null
+) : Argument<String, T> {
     override val type: StringArgumentType = when (type) {
         Type.WORD -> StringArgumentType.word()
         Type.PHRASE_QUOTED -> StringArgumentType.string()
