@@ -32,9 +32,7 @@ import dev.kotx.flylib.util.ComponentBuilder
 import dev.kotx.flylib.util.GREEN
 import dev.kotx.flylib.util.RED
 import dev.kotx.flylib.util.RESET
-import dev.kotx.flylib.util.asJsonObject
 import dev.kotx.flylib.util.component
-import dev.kotx.flylib.util.fullCommand
 import dev.kotx.flylib.util.getBooleanArrayOrNull
 import dev.kotx.flylib.util.getBooleanOrNull
 import dev.kotx.flylib.util.getDoubleArrayOrNull
@@ -69,15 +67,15 @@ import kotlin.io.path.writeText
 private typealias BukkitPermission = org.bukkit.permissions.Permission
 
 @Suppress("UNCHECKED_CAST")
-internal class CommandHandlerImpl(
-    override val flyLib: FlyLibImpl,
-    commands: List<Command>,
+internal class CommandHandlerImpl<T>(
+    override val flyLib: FlyLibImpl<T>,
+    commands: List<Command<T>>,
     private val defaultPermission: Permission,
-    private val config: Config?,
+    private var config: T?,
     private val configCommandName: String?
-) : CommandHandler {
+) : CommandHandler<T> {
     private val commands = commands.toMutableList()
-    private val depthMap = mutableMapOf<Command, Int>()
+    private val depthMap = mutableMapOf<Command<T>, Int>()
     private val gson = GsonBuilder()
         .setPrettyPrinting()
         .serializeNulls()
@@ -88,7 +86,7 @@ internal class CommandHandlerImpl(
             loadConfig()
 
             val baseCommand = commands.find { it.name.equals(configCommandName, true) }
-                ?: object : Command(flyLib.plugin.name.lowercase().replace(" ", "")) {
+                ?: object : Command<T>(flyLib.plugin.name.lowercase().replace(" ", "")) {
 
                     init {
                         permission(Permission.OP)
@@ -96,7 +94,7 @@ internal class CommandHandlerImpl(
                 }
 
             baseCommand.children.find { it.name.equals("config", true) }
-                ?: config.getConfigCommand("config").also { baseCommand.children.add(it) }
+                ?: config!!.getConfigCommand("config").also { baseCommand.children.add(it) }
 
             commands.removeIf { it.name == baseCommand.name }
             commands.add(baseCommand)
@@ -182,7 +180,7 @@ internal class CommandHandlerImpl(
     internal fun load() {
         val commandMap = flyLib.plugin.server.commandMap
 
-        fun registerPermission(name: String, command: Command) {
+        fun registerPermission(name: String, command: Command<T>) {
             commandMap.getCommand(name)?.permission = command.getCommandPermission().first
             commandMap.getCommand("minecraft:$name")?.permission = command.getCommandPermission().first
         }
@@ -193,7 +191,7 @@ internal class CommandHandlerImpl(
         }
     }
 
-    private fun getArgument(name: String, command: Command): LiteralCommandNode<CommandListenerWrapper> {
+    private fun getArgument(name: String, command: Command<T>): LiteralCommandNode<CommandListenerWrapper> {
         val commandArgument = LiteralArgumentBuilder.literal<CommandListenerWrapper>(name)
         commandArgument.requires {
             it.bukkitSender.hasPermission(command.getCommandPermission().first)
@@ -241,10 +239,12 @@ internal class CommandHandlerImpl(
 
                     try {
                         if (i == 0)
-                            argument.action?.apply { context.execute() } ?: usage.action?.apply { context.execute() }
-                            ?: command.apply { context.execute() }
+                            argument.action?.apply { context.execute() }
+                                ?: usage.action?.apply { context.execute() }
+                                ?: command.apply { context.execute() }
                         else
-                            argument.action?.apply { context.execute() } ?: context.sendHelp()
+                            argument.action?.apply { context.execute() }
+                                ?: context.sendHelp()
                     } catch (e: Exception) {
                         e.printStackTrace()
 
@@ -320,11 +320,11 @@ internal class CommandHandlerImpl(
     }
 
     private fun getCommandContext(
-        command: Command,
+        command: Command<T>,
         context: com.mojang.brigadier.context.CommandContext<CommandListenerWrapper>,
-        usage: Usage? = null
+        usage: Usage<T>? = null
     ) = CommandContext(
-        flyLib.plugin,
+        flyLib,
         config,
         command,
         context.source.bukkitSender,
@@ -335,7 +335,7 @@ internal class CommandHandlerImpl(
         usage?.parseArguments(context) ?: emptyList()
     )
 
-    private fun Command.getCommandPermission(): Pair<String, Permission> {
+    private fun Command<T>.getCommandPermission(): Pair<String, Permission> {
         val definedPermission = permission ?: defaultPermission
 
         val pluginName = flyLib.plugin.name.lowercase().replace(" ", "_")
@@ -346,7 +346,7 @@ internal class CommandHandlerImpl(
         return permissionName to definedPermission
     }
 
-    private fun Command.getUsagePermission(usage: Usage): Pair<String, Permission> {
+    private fun Command<T>.getUsagePermission(usage: Usage<T>): Pair<String, Permission> {
         val definedPermission = usage.permission ?: permission ?: defaultPermission
 
         val pluginName = flyLib.plugin.name.lowercase()
@@ -358,7 +358,7 @@ internal class CommandHandlerImpl(
         return permissionName to definedPermission
     }
 
-    private fun Usage.parseArguments(ctx: com.mojang.brigadier.context.CommandContext<CommandListenerWrapper>) =
+    private fun Usage<T>.parseArguments(ctx: com.mojang.brigadier.context.CommandContext<CommandListenerWrapper>) =
         arguments.map {
             try {
                 it.parse(ctx, it.name)
@@ -367,7 +367,7 @@ internal class CommandHandlerImpl(
             }
         }
 
-    private fun List<Command>.handleChildren(depth: Int) {
+    private fun List<Command<T>>.handleChildren(depth: Int) {
         val children = flatMap {
             depthMap[it] = depth
             it.children
@@ -377,19 +377,57 @@ internal class CommandHandlerImpl(
             children.handleChildren(depth + 1)
     }
 
-    private fun List<Command>.handleParent(parent: Command): Unit = forEach {
+    private fun List<Command<T>>.handleParent(parent: Command<T>): Unit = forEach {
         it.parent = parent
         it.children.handleParent(it)
     }
 
-    private fun Config.getConfigCommand(name: String, baseName: String? = null): Command = object : Command(name) {
+    private fun Any.getElements(): List<ConfigElement<*>> = this::class.java.declaredFields.mapNotNull {
+        it.isAccessible = true
+        when (it.type) {
+            String::class.java -> StringElement(it.name, it.get(this) as String)
+            Int::class.java -> IntegerElement(
+                it.name,
+                it.getInt(this),
+                it.getAnnotation(Min::class.java)?.min?.toInt() ?: Int.MIN_VALUE,
+                it.getAnnotation(Max::class.java)?.max?.toInt() ?: Int.MAX_VALUE
+            )
+            Long::class.java -> LongElement(
+                it.name,
+                it.getLong(this),
+                it.getAnnotation(Min::class.java)?.min ?: Long.MIN_VALUE,
+                it.getAnnotation(Max::class.java)?.max ?: Long.MAX_VALUE
+            )
+            Float::class.java -> FloatElement(
+                it.name,
+                it.getFloat(this),
+                it.getAnnotation(Min::class.java)?.min?.toFloat() ?: Float.MIN_VALUE,
+                it.getAnnotation(Max::class.java)?.max?.toFloat() ?: Float.MAX_VALUE
+            )
+            Double::class.java -> DoubleElement(
+                it.name,
+                it.getDouble(this),
+                it.getAnnotation(Min::class.java)?.min?.toDouble() ?: Double.MIN_VALUE,
+                it.getAnnotation(Max::class.java)?.max?.toDouble() ?: Double.MAX_VALUE
+            )
+            Boolean::class.java -> BooleanElement(it.name, it.getBoolean(this))
+            else -> {
+                if (it.annotations.any { it::class.java == Serialize::class.java })
+                    ObjectElement(it.name, Config(it.get(this).getElements()))
+                null
+            }
+        }
+    }
+
+    private fun Any.getConfigCommand(name: String, baseName: String? = null): Command<T> = object : Command<T>(name) {
         init {
-            if (baseName == null) children(object : Command("reload") {
-                override fun CommandContext.execute() {
+            if (baseName == null) children(object : Command<T>("reload") {
+                override fun CommandContext<T>.execute() {
                     loadConfig()
-                    success("The config reload was successful.")
                 }
             })
+
+            val elements = this@getConfigCommand.getElements()
 
             elements.forEach { element ->
                 val fullName = if (baseName == null)
@@ -400,8 +438,8 @@ internal class CommandHandlerImpl(
                 when (element) {
                     is ObjectElement -> {
                         if (element.value == null)
-                            children(object : Command(element.key) {
-                                override fun CommandContext.execute() {
+                            children(object : Command<T>(element.key) {
+                                override fun CommandContext<T>.execute() {
                                     if (baseName == null)
                                         fail("The value of ${element.key} is expected to be JsonObject, but is currently set to null.")
                                     else
@@ -418,7 +456,7 @@ internal class CommandHandlerImpl(
                     }
 
                     is ArrayElement<*> -> {
-                        children(object : Command(element.key) {
+                        children(object : Command<T>(element.key) {
                             init {
                                 usage {
                                     literalArgument("get")
@@ -851,7 +889,7 @@ internal class CommandHandlerImpl(
                         })
                     }
                     else -> {
-                        children(object : Command(element.key) {
+                        children(object : Command<T>(element.key) {
                             init {
                                 usage {
                                     literalArgument("get")
@@ -870,12 +908,39 @@ internal class CommandHandlerImpl(
 
                                     when (element) {
                                         is IntegerElement -> integerArgument("value") {
-                                            element.value = typedArgs[1]!! as Int
+                                            val newValue = (typedArgs[1] as Int?)!!
+
+                                            if (newValue > element.max) {
+                                                message {
+                                                    bold("[!] ", Color.RED)
+                                                    bold("\"$fullName\" ", Color(180, 85, 227))
+                                                    append("must not exceed ", Color.RED)
+                                                    bold(element.max.toString(), Color.RED)
+                                                }
+
+                                                return@integerArgument
+                                            }
+
+                                            if (newValue < element.min) {
+                                                message {
+                                                    bold("[!] ", Color.RED)
+                                                    bold("\"$fullName\" ", Color(180, 85, 227))
+                                                    append("must not be less than ", Color.RED)
+                                                    bold(element.max.toString(), Color.RED)
+                                                }
+
+                                                return@integerArgument
+                                            }
+
+                                            this@getConfigCommand::class.java.getDeclaredField(element.key).apply {
+                                                isAccessible = true
+                                                set(this@getConfigCommand, newValue)
+                                            }
 
                                             message {
                                                 bold("[+] ", Color.GREEN)
                                                 append("set ", Color.GREEN)
-                                                append(element.value.toString())
+                                                append(newValue.toString())
                                                 append(" to ", Color.GREEN)
                                                 bold("\"$fullName\"", Color(180, 85, 227))
                                             }
@@ -883,12 +948,39 @@ internal class CommandHandlerImpl(
                                             saveConfig()
                                         }
                                         is LongElement -> longArgument("value") {
-                                            element.value = typedArgs[1]!! as Long
+                                            val newValue = (typedArgs[1] as Long?)!!
+
+                                            if (newValue > element.max) {
+                                                message {
+                                                    bold("[!] ", Color.RED)
+                                                    bold("\"$fullName\" ", Color(180, 85, 227))
+                                                    append("must not exceed ", Color.RED)
+                                                    bold(element.max.toString(), Color.RED)
+                                                }
+
+                                                return@longArgument
+                                            }
+
+                                            if (newValue < element.min) {
+                                                message {
+                                                    bold("[!] ", Color.RED)
+                                                    bold("\"$fullName\" ", Color(180, 85, 227))
+                                                    append("must not be less than ", Color.RED)
+                                                    bold(element.max.toString(), Color.RED)
+                                                }
+
+                                                return@longArgument
+                                            }
+
+                                            this@getConfigCommand::class.java.getDeclaredField(element.key).apply {
+                                                isAccessible = true
+                                                set(this@getConfigCommand, newValue)
+                                            }
 
                                             message {
                                                 bold("[+] ", Color.GREEN)
                                                 append("set ", Color.GREEN)
-                                                append(element.value.toString())
+                                                append(newValue.toString())
                                                 append(" to ", Color.GREEN)
                                                 bold("\"$fullName\"", Color(180, 85, 227))
                                             }
@@ -896,12 +988,39 @@ internal class CommandHandlerImpl(
                                             saveConfig()
                                         }
                                         is FloatElement -> floatArgument("value") {
-                                            element.value = typedArgs[1]!! as Float
+                                            val newValue = (typedArgs[1] as Float?)!!
+
+                                            if (newValue > element.max) {
+                                                message {
+                                                    bold("[!] ", Color.RED)
+                                                    bold("\"$fullName\" ", Color(180, 85, 227))
+                                                    append("must not exceed ", Color.RED)
+                                                    bold(element.max.toString(), Color.RED)
+                                                }
+
+                                                return@floatArgument
+                                            }
+
+                                            if (newValue < element.min) {
+                                                message {
+                                                    bold("[!] ", Color.RED)
+                                                    bold("\"$fullName\" ", Color(180, 85, 227))
+                                                    append("must not be less than ", Color.RED)
+                                                    bold(element.max.toString(), Color.RED)
+                                                }
+
+                                                return@floatArgument
+                                            }
+
+                                            this@getConfigCommand::class.java.getDeclaredField(element.key).apply {
+                                                isAccessible = true
+                                                set(this@getConfigCommand, newValue)
+                                            }
 
                                             message {
                                                 bold("[+] ", Color.GREEN)
                                                 append("set ", Color.GREEN)
-                                                append(element.value.toString())
+                                                append(newValue.toString())
                                                 append(" to ", Color.GREEN)
                                                 bold("\"$fullName\"", Color(180, 85, 227))
                                             }
@@ -909,12 +1028,39 @@ internal class CommandHandlerImpl(
                                             saveConfig()
                                         }
                                         is DoubleElement -> doubleArgument("value") {
-                                            element.value = typedArgs[1]!! as Double
+                                            val newValue = (typedArgs[1] as Double?)!!
+
+                                            if (newValue > element.max) {
+                                                message {
+                                                    bold("[!] ", Color.RED)
+                                                    bold("\"$fullName\" ", Color(180, 85, 227))
+                                                    append("must not exceed ", Color.RED)
+                                                    bold(element.max.toString(), Color.RED)
+                                                }
+
+                                                return@doubleArgument
+                                            }
+
+                                            if (newValue < element.min) {
+                                                message {
+                                                    bold("[!] ", Color.RED)
+                                                    bold("\"$fullName\" ", Color(180, 85, 227))
+                                                    append("must not be less than ", Color.RED)
+                                                    bold(element.max.toString(), Color.RED)
+                                                }
+
+                                                return@doubleArgument
+                                            }
+
+                                            this@getConfigCommand::class.java.getDeclaredField(element.key).apply {
+                                                isAccessible = true
+                                                set(this@getConfigCommand, newValue)
+                                            }
 
                                             message {
                                                 bold("[+] ", Color.GREEN)
                                                 append("set ", Color.GREEN)
-                                                append(element.value.toString())
+                                                append(newValue.toString())
                                                 append(" to ", Color.GREEN)
                                                 bold("\"$fullName\"", Color(180, 85, 227))
                                             }
@@ -922,12 +1068,16 @@ internal class CommandHandlerImpl(
                                             saveConfig()
                                         }
                                         is StringElement -> stringArgument("value") {
-                                            element.value = typedArgs[1]!! as String
+                                            val newValue = (typedArgs[1] as String?)!!
+                                            this@getConfigCommand::class.java.getDeclaredField(element.key).apply {
+                                                isAccessible = true
+                                                set(this@getConfigCommand, newValue)
+                                            }
 
                                             message {
                                                 bold("[+] ", Color.GREEN)
                                                 append("set ", Color.GREEN)
-                                                append(element.value.toString())
+                                                append(newValue.toString())
                                                 append(" to ", Color.GREEN)
                                                 bold("\"$fullName\"", Color(180, 85, 227))
                                             }
@@ -935,12 +1085,16 @@ internal class CommandHandlerImpl(
                                             saveConfig()
                                         }
                                         is BooleanElement -> booleanArgument("value") {
-                                            element.value = typedArgs[1]!! as Boolean
+                                            val newValue = (typedArgs[1] as Boolean?)!!
+                                            this@getConfigCommand::class.java.getDeclaredField(element.key).apply {
+                                                isAccessible = true
+                                                set(this@getConfigCommand, newValue)
+                                            }
 
                                             message {
                                                 bold("[+] ", Color.GREEN)
                                                 append("set ", Color.GREEN)
-                                                append(element.value.toString())
+                                                append(newValue.toString())
                                                 append(" to ", Color.GREEN)
                                                 bold("\"$fullName\"", Color(180, 85, 227))
                                             }
@@ -973,7 +1127,7 @@ internal class CommandHandlerImpl(
     }
 
     internal fun saveConfig() {
-        val json = config!!.getJsonString(gson)
+        val json = gson.toJson(config)
 
         Path("./plugins/config/${flyLib.plugin.name}.json")
             .also { it.parent.createDirectories() }
@@ -984,9 +1138,14 @@ internal class CommandHandlerImpl(
     internal fun loadConfig() {
         if (!Path("./plugins/config/${flyLib.plugin.name}.json").exists()) return
 
-        val json = Path("./plugins/config/${flyLib.plugin.name}.json").readText().asJsonObject()
+        val json = Path("./plugins/config/${flyLib.plugin.name}.json").readText()
 
-        config!!.loadJsonObject(json)
+        config = gson.fromJson<T>(json, config!!::class.java)
+    }
+
+    internal fun updateConfig(action: T.() -> Unit) {
+        config!!.apply(action)
+        saveConfig()
     }
 
     private fun Config.loadJsonObject(json: JsonObject) {
