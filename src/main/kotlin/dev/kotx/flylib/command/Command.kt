@@ -7,7 +7,7 @@ package dev.kotx.flylib.command
 /**
  * An Command used for FlyLib
  */
-abstract class Command(
+abstract class Command<T>(
     internal val name: String,
 ) {
     /**
@@ -30,6 +30,19 @@ abstract class Command(
      */
     @JvmField
     internal val aliases: MutableList<String> = mutableListOf()
+
+    internal val fullCommand: List<Command<T>>
+        get() {
+            val commands = mutableListOf<Command<T>>()
+            var current: Command<T>? = this
+
+            do {
+                commands.add(current!!)
+                current = current.parent
+            } while (current != null)
+
+            return commands.reversed()
+        }
 
     /**
      * Command definition and usage.
@@ -62,7 +75,7 @@ abstract class Command(
      * ```
      */
     @JvmField
-    internal val usages: MutableList<Usage> = mutableListOf()
+    internal val usages: MutableList<Usage<T>> = mutableListOf()
 
     /**
      * Command usage example. Used for the default help message.
@@ -74,14 +87,14 @@ abstract class Command(
      * A child command. It is automatically registered as a command.
      */
     @JvmField
-    internal val children: MutableList<Command> = mutableListOf()
+    internal val children: MutableList<Command<T>> = mutableListOf()
 
-    internal var parent: Command? = null
+    internal var parent: Command<T>? = null
 
     /**
      * The block that executes the command. The default is to display help for that command.
      */
-    open fun CommandContext.execute() {
+    open fun CommandContext<T>.execute() {
         sendHelp()
     }
 
@@ -140,8 +153,8 @@ abstract class Command(
      * }
      * ```
      */
-    protected fun usage(builder: UsageAction) {
-        val usage = UsageBuilder().apply { builder.apply { initialize() } }.build()
+    protected fun usage(builder: UsageAction<T>) {
+        val usage = UsageBuilder<T>().apply { builder.apply { initialize() } }.build()
         usages.add(usage)
     }
 
@@ -155,7 +168,7 @@ abstract class Command(
     /**
      * Add child command. It is automatically registered as a command.
      */
-    protected fun children(vararg children: Command) {
+    protected fun children(vararg children: Command<T>) {
         this.children.addAll(children)
     }
 }
