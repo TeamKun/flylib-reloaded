@@ -4,11 +4,11 @@
 
 package dev.kotx.flylib.command
 
+import dev.kotx.flylib.FlyLib
 import dev.kotx.flylib.command.arguments.LiteralArgument
 import dev.kotx.flylib.util.ComponentBuilderAction
 import dev.kotx.flylib.util.component
 import dev.kotx.flylib.util.fail
-import dev.kotx.flylib.util.fullCommand
 import dev.kotx.flylib.util.joint
 import dev.kotx.flylib.util.message
 import dev.kotx.flylib.util.pluginMessage
@@ -22,7 +22,6 @@ import org.bukkit.Server
 import org.bukkit.World
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.bukkit.plugin.java.JavaPlugin
 import java.awt.Color
 
 /**
@@ -30,16 +29,13 @@ import java.awt.Color
  *  It is passed as an argument or receiver when executing a command or completing a tab.
  *  This class holds information when executing a command or completing a tab, which can be retrieved by the plug-in that registered the command, the command itself, the sender of the command, etc. It can also send a message to the executor of the command, display usage instructions, etc.
  */
-class CommandContext(
-    /**
-     * The plugin you registered FlyLib
-     */
-    val plugin: JavaPlugin,
-    val config: Config?,
+class CommandContext<T>(
+    val flyLib: FlyLib<T>,
+    val config: T?,
     /**
      * The command that has been executed or is about to be executed.
      */
-    val command: Command,
+    val command: Command<T>,
     /**
      * The executor of the command or the entity that is about to execute it (may not be the player).
      */
@@ -59,6 +55,8 @@ class CommandContext(
     depth: Int,
     val typedArgs: List<Any?> = emptyList()
 ) {
+    val plugin = flyLib.plugin
+
     /**
      * Executed command sender. (Limited to the player, but null if executed by someone other than the player.)
      */
@@ -157,6 +155,8 @@ class CommandContext(
      */
     fun pluginMessageFail(text: String) = sender.pluginMessageFail(plugin, text)
 
+    fun updateConfig(action: T.() -> Unit) = flyLib.updateConfig(action)
+
     /**
      * Display the information of the command in this context in the sender of this context. (It will also include usages and examples.)
      */
@@ -253,9 +253,9 @@ class CommandContext(
  * A wrapper for a function that is called when Usage is executed
  * You can use SAM conversation in Java
  */
-fun interface ContextAction {
+fun interface ContextAction<T> {
     /**
      * An method which replacing kotlin apply block.
      */
-    fun CommandContext.execute()
+    fun CommandContext<T>.execute()
 }
