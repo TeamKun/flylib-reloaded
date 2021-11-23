@@ -117,8 +117,8 @@ var pathtoroot = "../../../../../";
                     <hr>
                     <pre class="wrap-overflow">
 
-public final class <span class="typeNameLabel"><a href=LiteralArgument.html>LiteralArgument</a></span>
- implements <a href=../Argument.html>Argument</a>&lt;<a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html>String</a>&gt;
+public final class <span class="typeNameLabel"><a href=LiteralArgument.html>LiteralArgument</a>&lt;T extends <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html>Object</a>&gt;</span>
+ implements <a href=../Argument.html>Argument</a>&lt;<a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html>String</a>, <a href=LiteralArgument.html>T</a>&gt;
                     </pre>
                     <div class="block"><p>An argument that does not have any user input. Input other than "name" is not allowed. If anything other than "name" is entered, an error will be displayed on the client side and even if you try to execute it, it will not be accepted. Expected input (if "name" specified "test"): <code>test</code></p></div>
                 </li>
@@ -174,7 +174,7 @@ public final class <span class="typeNameLabel"><a href=LiteralArgument.html>Lite
                                         </tr>
                                         
                                         <tr class="rowColor">
-                                            <td class="colFirst"><code>private final <a href=../SuggestionAction.html>SuggestionAction</a></code></td>
+                                            <td class="colFirst"><code>private final <a href=../SuggestionAction.html>SuggestionAction</a>&lt;<a href=LiteralArgument.html>T</a>&gt;</code></td>
                                             <th class="colSecond" scope="row"><code><a href=LiteralArgument.html#suggestion>suggestion</a></code></th>
                                             <td class="colLast"></td>
                                         </tr>
@@ -186,7 +186,7 @@ public final class <span class="typeNameLabel"><a href=LiteralArgument.html>Lite
                                         </tr>
                                         
                                         <tr class="rowColor">
-                                            <td class="colFirst"><code>private final <a href=../ContextAction.html>ContextAction</a></code></td>
+                                            <td class="colFirst"><code>private final <a href=../ContextAction.html>ContextAction</a>&lt;<a href=LiteralArgument.html>T</a>&gt;</code></td>
                                             <th class="colSecond" scope="row"><code><a href=LiteralArgument.html#action>action</a></code></th>
                                             <td class="colLast"></td>
                                         </tr>
@@ -217,7 +217,7 @@ public final class <span class="typeNameLabel"><a href=LiteralArgument.html>Lite
                                         
                                             <tr class="altColor">
                                                 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a
-                                                        href="#LiteralArgument(String,ContextAction)">LiteralArgument</a></span>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> name, <a href=../ContextAction.html>ContextAction</a> action)</code></th>
+                                                        href="#LiteralArgument(String,ContextAction)">LiteralArgument</a></span>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> name, <a href=../ContextAction.html>ContextAction</a>&lt;<a href=LiteralArgument.html>T</a>&gt; action)</code></th>
                                                 <td class="colLast"></td>
                                             </tr>
                                         
@@ -279,7 +279,7 @@ public final class <span class="typeNameLabel"><a href=LiteralArgument.html>Lite
                                         </tr>
                                         
                                         <tr id="i1" class="rowColor">
-                                            <td class="colFirst"><code><a href=../SuggestionAction.html>SuggestionAction</a></code>
+                                            <td class="colFirst"><code><a href=../SuggestionAction.html>SuggestionAction</a>&lt;<a href=LiteralArgument.html>T</a>&gt;</code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=LiteralArgument.html#getSuggestion()>getSuggestion</a>() </code>
                                             </th>
@@ -295,7 +295,7 @@ public final class <span class="typeNameLabel"><a href=LiteralArgument.html>Lite
                                         </tr>
                                         
                                         <tr id="i3" class="rowColor">
-                                            <td class="colFirst"><code><a href=../ContextAction.html>ContextAction</a></code>
+                                            <td class="colFirst"><code><a href=../ContextAction.html>ContextAction</a>&lt;<a href=LiteralArgument.html>T</a>&gt;</code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=LiteralArgument.html#getAction()>getAction</a>() </code>
                                             </th>
@@ -345,7 +345,7 @@ public final class <span class="typeNameLabel"><a href=LiteralArgument.html>Lite
                                 <ul class="blockList">
                                     <li class="blockList">
                                         <h4>LiteralArgument</h4>
-                                        <pre>LiteralArgument(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> name, <a href=../ContextAction.html>ContextAction</a> action)</pre>
+                                        <pre>LiteralArgument(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> name, <a href=../ContextAction.html>ContextAction</a>&lt;<a href=LiteralArgument.html>T</a>&gt; action)</pre>
                                         <div class="block"></div>
                                         
                                         <dl>
@@ -398,7 +398,7 @@ public final class <span class="typeNameLabel"><a href=LiteralArgument.html>Lite
                                           >
                                     <li class="blockList">
                                         <h4>getSuggestion</h4>
-                                        <pre class="methodSignature"> <a href=../SuggestionAction.html>SuggestionAction</a> <a href=LiteralArgument.html#getSuggestion()>getSuggestion</a>()</pre>
+                                        <pre class="methodSignature"> <a href=../SuggestionAction.html>SuggestionAction</a>&lt;<a href=LiteralArgument.html>T</a>&gt; <a href=LiteralArgument.html#getSuggestion()>getSuggestion</a>()</pre>
                                         <div class="block"><p>Lambda expression for tab completion of its arguments.</p></div>
                                         
                                         <!-- TODO missing return annotation -->
@@ -428,7 +428,7 @@ public final class <span class="typeNameLabel"><a href=LiteralArgument.html>Lite
                                           >
                                     <li class="blockList">
                                         <h4>getAction</h4>
-                                        <pre class="methodSignature"> <a href=../ContextAction.html>ContextAction</a> <a href=LiteralArgument.html#getAction()>getAction</a>()</pre>
+                                        <pre class="methodSignature"> <a href=../ContextAction.html>ContextAction</a>&lt;<a href=LiteralArgument.html>T</a>&gt; <a href=LiteralArgument.html#getAction()>getAction</a>()</pre>
                                         <div class="block"><p>Argument context action</p></div>
                                         
                                         <!-- TODO missing return annotation -->

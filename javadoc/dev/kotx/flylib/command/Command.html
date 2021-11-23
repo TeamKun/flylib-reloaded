@@ -114,7 +114,7 @@ var pathtoroot = "../../../../";
                     <hr>
                     <pre class="wrap-overflow">
 
-public abstract class <span class="typeNameLabel"><a href=Command.html>Command</a></span>
+public abstract class <span class="typeNameLabel"><a href=Command.html>Command</a>&lt;T extends <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html>Object</a>&gt;</span>
 
                     </pre>
                     <div class="block"><p>An Command used for FlyLib</p></div>
@@ -246,7 +246,7 @@ public abstract class <span class="typeNameLabel"><a href=Command.html>Command</
                                         <tr id="i0" class="altColor">
                                             <td class="colFirst"><code><a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a></code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=Command.html#execute(CommandContext)>execute</a>(<a href=CommandContext.html>CommandContext</a> $self) </code>
+                                            <th class="colSecond" scope="row"><code><a href=Command.html#execute(CommandContext)>execute</a>(<a href=CommandContext.html>CommandContext</a>&lt;<a href=Command.html>T</a>&gt; $self) </code>
                                             </th>
                                             <td class="colLast">The block that executes the command.</td>
                                         </tr>
@@ -313,7 +313,7 @@ public abstract class <span class="typeNameLabel"><a href=Command.html>Command</
                                           >
                                     <li class="blockList">
                                         <h4>execute</h4>
-                                        <pre class="methodSignature"> <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a> <a href=Command.html#execute(CommandContext)>execute</a>(<a href=CommandContext.html>CommandContext</a> $self)</pre>
+                                        <pre class="methodSignature"> <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a> <a href=Command.html#execute(CommandContext)>execute</a>(<a href=CommandContext.html>CommandContext</a>&lt;<a href=Command.html>T</a>&gt; $self)</pre>
                                         <div class="block"><p>The block that executes the command. The default is to display help for that command.</p></div>
                                         
                                         <!-- TODO missing return annotation -->
