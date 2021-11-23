@@ -6,7 +6,6 @@ package dev.kotx.flylib
 
 import dev.kotx.flylib.command.Command
 import dev.kotx.flylib.command.CommandHandlerImpl
-import dev.kotx.flylib.command.Config
 import dev.kotx.flylib.command.Permission
 import dev.kotx.flylib.util.BOLD
 import dev.kotx.flylib.util.CYAN
@@ -24,15 +23,14 @@ import org.bukkit.plugin.RegisteredListener
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.dsl.module
 
-internal class FlyLibImpl(
+internal class FlyLibImpl<T>(
     override val plugin: JavaPlugin,
-    commands: List<Command>,
+    commands: List<Command<T>>,
     defaultPermission: Permission,
-    override val config: Config?,
+    override val config: T?,
     baseCommandName: String?,
     private val listenerActions: MutableMap<HandlerList, Pair<RegisteredListener, Class<*>>>
-) :
-    FlyLib {
+) : FlyLib<T> {
     override val commandHandler =
         CommandHandlerImpl(this, commands, defaultPermission, config, baseCommandName)
 
@@ -109,6 +107,10 @@ internal class FlyLibImpl(
 
     override fun loadConfig() {
         commandHandler.loadConfig()
+    }
+
+    override fun updateConfig(action: T.() -> Unit) {
+        commandHandler.updateConfig(action)
     }
 
     @Suppress("UNCHECKED_CAST")
