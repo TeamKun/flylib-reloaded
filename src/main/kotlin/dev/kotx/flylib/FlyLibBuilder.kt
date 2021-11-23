@@ -5,8 +5,6 @@
 package dev.kotx.flylib
 
 import dev.kotx.flylib.command.Command
-import dev.kotx.flylib.command.Config
-import dev.kotx.flylib.command.ConfigBuilder
 import dev.kotx.flylib.command.Permission
 import org.bukkit.event.Event
 import org.bukkit.event.EventPriority
@@ -18,19 +16,19 @@ import org.bukkit.plugin.java.JavaPlugin
 /**
  * A builder that creates Fly Lib.
  */
-class FlyLibBuilder(
+class FlyLibBuilder<T>(
     private val plugin: JavaPlugin
 ) {
-    private val commands = mutableListOf<Command>()
+    private val commands = mutableListOf<Command<T>>()
     private val listenerActions = mutableMapOf<HandlerList, Pair<RegisteredListener, Class<*>>>()
     private var defaultPermission = Permission.OP
-    private var config: Config? = null
+    private var config: T? = null
     private var baseCommandName: String? = null
 
     /**
      * Add a command.
      */
-    fun command(vararg command: Command): FlyLibBuilder {
+    fun command(vararg command: Command<T>): FlyLibBuilder<T> {
         command.forEach {
             this.commands.add(it)
         }
@@ -41,18 +39,14 @@ class FlyLibBuilder(
     /**
      * Specifies the default permissions that will be assigned if the command permissions are not specified.
      */
-    fun defaultPermission(permission: Permission): FlyLibBuilder {
+    fun defaultPermission(permission: Permission): FlyLibBuilder<T> {
         defaultPermission = permission
         return this
     }
 
-    /**
-     * Set the config and its name.
-     */
-    @JvmOverloads
-    fun config(baseCommandName: String? = null, config: ConfigBuilder.() -> Unit): FlyLibBuilder {
+    fun config(baseCommandName: String? = null, config: T): FlyLibBuilder<T> {
         this.baseCommandName = baseCommandName
-        this.config = ConfigBuilder().apply(config).build()
+        this.config = config
         return this
     }
 
@@ -61,17 +55,17 @@ class FlyLibBuilder(
      */
     @Suppress("UNCHECKED_CAST")
     @JvmOverloads
-    fun <T : Event> listen(
-        clazz: Class<T>,
+    fun <E : Event> listen(
+        clazz: Class<E>,
         priority: EventPriority = EventPriority.NORMAL,
         ignoreCancelled: Boolean = false,
-        action: ListenerAction<T>
-    ): FlyLibBuilder {
+        action: ListenerAction<E>
+    ): FlyLibBuilder<T> {
         val handlerList =
             clazz.methods.find { it.name == "getHandlerList" }?.invoke(null) as? HandlerList ?: return this
         val listener = RegisteredListener(
             object : Listener {},
-            { _, event -> action.execute(event as T) },
+            { _, event -> action.execute(event as E) },
             priority,
             plugin,
             ignoreCancelled
@@ -82,7 +76,7 @@ class FlyLibBuilder(
         return this
     }
 
-    internal fun build(): FlyLib =
+    internal fun build(): FlyLib<T> =
         FlyLibImpl(plugin, commands, defaultPermission, config, baseCommandName, listenerActions)
 }
 
@@ -90,11 +84,11 @@ class FlyLibBuilder(
  * An interface that takes FlyLibBuilder as an argument.
  * In Java, it can be used for SAM conversion.
  */
-fun interface FlyLibAction {
+fun interface FlyLibAction<T> {
     /**
      * An method which replacing kotlin apply block.
      */
-    fun FlyLibBuilder.initialize()
+    fun FlyLibBuilder<T>.initialize()
 }
 
 /**
